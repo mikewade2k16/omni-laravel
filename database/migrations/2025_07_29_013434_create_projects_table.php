@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id');
+            $table->foreignId('client_id')
+                ->constrained('clients')
+                ->onDelete('cascade');
             $table->string('name');
             $table->enum('status', ['not_started', 'raw', 'started', 'in_progress', 'awaiting_approval', 'completed', 'postponed', 'canceled']);
             $table->string('type_project')->nullable();

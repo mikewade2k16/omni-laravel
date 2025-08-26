@@ -19,7 +19,10 @@ return new class extends Migration
             $table->dateTime('last_scanned_at')->nullable();
             $table->string('qr_image_path')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->unsignedBigInteger('client_id')->nullable();
+            $table->foreignId('client_id')
+                ->nullable()
+                ->constrained('clients')
+                ->nullOnDelete();
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });
