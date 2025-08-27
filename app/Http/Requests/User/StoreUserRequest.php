@@ -28,4 +28,5 @@ class StoreUserRequest extends FormRequest
             'nick' => 'required|string|max:50',
         ];
     }
+    
 }
