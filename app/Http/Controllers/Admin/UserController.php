@@ -44,14 +44,13 @@ class UserController extends Controller
     // Atualizar um usuário
     public function update(UpdateUserRequest $request, $id)
     {
-        $user = $this->service->update($id, $request->validated());
-        return new UserResource($user);
+        $task = $this->service->update($id, $request->validated());
+        return new TaskResource($task);
     }
 
-    // Deletar um usuário
     public function delete($id)
     {
         $this->service->delete($id);
-        return response()->json(['message' => 'Usuário deletado com sucesso.']);
+        return response()->json(['message' => 'Task deleted successfully']);
     }
 }
