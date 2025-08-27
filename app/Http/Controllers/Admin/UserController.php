@@ -51,6 +51,6 @@ class UserController extends Controller
     public function delete($id)
     {
         $this->service->delete($id);
-        return response()->json(['message' => 'Task deleted successfully']);
+        return response()->json(['message' => 'Usuário deletado com sucesso.']);
     }
-}
+}   

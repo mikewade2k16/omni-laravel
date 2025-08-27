@@ -22,7 +22,7 @@ class TaskService
     public function store(array $data)
     {
         $task = $this->repository->store($data);
-        Log::info('Task created:', (array)$task);
+        Log::info('Task criada:', (array)$task);
         return $task;
     }
 
