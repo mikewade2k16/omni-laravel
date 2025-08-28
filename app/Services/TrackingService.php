@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Log;
+use App\Repositories\TrackingRepository;
 
-class UserService
+class TrackingService
 {
     protected $repository;
 
-    public function __construct(UserRepository $repository)
+    public function __construct(TrackingRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -21,9 +20,7 @@ class UserService
 
     public function store(array $data)
     {
-        $user = $this->repository->store($data);
-        Log::info('Usuario criado:', (array) $user);
-        return $user;
+        return $this->repository->store($data);
     }
 
     public function find($id)

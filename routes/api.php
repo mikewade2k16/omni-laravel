@@ -6,6 +6,13 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CampaignController;
+use App\Http\Controllers\Admin\TrackingController;
+use App\Http\Controllers\Admin\CollectionController;
+use App\Http\Controllers\Admin\CollectionItemController;
+use App\Http\Controllers\Admin\CollectionViewController;
+use App\Http\Controllers\Admin\FilesOmniController;
+use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\UserProjectController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -51,4 +58,53 @@ Route::prefix('admin')->group(function () {
     Route::get('campaigns/{id}', [CampaignController::class, 'show']);
     Route::put('campaigns/{id}', [CampaignController::class, 'update']);
     Route::delete('campaigns/{id}', [CampaignController::class, 'delete']);
+    
+    // Rotas para Trackings
+    Route::get('trackings', [TrackingController::class, 'index']);
+    Route::post('trackings', [TrackingController::class, 'store']);
+    Route::get('trackings/{id}', [TrackingController::class, 'show']);
+    Route::put('trackings/{id}', [TrackingController::class, 'update']);
+    Route::delete('trackings/{id}', [TrackingController::class, 'delete']);
+
+    // Rotas para Collections
+    Route::get('collections', [CollectionController::class, 'index']);
+    Route::post('collections', [CollectionController::class, 'store']);
+    Route::get('collections/{id}', [CollectionController::class, 'show']);
+    Route::put('collections/{id}', [CollectionController::class, 'update']);
+    Route::delete('collections/{id}', [CollectionController::class, 'delete']);
+
+    // Rotas para Collection Items
+    Route::get('collection-items', [CollectionItemController::class, 'index']);
+    Route::post('collection-items', [CollectionItemController::class, 'store']);
+    Route::get('collection-items/{id}', [CollectionItemController::class, 'show']);
+    Route::put('collection-items/{id}', [CollectionItemController::class, 'update']);
+    Route::delete('collection-items/{id}', [CollectionItemController::class, 'destroy']);
+
+    // Rotas para Collection Views
+    Route::get('collection-views', [CollectionViewController::class, 'index']);
+    Route::post('collection-views', [CollectionViewController::class, 'store']);
+    Route::get('collection-views/{id}', [CollectionViewController::class, 'show']);
+    Route::put('collection-views/{id}', [CollectionViewController::class, 'update']);
+    Route::delete('collection-views/{id}', [CollectionViewController::class, 'destroy']);
+
+    // Rotas para FilesOmnis
+    Route::get('files-omnis', [FilesOmniController::class, 'index']);
+    Route::post('files-omnis', [FilesOmniController::class, 'store']);
+    Route::get('files-omnis/{id}', [FilesOmniController::class, 'show']);
+    Route::put('files-omnis/{id}', [FilesOmniController::class, 'update']);
+    Route::delete('files-omnis/{id}', [FilesOmniController::class, 'destroy']);
+
+    // Rotas para Projects
+    Route::get('projects', [ProjectController::class, 'index']);
+    Route::post('projects', [ProjectController::class, 'store']);
+    Route::get('projects/{id}', [ProjectController::class, 'show']);
+    Route::put('projects/{id}', [ProjectController::class, 'update']);
+    Route::delete('projects/{id}', [ProjectController::class, 'delete']);
+
+    // Rotas para UserProjects
+    Route::get('user-projects', [UserProjectController::class, 'index']);
+    Route::post('user-projects', [UserProjectController::class, 'store']);
+    Route::get('user-projects/{id}', [UserProjectController::class, 'show']);
+    Route::put('user-projects/{id}', [UserProjectController::class, 'update']);
+    Route::delete('user-projects/{id}', [UserProjectController::class, 'destroy']);
 });

@@ -28,9 +28,8 @@ class UserController extends Controller
     // Criar um usuário
     public function store(StoreUserRequest $request)
     {
-        log::info('aqui');
-        $user = $this->service->store($request->all());
-        log::info($user);
+        Log::info('Storing User:');
+        $user = $this->service->store($request->validated());
         return new UserResource($user);
     }
 
@@ -45,7 +44,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, $id)
     {
         $task = $this->service->update($id, $request->validated());
-        return new TaskResource($task);
+        return new UserResource($task);
     }
 
     public function delete($id)
