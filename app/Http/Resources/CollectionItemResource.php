@@ -8,7 +8,7 @@ class CollectionItemResource extends JsonResource
 {
     public function toArray($request): array
     {
-        return [
+        $response = [
             'id' => $this->id,
             'collection_id' => $this->collection_id,
             'data' => $this->data,
@@ -17,5 +17,9 @@ class CollectionItemResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
+
+        dd($response);
+
+        return $response;
     }
 }

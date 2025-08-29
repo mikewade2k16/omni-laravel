@@ -25,14 +25,6 @@ class UserController extends Controller
         return UserResource::collection($this->service->list());
     }
 
-    // Criar um usuário
-    public function store(StoreUserRequest $request)
-    {
-        Log::info('Storing User:');
-        $user = $this->service->store($request->validated());
-        return new UserResource($user);
-    }
-
     // Visualizar um usuário específico
     public function show($id)
     {
@@ -40,16 +32,45 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    // Criar um usuário
+    public function store(StoreUserRequest $request)
+    {
+        try {
+            $user = $this->service->store($request->validated());
+            return new UserResource($user);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar usuário',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
     // Atualizar um usuário
     public function update(UpdateUserRequest $request, $id)
     {
-        $task = $this->service->update($id, $request->validated());
-        return new UserResource($task);
+        try {
+            $user = $this->service->update($id, $request->validated());
+            return new UserResource($user);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar usuário',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
+    // Deletar um usuário
     public function delete($id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'Usuário deletado com sucesso.']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Usuário deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar usuário',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
-}   
+}

@@ -16,8 +16,7 @@ class StoreUserProjectRequest extends FormRequest
         return [
             'user_id' => 'required|integer|exists:users,id',
             'project_id' => 'required|integer|exists:projects,id',
-            'role' => 'required|string|max:255',
-            'assigned_at' => 'required|date',
         ];
     }
+
 }

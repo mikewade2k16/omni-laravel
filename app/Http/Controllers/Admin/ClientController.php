@@ -24,27 +24,48 @@ class ClientController extends Controller
         return ClientResource::collection($this->service->list());
     }
 
-    public function store(StoreClientRequest $request)
-    {
-        $client = $this->service->store($request->validated());
-        return new ClientResource($client);
-    }
-
     public function show($id)
     {
         $client = $this->service->find($id);
         return new ClientResource($client);
     }
 
-    public function update(UpdateClientRequest $request, $id)
+    public function store(StoreClientRequest $request)
     {
-        $client = $this->service->update($id, $request->validated());
-        return new ClientResource($client);
+        try {
+            $client = $this->service->store($request->validated());
+            return response()->json(new ClientResource($client), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar Cliente',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function delete($id)
+    public function update(UpdateClientRequest $request, $id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'Cliente deletado com sucesso.']);
+        try {
+            $client = $this->service->update($id, $request->validated());
+            return response()->json(new ClientResource($client), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar Cliente',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Cliente deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar Cliente',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

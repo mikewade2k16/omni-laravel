@@ -29,21 +29,42 @@ class SiteZenController extends Controller
         return new SiteZenResource($siteZen);
     }
 
-    public function store(StoreSiteZenRequest $request)
+    public function store(SiteZenRequest $request): JsonResponse
     {
-        $siteZen = $this->service->create($request->validated());
-        return new SiteZenResource($siteZen);
+        try {
+            $siteZen = $this->service->create($request->validated());
+            return response()->json(new SiteZenResource($siteZen), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar SiteZen',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(UpdateSiteZenRequest $request, $id)
     {
-        $siteZen = $this->service->update($id, $request->validated());
-        return new SiteZenResource($siteZen);
+        try {
+            $siteZen = $this->service->update($id, $request->validated());
+            return response()->json(new SiteZenResource($siteZen), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar SiteZen',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'SiteZen deletado com sucesso.']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'SiteZen deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar SiteZen',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -24,27 +24,48 @@ class ProjectController extends Controller
         return ProjectResource::collection($projects);
     }
 
-    public function store(StoreProjectRequest $request)
-    {
-        $project = $this->service->store($request->validated());
-        return new ProjectResource($project);
-    }
-
     public function show($id)
     {
         $project = $this->service->find($id);
         return new ProjectResource($project);
     }
 
-    public function update(UpdateProjectRequest $request, $id)
+    public function store(StoreProjectRequest $request): JsonResponse
     {
-        $project = $this->service->update($id, $request->validated());
-        return new ProjectResource($project);
+        try {
+            $project = $this->service->store($request->validated());
+            return response()->json(new ProjectResource($project), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar Projeto',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function delete($id)
+    public function update(UpdateProjectRequest $request, $id): JsonResponse
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'Project deleted successfully']);
+        try {
+            $project = $this->service->update($id, $request->validated());
+            return response()->json(new ProjectResource($project), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar Projeto',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroy($id): JsonResponse
+    {
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Projeto deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar Projeto',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

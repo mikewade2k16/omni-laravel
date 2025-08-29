@@ -3,41 +3,66 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Services\CollectionItemService;
 use App\Http\Requests\CollectionItem\StoreCollectionItemRequest;
 use App\Http\Requests\CollectionItem\UpdateCollectionItemRequest;
-use App\Http\Resources\CollectionItemResource;
-use App\Models\CollectionItem;
 
 class CollectionItemController extends Controller
 {
+    protected $service;
+
+    public function __construct(CollectionItemService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index()
     {
-        return CollectionItemResource::collection(CollectionItem::all());
+        return $this->service->list();
     }
 
     public function show($id)
     {
-        $item = CollectionItem::findOrFail($id);
-        return new CollectionItemResource($item);
+        return $this->service->find($id);
     }
 
     public function store(StoreCollectionItemRequest $request)
     {
-        $item = CollectionItem::create($request->validated());
-        return new CollectionItemResource($item);
+        try {
+            $item = $this->service->store($request->validated());
+            return response()->json($item, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar CollectionItem',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(UpdateCollectionItemRequest $request, $id)
     {
-        $item = CollectionItem::findOrFail($id);
-        $item->update($request->validated());
-        return new CollectionItemResource($item);
+        try {
+            $item = $this->service->update($id, $request->validated());
+            return response()->json($item, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar CollectionItem',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $item = CollectionItem::findOrFail($id);
-        $item->delete();
-        return response()->json(['message' => 'Item deletado com sucesso.']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Item deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar CollectionItem',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

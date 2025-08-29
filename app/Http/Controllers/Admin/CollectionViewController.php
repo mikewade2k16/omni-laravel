@@ -33,19 +33,40 @@ class CollectionViewController extends Controller
 
     public function store(StoreCollectionViewRequest $request)
     {
-        $view = $this->service->create($request->validated());
-        return new CollectionViewResource($view);
+        try {
+            $view = $this->service->create($request->validated());
+            return response()->json(new CollectionViewResource($view), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar CollectionView',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function update(UpdateCollectionViewRequest $request, CollectionView $collectionView)
+    public function update(UpdateCollectionViewRequest $request, $id)
     {
-        $view = $this->service->update($collectionView, $request->validated());
-        return new CollectionViewResource($view);
+        try {
+            $view = $this->service->update($id, $request->validated());
+            return response()->json(new CollectionViewResource($view), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar CollectionView',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function destroy(CollectionView $collectionView)
+    public function destroy($id)
     {
-        $this->service->delete($collectionView);
-        return response()->json(['message' => 'Deleted successfully']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'CollectionView deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar CollectionView',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

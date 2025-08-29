@@ -22,23 +22,47 @@ class CollectionController extends Controller
         return $this->service->list();
     }
 
-    public function store(StoreCollectionRequest $request)
-    {
-        return $this->service->store($request->validated());
-    }
-
     public function show($id)
     {
         return $this->service->find($id);
     }
 
-    public function update(UpdateCollectionRequest $request, $id)
+    public function store(StoreCollectionRequest $request)
     {
-        return $this->service->update($id, $request->validated());
+        try {
+            $collection = $this->service->store($request->validated());
+            return response()->json($collection, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar Collection',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function delete($id)
+    public function update(UpdateCollectionRequest $request, $id)
     {
-        return $this->service->delete($id);
+        try {
+            $collection = $this->service->update($id, $request->validated());
+            return response()->json($collection, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar Collection',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Collection deletada com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar Collection',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

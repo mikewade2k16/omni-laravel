@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\UserProjectService;
-use App\Http\Requests\StoreUserProjectRequest;
-use App\Http\Requests\UpdateUserProjectRequest;
-use App\Http\Resources\UserProjectResource;
+use App\Http\Requests\UserProject\StoreUserProjectRequest;
+use App\Http\Requests\UserProject\UpdateUserProjectRequest;
 
 class UserProjectController extends Controller
 {
@@ -19,29 +18,50 @@ class UserProjectController extends Controller
 
     public function index()
     {
-        return UserProjectResource::collection($this->service->all());
-    }
-
-    public function store(StoreUserProjectRequest $request)
-    {
-        $userProject = $this->service->store($request->validated());
-        return new UserProjectResource($userProject);
+        return $this->service->list();
     }
 
     public function show($id)
     {
-        return new UserProjectResource($this->service->find($id));
+        return $this->service->find($id);
+    }
+
+    public function store(StoreUserProjectRequest $request)
+    {
+        try {
+            $userProject = $this->service->store($request->validated());
+            return response()->json($userProject, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar UserProject',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(UpdateUserProjectRequest $request, $id)
     {
-        $userProject = $this->service->update($id, $request->validated());
-        return new UserProjectResource($userProject);
+        try {
+            $userProject = $this->service->update($id, $request->validated());
+            return response()->json($userProject, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar UserProject',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'Deleted successfully']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'UserProject deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar UserProject',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

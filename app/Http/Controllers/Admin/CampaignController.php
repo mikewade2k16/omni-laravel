@@ -23,13 +23,6 @@ class CampaignController extends Controller
         return CampaignResource::collection($this->service->list());
     }
 
-    // Criar uma nova campanha
-    public function store(StoreCampaignRequest $request)
-    {
-        $campaign = $this->service->store($request->validated());
-        return new CampaignResource($campaign);
-    }
-
     // Visualizar uma campanha específica
     public function show($id)
     {
@@ -37,17 +30,45 @@ class CampaignController extends Controller
         return new CampaignResource($campaign);
     }
 
+    // Criar uma nova campanha
+    public function store(StoreCampaignRequest $request)
+    {
+        try {
+            $campaign = $this->service->store($request->validated());
+            return response()->json(new CampaignResource($campaign), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar campanha',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
     // Atualizar uma campanha
     public function update(UpdateCampaignRequest $request, $id)
     {
-        $campaign = $this->service->update($id, $request->validated());
-        return new CampaignResource($campaign);
+        try {
+            $campaign = $this->service->update($id, $request->validated());
+            return response()->json(new CampaignResource($campaign), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar campanha',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     // Deletar uma campanha
-    public function delete($id)
+    public function destroy($id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'Campanha deletada com sucesso.']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Campanha deletada com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar campanha',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

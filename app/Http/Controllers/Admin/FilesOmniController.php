@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\FilesOmniService;
 use App\Http\Requests\FilesOmni\StoreFilesOmniRequest;
 use App\Http\Requests\FilesOmni\UpdateFilesOmniRequest;
 use App\Http\Resources\FilesOmniResource;
-use App\Services\FilesOmniService;
 
 class FilesOmniController extends Controller
 {
@@ -22,27 +22,48 @@ class FilesOmniController extends Controller
         return FilesOmniResource::collection($this->service->allFiles());
     }
 
-    public function store(StoreFilesOmniRequest $request)
-    {
-        $file = $this->service->createFile($request->validated());
-        return new FilesOmniResource($file);
-    }
-
     public function show($id)
     {
         $file = $this->service->getFile($id);
         return new FilesOmniResource($file);
     }
 
+    public function store(StoreFilesOmniRequest $request)
+    {
+        try {
+            $file = $this->service->createFile($request->validated());
+            return response()->json($file, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar arquivo',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function update(UpdateFilesOmniRequest $request, $id)
     {
-        $file = $this->service->updateFile($id, $request->validated());
-        return new FilesOmniResource($file);
+        try {
+            $file = $this->service->updateFile($id, $request->validated());
+            return response()->json($file, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar arquivo',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $this->service->deleteFile($id);
-        return response()->json(['message' => 'File deleted successfully.']);
+        try {
+            $this->service->deleteFile($id);
+            return response()->json(['message' => 'Arquivo deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar arquivo',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }
