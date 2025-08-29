@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\CollectionViewController;
 use App\Http\Controllers\Admin\FilesOmniController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\UserProjectController;
+use App\Http\Controllers\Admin\QrcodeController;
+use App\Http\Controllers\Admin\ShortLinkController;
+use App\Http\Controllers\Admin\SiteZenController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -107,4 +110,25 @@ Route::prefix('admin')->group(function () {
     Route::get('user-projects/{id}', [UserProjectController::class, 'show']);
     Route::put('user-projects/{id}', [UserProjectController::class, 'update']);
     Route::delete('user-projects/{id}', [UserProjectController::class, 'destroy']);
+
+    // Rotas para Qrcodes
+    Route::get('qrcodes', [QrcodeController::class, 'index']);
+    Route::post('qrcodes', [QrcodeController::class, 'store']);
+    Route::get('qrcodes/{id}', [QrcodeController::class, 'show']);
+    Route::put('qrcodes/{id}', [QrcodeController::class, 'update']);
+    Route::delete('qrcodes/{id}', [QrcodeController::class, 'destroy']);
+
+    // Rotas para ShortLinks
+    Route::get('short-links', [ShortLinkController::class, 'index']);
+    Route::post('short-links', [ShortLinkController::class, 'store']);
+    Route::get('short-links/{id}', [ShortLinkController::class, 'show']);
+    Route::put('short-links/{id}', [ShortLinkController::class, 'update']);
+    Route::delete('short-links/{id}', [ShortLinkController::class, 'destroy']);
+
+    // Rotas para SiteZen
+    Route::get('site-zen', [SiteZenController::class, 'index']);
+    Route::post('site-zen', [SiteZenController::class, 'store']);
+    Route::get('site-zen/{id}', [SiteZenController::class, 'show']);
+    Route::put('site-zen/{id}', [SiteZenController::class, 'update']);
+    Route::delete('site-zen/{id}', [SiteZenController::class, 'destroy']);
 });
