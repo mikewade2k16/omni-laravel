@@ -20,27 +20,48 @@ class TrackingController extends Controller
         return response()->json($this->service->list(), 200);
     }
 
-    public function store(StoreTrackingRequest $request)
-    {
-        $tracking = $this->service->store($request->validated());
-        return response()->json($tracking, 201);
-    }
-
     public function show($id)
     {
         $tracking = $this->service->find($id);
         return response()->json($tracking, 200);
     }
 
+    public function store(StoreTrackingRequest $request)
+    {
+        try {
+            $tracking = $this->service->store($request->validated());
+            return response()->json($tracking, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar Tracking',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function update(StoreTrackingRequest $request, $id)
     {
-        $tracking = $this->service->update($id, $request->validated());
-        return response()->json($tracking, 200);
+        try {
+            $tracking = $this->service->update($id, $request->validated());
+            return response()->json($tracking, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar Tracking',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $this->service->delete($id);
-        return response()->json(null, 204);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Tracking deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar Tracking',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

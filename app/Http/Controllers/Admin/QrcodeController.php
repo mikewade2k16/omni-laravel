@@ -37,29 +37,46 @@ class QrcodeController extends Controller
 
     public function store(StoreQrcodeRequest $request)
     {
-        $qrcode = $this->service->create($request->validated());
-        return new QrcodeResource($qrcode);
+        try {
+            $qrcode = $this->service->create($request->validated());
+            return response()->json(new QrcodeResource($qrcode), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar QR Code',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(UpdateQrcodeRequest $request, $id)
     {
-        $qrcode = $this->service->update($id, $request->validated());
-
-        if (!$qrcode) {
-            return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
+        try {
+            $qrcode = $this->service->update($id, $request->validated());
+            if (!$qrcode) {
+                return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
+            }
+            return response()->json(new QrcodeResource($qrcode), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar QR Code',
+                'error'   => $e->getMessage()
+            ], 500);
         }
-
-        return new QrcodeResource($qrcode);
     }
 
     public function destroy($id)
     {
-        $deleted = $this->service->delete($id);
-
-        if (!$deleted) {
-            return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
+        try {
+            $deleted = $this->service->delete($id);
+            if (!$deleted) {
+                return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
+            }
+            return response()->json(['message' => 'QR Code deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar QR Code',
+                'error'   => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json(['message' => 'QR Code deletado com sucesso']);
     }
 }

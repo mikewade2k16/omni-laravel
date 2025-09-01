@@ -37,7 +37,7 @@ class UserController extends Controller
     {
         try {
             $user = $this->service->store($request->validated());
-            return new UserResource($user);
+            return response()->json($user, 201);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao criar usuário',
@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         try {
             $user = $this->service->update($id, $request->validated());
-            return new UserResource($user);
+            return response()->json($user, 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao atualizar usuário',
@@ -61,7 +61,7 @@ class UserController extends Controller
     }
 
     // Deletar um usuário
-    public function delete($id)
+    public function destroy($id)
     {
         try {
             $this->service->delete($id);

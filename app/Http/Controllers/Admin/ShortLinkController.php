@@ -24,27 +24,48 @@ class ShortLinkController extends Controller
         return ShortLinkResource::collection($shortLinks);
     }
 
-    public function store(StoreShortLinkRequest $request)
-    {
-        $shortLink = $this->service->create($request->validated());
-        return new ShortLinkResource($shortLink);
-    }
-
     public function show($id)
     {
         $shortLink = $this->service->get($id);
         return new ShortLinkResource($shortLink);
     }
 
+    public function store(StoreShortLinkRequest $request)
+    {
+        try {
+            $shortLink = $this->service->create($request->validated());
+            return response()->json(new ShortLinkResource($shortLink), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar ShortLink',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function update(UpdateShortLinkRequest $request, $id)
     {
-        $shortLink = $this->service->update($id, $request->validated());
-        return new ShortLinkResource($shortLink);
+        try {
+            $shortLink = $this->service->update($id, $request->validated());
+            return response()->json(new ShortLinkResource($shortLink), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar ShortLink',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'ShortLink deleted successfully']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'ShortLink deletado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar ShortLink',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }
