@@ -23,28 +23,48 @@ class TaskController extends Controller
         return TaskResource::collection($this->service->list());
     }
 
-    public function store(StoreTaskRequest $request)
-    {
-        Log::info('Storing Task:');
-        $task = $this->service->store($request->validated());
-        return new TaskResource($task);
-    }
-
     public function show($id)
     {
         $task = $this->service->find($id);
         return new TaskResource($task);
     }
 
+    public function store(StoreTaskRequest $request)
+    {
+        try {
+            $task = $this->service->store($request->validated());
+            return response()->json(new TaskResource($task), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao criar Tarefa',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function update(UpdateTaskRequest $request, $id)
     {
-        $task = $this->service->update($id, $request->validated());
-        return new TaskResource($task);
+        try {
+            $task = $this->service->update($id, $request->validated());
+            return response()->json(new TaskResource($task), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao atualizar Tarefa',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function delete($id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'Tarefa deletada com sucesso.']);
+        try {
+            $this->service->delete($id);
+            return response()->json(['message' => 'Tarefa deletada com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar Tarefa',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }
