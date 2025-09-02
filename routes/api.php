@@ -39,7 +39,7 @@ Route::prefix('admin')->group(function () {
     Route::post('users', [UserController::class, 'store']);
     Route::get('users/{id}', [UserController::class, 'show']);
     Route::put('users/{id}', [UserController::class, 'update']);
-    Route::delete('users/{id}', [UserController::class, 'delete']);
+    Route::delete('users/{id}', [UserController::class, 'destroy']);
 
     // Rotas para Tasks
     Route::get('tasks', [TaskController::class, 'index']);
