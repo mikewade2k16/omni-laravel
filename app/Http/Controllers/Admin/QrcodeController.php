@@ -67,8 +67,8 @@ class QrcodeController extends Controller
     public function destroy($id)
     {
         try {
-            $deleted = $this->service->delete($id);
-            if (!$deleted) {
+            $destroy = $this->service->destroy($id);
+            if (!$destroy) {
                 return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
             }
             return response()->json(['message' => 'QR Code deletado com sucesso.']);

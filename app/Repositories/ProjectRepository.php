@@ -8,7 +8,8 @@ class ProjectRepository
 {
     public function list()
     {
-        return Project::all();
+        // Mantemos simples para a listagem geral
+        return Project::orderBy('name', 'asc')->get();
     }
 
     public function store(array $data)
@@ -18,7 +19,8 @@ class ProjectRepository
 
     public function find($id)
     {
-        return Project::findOrFail($id);
+        // ✅ AQUI ESTÁ A MUDANÇA: Carregamos as colunas junto com o projeto.
+        return Project::with('columns')->findOrFail($id);
     }
 
     public function update($id, array $data)

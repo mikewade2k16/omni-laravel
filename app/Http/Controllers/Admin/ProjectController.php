@@ -59,7 +59,7 @@ class ProjectController extends Controller
     public function destroy($id): JsonResponse
     {
         try {
-            $this->service->delete($id);
+            $this->service->destroy($id);
             return response()->json(['message' => 'Projeto deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

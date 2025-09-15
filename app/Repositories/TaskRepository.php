@@ -8,7 +8,8 @@ class TaskRepository
 {
     public function list()
     {
-        return Task::all();
+        // ✅ MUDANÇA: Carregamos a coluna de cada tarefa.
+        return Task::with('column')->get();
     }
 
     public function store(array $data)
@@ -18,7 +19,8 @@ class TaskRepository
 
     public function find($id)
     {
-        return Task::findOrFail($id);
+        // ✅ MUDANÇA: Carregamos a coluna da tarefa específica.
+        return Task::with('column')->findOrFail($id);
     }
 
     public function update($id, array $data)

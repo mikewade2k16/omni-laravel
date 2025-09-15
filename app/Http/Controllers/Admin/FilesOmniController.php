@@ -57,7 +57,7 @@ class FilesOmniController extends Controller
     public function destroy($id)
     {
         try {
-            $this->service->deleteFile($id);
+            $this->service->destroyFile($id);
             return response()->json(['message' => 'Arquivo deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

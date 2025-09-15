@@ -59,7 +59,7 @@ class ClientController extends Controller
     public function destroy($id)
     {
         try {
-            $this->service->delete($id);
+            $this->service->destroy($id);
             return response()->json(['message' => 'Cliente deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

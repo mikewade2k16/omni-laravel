@@ -45,19 +45,29 @@ class Task extends Model
         'timer_status'   => 'integer',
     ];
 
-    // Relacionamentos existentes...
-    public function client() { /* ... */ }
-    public function campaign() { /* ... */ }
-    public function user() { /* ... */ }
-
     /**
-     * NOVO: Uma tarefa pertence a uma coluna.
+     * Relacionamento com Cliente.
      */
-    public function column(): BelongsTo
+    public function client()
     {
-        return $this->belongsTo(Column::class);
+        return $this->belongsTo(Client::class);
     }
 
+    /**
+     * Relacionamento com Campaign.
+     */
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class);
+    }
+
+    /**
+     * Usuário responsável pela tarefa.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     /**
      * NOVO: Uma tarefa tem um histórico de mudanças de coluna.
      */

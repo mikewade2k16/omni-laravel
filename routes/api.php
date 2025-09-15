@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\UserProjectController;
 use App\Http\Controllers\Admin\QrcodeController;
 use App\Http\Controllers\Admin\ShortLinkController;
 use App\Http\Controllers\Admin\SiteZenController;
+use App\Http\Controllers\Admin\ColumnController;
+use App\Http\Controllers\Admin\ColumnHistoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,7 +41,7 @@ Route::prefix('admin')->group(function () {
     Route::post('users', [UserController::class, 'store']);
     Route::get('users/{id}', [UserController::class, 'show']);
     Route::put('users/{id}', [UserController::class, 'update']);
-    Route::delete('users/{id}', [UserController::class, 'destroy']);
+    Route::delete('users/{id}', [UserController::class, 'delete']);
 
     // Rotas para Tasks
     Route::get('tasks', [TaskController::class, 'index']);
@@ -81,21 +83,21 @@ Route::prefix('admin')->group(function () {
     Route::post('collection-items', [CollectionItemController::class, 'store']);
     Route::get('collection-items/{id}', [CollectionItemController::class, 'show']);
     Route::put('collection-items/{id}', [CollectionItemController::class, 'update']);
-    Route::delete('collection-items/{id}', [CollectionItemController::class, 'destroy']);
+    Route::delete('collection-items/{id}', [CollectionItemController::class, 'delete']);
 
     // Rotas para Collection Views
     Route::get('collection-views', [CollectionViewController::class, 'index']);
     Route::post('collection-views', [CollectionViewController::class, 'store']);
     Route::get('collection-views/{id}', [CollectionViewController::class, 'show']);
     Route::put('collection-views/{id}', [CollectionViewController::class, 'update']);
-    Route::delete('collection-views/{id}', [CollectionViewController::class, 'destroy']);
+    Route::delete('collection-views/{id}', [CollectionViewController::class, 'delete']);
 
     // Rotas para FilesOmnis
     Route::get('files-omnis', [FilesOmniController::class, 'index']);
     Route::post('files-omnis', [FilesOmniController::class, 'store']);
     Route::get('files-omnis/{id}', [FilesOmniController::class, 'show']);
     Route::put('files-omnis/{id}', [FilesOmniController::class, 'update']);
-    Route::delete('files-omnis/{id}', [FilesOmniController::class, 'destroy']);
+    Route::delete('files-omnis/{id}', [FilesOmniController::class, 'delete']);
 
     // Rotas para Projects
     Route::get('projects', [ProjectController::class, 'index']);
@@ -109,26 +111,40 @@ Route::prefix('admin')->group(function () {
     Route::post('user-projects', [UserProjectController::class, 'store']);
     Route::get('user-projects/{id}', [UserProjectController::class, 'show']);
     Route::put('user-projects/{id}', [UserProjectController::class, 'update']);
-    Route::delete('user-projects/{id}', [UserProjectController::class, 'destroy']);
+    Route::delete('user-projects/{id}', [UserProjectController::class, 'delete']);
 
     // Rotas para Qrcodes
     Route::get('qrcodes', [QrcodeController::class, 'index']);
     Route::post('qrcodes', [QrcodeController::class, 'store']);
     Route::get('qrcodes/{id}', [QrcodeController::class, 'show']);
     Route::put('qrcodes/{id}', [QrcodeController::class, 'update']);
-    Route::delete('qrcodes/{id}', [QrcodeController::class, 'destroy']);
+    Route::delete('qrcodes/{id}', [QrcodeController::class, 'delete']);
 
     // Rotas para ShortLinks
     Route::get('short-links', [ShortLinkController::class, 'index']);
     Route::post('short-links', [ShortLinkController::class, 'store']);
     Route::get('short-links/{id}', [ShortLinkController::class, 'show']);
     Route::put('short-links/{id}', [ShortLinkController::class, 'update']);
-    Route::delete('short-links/{id}', [ShortLinkController::class, 'destroy']);
+    Route::delete('short-links/{id}', [ShortLinkController::class, 'delete']);
 
     // Rotas para SiteZen
     Route::get('site-zen', [SiteZenController::class, 'index']);
     Route::post('site-zen', [SiteZenController::class, 'store']);
     Route::get('site-zen/{id}', [SiteZenController::class, 'show']);
     Route::put('site-zen/{id}', [SiteZenController::class, 'update']);
-    Route::delete('site-zen/{id}', [SiteZenController::class, 'destroy']);
+    Route::delete('site-zen/{id}', [SiteZenController::class, 'delete']);
+
+    // Rotas para Columns
+    Route::get('columns', [ColumnController::class, 'index']);
+    Route::post('columns', [ColumnController::class, 'store']);
+    Route::get('columns/{id}', [ColumnController::class, 'show']);
+    Route::put('columns/{id}', [ColumnController::class, 'update']);
+    Route::delete('columns/{id}', [ColumnController::class, 'delete']);
+
+    // Rotas para Column Histories
+    Route::get('column-histories', [ColumnHistoryController::class, 'index']);
+    Route::post('column-histories', [ColumnHistoryController::class, 'store']);
+    Route::get('column-histories/{id}', [ColumnHistoryController::class, 'show']);
+    Route::put('column-histories/{id}', [ColumnHistoryController::class, 'update']);
+    Route::delete('column-histories/{id}', [ColumnHistoryController::class, 'delete']);        
 });

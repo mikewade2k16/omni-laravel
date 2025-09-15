@@ -55,10 +55,10 @@ class TaskController extends Controller
         }
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         try {
-            $this->service->delete($id);
+            $this->service->destroy($id);
             return response()->json(['message' => 'Tarefa deletada com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([
