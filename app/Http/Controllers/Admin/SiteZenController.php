@@ -7,6 +7,7 @@ use App\Services\SiteZenService;
 use App\Http\Requests\SiteZen\StoreSiteZenRequest;
 use App\Http\Requests\SiteZen\UpdateSiteZenRequest;
 use App\Http\Resources\SiteZenResource;
+use Illuminate\Http\JsonResponse;
 
 class SiteZenController extends Controller
 {
@@ -29,7 +30,7 @@ class SiteZenController extends Controller
         return new SiteZenResource($siteZen);
     }
 
-    public function store(SiteZenRequest $request): JsonResponse
+    public function store(StoreSiteZenRequest $request): JsonResponse
     {
         try {
             $siteZen = $this->service->create($request->validated());
@@ -58,7 +59,7 @@ class SiteZenController extends Controller
     public function destroy($id)
     {
         try {
-            $this->service->destroy($id);
+            $this->service->delete($id);
             return response()->json(['message' => 'SiteZen deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

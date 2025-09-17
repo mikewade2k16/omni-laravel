@@ -19,19 +19,19 @@ class FilesOmniController extends Controller
 
     public function index()
     {
-        return FilesOmniResource::collection($this->service->allFiles());
+        return FilesOmniResource::collection($this->service->list());
     }
 
     public function show($id)
     {
-        $file = $this->service->getFile($id);
+        $file = $this->service->find($id);
         return new FilesOmniResource($file);
     }
 
     public function store(StoreFilesOmniRequest $request)
     {
         try {
-            $file = $this->service->createFile($request->validated());
+            $file = $this->service->store($request->validated());
             return response()->json($file, 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -44,7 +44,7 @@ class FilesOmniController extends Controller
     public function update(UpdateFilesOmniRequest $request, $id)
     {
         try {
-            $file = $this->service->updateFile($id, $request->validated());
+            $file = $this->service->update($id, $request->validated());
             return response()->json($file, 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -57,7 +57,7 @@ class FilesOmniController extends Controller
     public function destroy($id)
     {
         try {
-            $this->service->destroyFile($id);
+            $this->service->delete($id);
             return response()->json(['message' => 'Arquivo deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

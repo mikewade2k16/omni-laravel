@@ -16,7 +16,7 @@ class StoreCollectionItemRequest extends FormRequest
         return [
             'collection_id' => 'required|exists:collections,id',
             'data' => 'required|array',
-            'created_by' => 'required|exists:users,id',
+            // 'created_by' => 'required|exists:users,id',
         ];
     }
 }

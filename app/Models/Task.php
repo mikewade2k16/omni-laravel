@@ -11,14 +11,12 @@ class Task extends Model
 {
     use HasFactory;
 
-    // ATENÇÃO AQUI: 'status' foi removido e 'column_id' foi adicionado.
     protected $fillable = [
         'client_id',
         'campaign_id',
         'user_id',
-        'column_id', // ADICIONADO
+        'column_id',
         'name',
-        // 'status', // REMOVIDO
         'start_date',
         'type_task',
         'number',
@@ -45,32 +43,26 @@ class Task extends Model
         'timer_status'   => 'integer',
     ];
 
-    /**
-     * Relacionamento com Cliente.
-     */
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
-    /**
-     * Relacionamento com Campaign.
-     */
     public function campaign()
     {
         return $this->belongsTo(Campaign::class);
     }
 
-    /**
-     * Usuário responsável pela tarefa.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    /**
-     * NOVO: Uma tarefa tem um histórico de mudanças de coluna.
-     */
+
+    public function column(): BelongsTo 
+    {
+        return $this->belongsTo(Column::class);
+    }
+
     public function history(): HasMany
     {
         return $this->hasMany(ColumnHistory::class);

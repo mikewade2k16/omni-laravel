@@ -13,7 +13,7 @@ class UserProjectService
         $this->repository = $repository;
     }
 
-    public function all()
+    public function list()
     {
         return $this->repository->all();
     }

@@ -55,7 +55,7 @@ class TrackingController extends Controller
     public function destroy($id)
     {
         try {
-            $this->service->destroy($id);
+            $this->service->delete($id);
             return response()->json(['message' => 'Tracking deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

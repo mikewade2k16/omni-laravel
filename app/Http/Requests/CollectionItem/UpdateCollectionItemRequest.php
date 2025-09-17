@@ -16,7 +16,7 @@ class UpdateCollectionItemRequest extends FormRequest
         return [
             'collection_id' => 'sometimes|exists:collections,id',
             'data' => 'sometimes|array',
-            'updated_by' => 'required|exists:users,id',
+            //'updated_by' => 'required|exists:users,id',
         ];
     }
 }

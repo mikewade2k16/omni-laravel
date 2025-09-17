@@ -20,13 +20,13 @@ class QrcodeController extends Controller
 
     public function index()
     {
-        $qrcodes = $this->service->getAll();
+        $qrcodes = $this->service->list();
         return QrcodeResource::collection($qrcodes);
     }
 
     public function show($id)
     {
-        $qrcode = $this->service->getById($id);
+        $qrcode = $this->service->find($id);
 
         if (!$qrcode) {
             return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
@@ -38,7 +38,7 @@ class QrcodeController extends Controller
     public function store(StoreQrcodeRequest $request)
     {
         try {
-            $qrcode = $this->service->create($request->validated());
+            $qrcode = $this->service->store($request->validated());
             return response()->json(new QrcodeResource($qrcode), 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -67,10 +67,12 @@ class QrcodeController extends Controller
     public function destroy($id)
     {
         try {
-            $destroy = $this->service->destroy($id);
-            if (!$destroy) {
+            $deleted = $this->service->delete($id);
+
+            if (!$deleted) {
                 return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
             }
+
             return response()->json(['message' => 'QR Code deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([
