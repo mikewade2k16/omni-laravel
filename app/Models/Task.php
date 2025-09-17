@@ -4,17 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
     use HasFactory;
 
+    // ATENÇÃO AQUI: 'status' foi removido e 'column_id' foi adicionado.
     protected $fillable = [
         'client_id',
         'campaign_id',
         'user_id',
+        'column_id', // ADICIONADO
         'name',
-        'status',
+        // 'status', // REMOVIDO
         'start_date',
         'type_task',
         'number',
@@ -35,7 +39,7 @@ class Task extends Model
         'start_date'     => 'date',
         'due_date'       => 'date',
         'archived'       => 'boolean',
-        'involved_users' => 'array', // se armazenar JSON
+        'involved_users' => 'array',
         'last_started'   => 'datetime',
         'time_spent'     => 'integer',
         'timer_status'   => 'integer',
@@ -63,5 +67,12 @@ class Task extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    /**
+     * NOVO: Uma tarefa tem um histórico de mudanças de coluna.
+     */
+    public function history(): HasMany
+    {
+        return $this->hasMany(ColumnHistory::class);
     }
 }

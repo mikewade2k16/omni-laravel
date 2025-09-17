@@ -23,6 +23,7 @@ class Campaign extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date'   => 'date',
+        'channels'   => 'array',
     ];
 
     /**
