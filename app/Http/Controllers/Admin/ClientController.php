@@ -7,9 +7,32 @@ use App\Http\Requests\Client\StoreClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
 use App\Http\Resources\ClientResource;
 use App\Services\ClientService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse; // Importar JsonResponse para o type-hint
 
+/**
+ * @OA\Schema(
+ * schema="StoreClientRequest",
+ * type="object",
+ * title="Store Client Request",
+ * required={"nome", "email", "cpf", "user_id"},
+ * properties={
+ * @OA\Property(property="nome", type="string", example="João da Silva"),
+ * @OA\Property(property="email", type="string", format="email", example="joao.silva@example.com"),
+ * @OA\Property(property="cpf", type="string", example="123.456.789-10"),
+ * @OA\Property(property="user_id", type="integer", description="ID do usuário responsável", example=1)
+ * }
+ * )
+ *
+ * @OA\Schema(
+ * schema="UpdateClientRequest",
+ * type="object",
+ * title="Update Client Request",
+ * properties={
+ * @OA\Property(property="nome", type="string", example="João da Silva Santos"),
+ * @OA\Property(property="email", type="string", format="email", example="joao.santos@example.com")
+ * }
+ * )
+ */
 class ClientController extends Controller
 {
     protected $service;
@@ -19,53 +42,141 @@ class ClientController extends Controller
         $this->service = $service;
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/admin/clients",
+     * summary="Lista todos os clientes",
+     * tags={"Clients"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(    
+     * response=200,
+     * description="Operação bem-sucedida",
+     * @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Client"))
+     * )
+     * )
+     */
     public function index()
     {
         return ClientResource::collection($this->service->list());
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/admin/clients/{id}",
+     * summary="Busca um cliente pelo ID",
+     * tags={"Clients"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="ID do cliente",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Operação bem-sucedida",
+     * @OA\JsonContent(ref="#/components/schemas/Client")
+     * ),
+     * @OA\Response(response=404, description="Cliente não encontrado")
+     * )
+     */
     public function show($id)
     {
         $client = $this->service->find($id);
         return new ClientResource($client);
     }
 
-    public function store(StoreClientRequest $request)
+    /**
+     * @OA\Post(
+     * path="/api/admin/clients",
+     * summary="Cria um novo cliente",
+     * tags={"Clients"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(ref="#/components/schemas/StoreClientRequest")
+     * ),
+     * @OA\Response(
+     * response=201,
+     * description="Cliente criado com sucesso",
+     * @OA\JsonContent(ref="#/components/schemas/Client")
+     * ),
+     * @OA\Response(response=422, description="Erro de validação")
+     * )
+     */
+    public function store(StoreClientRequest $request): JsonResponse
     {
         try {
             $client = $this->service->store($request->validated());
             return response()->json(new ClientResource($client), 201);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao criar Cliente',
-                'error'   => $e->getMessage()
-            ], 500);
+            return response()->json(['message' => 'Erro ao criar Cliente', 'error' => $e->getMessage()], 500);
         }
     }
 
-    public function update(UpdateClientRequest $request, $id)
+    /**
+     * @OA\Put(
+     * path="/api/admin/clients/{id}",
+     * summary="Atualiza um cliente existente",
+     * tags={"Clients"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(ref="#/components/schemas/UpdateClientRequest")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Cliente atualizado com sucesso",
+     * @OA\JsonContent(ref="#/components/schemas/Client")
+     * ),
+     * @OA\Response(response=404, description="Cliente não encontrado")
+     * )
+     */
+    public function update(UpdateClientRequest $request, $id): JsonResponse
     {
         try {
             $client = $this->service->update($id, $request->validated());
-            return response()->json(new ClientResource($client), 201);
+            // O código de sucesso para update é 200 OK, não 201 Created.
+            return response()->json(new ClientResource($client), 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao atualizar Cliente',
-                'error'   => $e->getMessage()
-            ], 500);
+            return response()->json(['message' => 'Erro ao atualizar Cliente', 'error' => $e->getMessage()], 500);
         }
     }
 
-    public function destroy($id)
+    /**
+     * @OA\Delete(
+     * path="/api/admin/clients/{id}",
+     * summary="Deleta um cliente",
+     * tags={"Clients"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Cliente deletado com sucesso",
+     * @OA\JsonContent(properties={@OA\Property(property="message", type="string", example="Cliente deletado com sucesso.")})
+     * ),
+     * @OA\Response(response=404, description="Cliente não encontrado")
+     * )
+     */
+    public function destroy($id): JsonResponse
     {
         try {
             $this->service->delete($id);
             return response()->json(['message' => 'Cliente deletado com sucesso.']);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao deletar Cliente',
-                'error'   => $e->getMessage()
-            ], 500);
+            return response()->json(['message' => 'Erro ao deletar Cliente', 'error' => $e->getMessage()], 500);
         }
     }
 }
