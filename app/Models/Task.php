@@ -6,7 +6,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany; 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+/**
+ * @OA\Schema(
+ * schema="Task",
+ * type="object",
+ * title="Task",
+ * properties={
+ * @OA\Property(property="id", type="integer"),
+ * @OA\Property(property="name", type="string", description="Nome da tarefa"),
+ * @OA\Property(property="description", type="string", nullable=true, description="Descrição detalhada da tarefa"),
+ * @OA\Property(property="due_date", type="string", format="date", description="Data de vencimento"),
+ * @OA\Property(property="column", ref="#/components/schemas/Column", description="A coluna (status) à qual a tarefa pertence"),
+ * @OA\Property(property="users", type="array", @OA\Items(ref="#/components/schemas/User"), description="Lista de usuários responsáveis pela tarefa"),
+ * @OA\Property(property="involved_users", type="array", @OA\Items(type="integer"), description="Campo legado com IDs dos usuários envolvidos"),
+ * @OA\Property(property="created_at", type="string", format="date-time"),
+ * @OA\Property(property="updated_at", type="string", format="date-time")
+ * }
+ * )
+ */
 class Task extends Model
 {
     use HasFactory;
@@ -72,4 +91,5 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'task_user');
     }
+    
 }

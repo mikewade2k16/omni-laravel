@@ -7,7 +7,28 @@ use App\Services\FilesOmniService;
 use App\Http\Requests\FilesOmni\StoreFilesOmniRequest;
 use App\Http\Requests\FilesOmni\UpdateFilesOmniRequest;
 use App\Http\Resources\FilesOmniResource;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * @OA\Schema(
+ * schema="StoreFilesOmniRequest",
+ * required={"client_id", "uploaded_by", "file_path", "file_name", "file_type"},
+ * @OA\Property(property="client_id", type="integer", example=1),
+ * @OA\Property(property="task_id", type="integer", example=1, nullable=true),
+ * @OA\Property(property="uploaded_by", type="integer", example=1),
+ * @OA\Property(property="file_path", type="string", example="uploads/clients/file123.pdf"),
+ * @OA\Property(property="file_name", type="string", example="contrato.pdf"),
+ * @OA\Property(property="file_type", type="string", example="application/pdf"),
+ * @OA\Property(property="version", type="integer", example=1),
+ * @OA\Property(property="published", type="boolean", example=true)
+ * )
+ *
+ * @OA\Schema(
+ * schema="UpdateFilesOmniRequest",
+ * @OA\Property(property="file_name", type="string", example="contrato_assinado.pdf"),
+ * @OA\Property(property="published", type="boolean", example=false)
+ * )
+ */
 class FilesOmniController extends Controller
 {
     protected $service;
@@ -17,22 +38,53 @@ class FilesOmniController extends Controller
         $this->service = $service;
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/admin/files-omnis",
+     * summary="Lista todos os arquivos",
+     * tags={"Files Omni"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(response=200, description="Sucesso", @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/FilesOmni")))
+     * )
+     */
     public function index()
     {
         return FilesOmniResource::collection($this->service->list());
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/admin/files-omnis/{id}",
+     * summary="Busca um arquivo pelo ID",
+     * tags={"Files Omni"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Sucesso", @OA\JsonContent(ref="#/components/schemas/FilesOmni")),
+     * @OA\Response(response=404, description="Arquivo não encontrado")
+     * )
+     */
     public function show($id)
     {
         $file = $this->service->find($id);
         return new FilesOmniResource($file);
     }
 
-    public function store(StoreFilesOmniRequest $request)
+    /**
+     * @OA\Post(
+     * path="/api/admin/files-omnis",
+     * summary="Cria um novo registro de arquivo",
+     * tags={"Files Omni"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/StoreFilesOmniRequest")),
+     * @OA\Response(response=201, description="Criado com sucesso", @OA\JsonContent(ref="#/components/schemas/FilesOmni")),
+     * @OA\Response(response=422, description="Erro de validação")
+     * )
+     */
+    public function store(StoreFilesOmniRequest $request): JsonResponse
     {
         try {
             $file = $this->service->store($request->validated());
-            return response()->json($file, 201);
+            return response()->json(new FilesOmniResource($file), 201);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao criar arquivo',
@@ -41,11 +93,23 @@ class FilesOmniController extends Controller
         }
     }
 
-    public function update(UpdateFilesOmniRequest $request, $id)
+    /**
+     * @OA\Put(
+     * path="/api/admin/files-omnis/{id}",
+     * summary="Atualiza um registro de arquivo",
+     * tags={"Files Omni"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/UpdateFilesOmniRequest")),
+     * @OA\Response(response=200, description="Atualizado com sucesso", @OA\JsonContent(ref="#/components/schemas/FilesOmni")),
+     * @OA\Response(response=404, description="Arquivo não encontrado")
+     * )
+     */
+    public function update(UpdateFilesOmniRequest $request, $id): JsonResponse
     {
         try {
             $file = $this->service->update($id, $request->validated());
-            return response()->json($file, 200);
+            return response()->json(new FilesOmniResource($file), 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao atualizar arquivo',
@@ -54,7 +118,18 @@ class FilesOmniController extends Controller
         }
     }
 
-    public function destroy($id)
+    /**
+     * @OA\Delete(
+     * path="/api/admin/files-omnis/{id}",
+     * summary="Deleta um registro de arquivo",
+     * tags={"Files Omni"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Deletado com sucesso"),
+     * @OA\Response(response=404, description="Arquivo não encontrado")
+     * )
+     */
+    public function destroy($id): JsonResponse
     {
         try {
             $this->service->delete($id);

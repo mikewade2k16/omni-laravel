@@ -6,11 +6,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; 
+use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable implements JWTSubject 
+/**
+ * @OA\Schema(
+ * schema="User",
+ * type="object",
+ * title="User",
+ * properties={
+ * @OA\Property(property="id", type="integer"),
+ * @OA\Property(property="name", type="string"),
+ * @OA\Property(property="email", type="string", format="email"),
+ * @OA\Property(property="nick", type="string"),
+ * @OA\Property(property="status", type="string"),
+ * @OA\Property(property="user_type", type="string"),
+ * @OA\Property(property="created_at", type="string", format="date-time"),
+ * @OA\Property(property="updated_at", type="string", format="date-time")
+ * }
+ * )
+ */
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
