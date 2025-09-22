@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @OA\Schema(
@@ -23,7 +24,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @OA\Property(property="status", type="string"),
  * @OA\Property(property="user_type", type="string"),
  * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time")
+ * @OA\Property(property="updated_at", type="string", format="date-time"),
+ * @OA\Property(property="projects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Projetos criados pelo usuário"),
+ * @OA\Property(property="accessibleProjects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Projetos que o usuário tem acesso"),
+ * @OA\Property(property="tasks", type="array", @OA\Items(ref="#/components/schemas/Task"), description="Tarefas pelas quais o usuário é responsável")
  * }
  * )
  */
@@ -86,6 +90,26 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
     
+
+    /**
+     * Os projetos que este usuário criou.
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    /**
+     * Os projetos aos quais o usuário tem acesso (como membro).
+     */
+    public function accessibleProjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_user');
+    }
+
+    /**
+     * As tarefas pelas quais o usuário é responsável.
+     */
     public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_user');

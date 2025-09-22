@@ -8,6 +8,7 @@ use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
+use App\Models\Project;
 
 /**
  * @OA\Schema(
@@ -16,13 +17,17 @@ use Illuminate\Http\JsonResponse;
  * @OA\Property(property="client_id", type="integer", example=1),
  * @OA\Property(property="name", type="string", example="Novo Projeto de Marketing"),
  * @OA\Property(property="status", type="string", example="not_started"),
- * @OA\Property(property="description", type="string", example="Descrição detalhada do projeto.")
+ * @OA\Property(property="description", type="string", example="Descrição detalhada do projeto."),
+ * @OA\Property(property="visibility", type="string", enum={"public", "private"}, example="private"),
+ * @OA\Property(property="members", type="array", @OA\Items(type="integer"), example={1, 2})
  * )
  *
  * @OA\Schema(
  * schema="UpdateProjectRequest",
  * @OA\Property(property="name", type="string", example="Projeto de Marketing Atualizado"),
- * @OA\Property(property="status", type="string", example="completed")
+ * @OA\Property(property="status", type="string", example="completed"),
+ * @OA\Property(property="visibility", type="string", enum={"public", "private"}, example="public"),
+ * @OA\Property(property="members", type="array", @OA\Items(type="integer"), example={1, 3})
  * )
  */
 class ProjectController extends Controller
@@ -63,6 +68,7 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = $this->service->find($id);
+        $this->authorize('view', $project); // ✅ VERIFICA A PERMISSÃO
         return new ProjectResource($project);
     }
 
@@ -79,6 +85,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request): JsonResponse
     {
+        $this->authorize('create', Project::class);
         try {
             $project = $this->service->store($request->validated());
             return response()->json(new ProjectResource($project), 201);
@@ -101,6 +108,8 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, $id): JsonResponse
     {
+        $project = Project::findOrFail($id);
+        $this->authorize('update', $project);
         try {
             $project = $this->service->update($id, $request->validated());
             return response()->json(new ProjectResource($project), 200);
@@ -122,6 +131,8 @@ class ProjectController extends Controller
      */
     public function destroy($id): JsonResponse
     {
+        $project = Project::findOrFail($id); 
+        $this->authorize('delete', $project);
         try {
             $this->service->delete($id);
             return response()->json(['message' => 'Projeto deletado com sucesso.']);

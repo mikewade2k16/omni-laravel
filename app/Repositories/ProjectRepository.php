@@ -3,13 +3,27 @@
 namespace App\Repositories;
 
 use App\Models\Project;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectRepository
 {
     public function list()
     {
-        // Mantemos simples para a listagem geral
-        return Project::orderBy('name', 'asc')->get();
+        $user = Auth::user();
+
+        return Project::with(['creator', 'members'])
+            ->where('visibility', 'public')
+            ->orWhere(function ($query) use ($user) {
+                $query->where('visibility', 'private')
+                      ->where(function ($q) use ($user) {
+                          $q->where('user_id', $user->id) 
+                            ->orWhereHas('members', function ($subQ) use ($user) {
+                                $subQ->where('user_id', $user->id);
+                            });
+                      });
+            })
+            ->orderBy('name', 'asc')
+            ->get();
     }
 
     public function store(array $data)
@@ -19,8 +33,7 @@ class ProjectRepository
 
     public function find($id)
     {
-        // ✅ AQUI ESTÁ A MUDANÇA: Carregamos as colunas junto com o projeto.
-        return Project::with('columns')->findOrFail($id);
+        return Project::with(['columns', 'creator', 'members'])->findOrFail($id);
     }
 
     public function update($id, array $data)

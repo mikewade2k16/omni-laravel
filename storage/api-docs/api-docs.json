@@ -3549,6 +3549,24 @@
                     "description": {
                         "type": "string",
                         "example": "Descrição detalhada do projeto."
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private"
+                        ],
+                        "example": "private"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ]
                     }
                 },
                 "type": "object"
@@ -3562,6 +3580,24 @@
                     "status": {
                         "type": "string",
                         "example": "completed"
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private"
+                        ],
+                        "example": "public"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            3
+                        ]
                     }
                 },
                 "type": "object"
@@ -4153,11 +4189,23 @@
                     "id": {
                         "type": "integer"
                     },
+                    "user_id": {
+                        "description": "ID do usuário que criou o projeto",
+                        "type": "integer"
+                    },
                     "client_id": {
                         "type": "integer"
                     },
                     "name": {
                         "type": "string"
+                    },
+                    "visibility": {
+                        "description": "Visibilidade do projeto",
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private"
+                        ]
                     },
                     "status": {
                         "type": "string",
@@ -4183,6 +4231,13 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Column"
+                        }
+                    },
+                    "members": {
+                        "description": "Usuários que têm acesso ao projeto",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
                         }
                     }
                 },
@@ -4443,6 +4498,27 @@
                     "updated_at": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "projects": {
+                        "description": "Projetos criados pelo usuário",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Project"
+                        }
+                    },
+                    "accessibleProjects": {
+                        "description": "Projetos que o usuário tem acesso",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Project"
+                        }
+                    },
+                    "tasks": {
+                        "description": "Tarefas pelas quais o usuário é responsável",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Task"
+                        }
                     }
                 },
                 "type": "object"
