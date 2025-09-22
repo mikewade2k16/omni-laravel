@@ -6,6 +6,158 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Autentica um usuário e retorna um token",
+                "operationId": "a871fffd623cec921ae2402ed39073d4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado (credenciais inválidas)"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Registra um novo usuário (requer autenticação)",
+                "operationId": "0f590e5509bbfe84ec316f6d1fbf127f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário registrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Desconecta o usuário (invalida o token)",
+                "operationId": "09065a38576bef522e8d1e034e934f6f",
+                "responses": {
+                    "200": {
+                        "description": "Desconectado com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Atualiza um token expirado",
+                "operationId": "abe884a1ee783cff5c8bab1f13b08971",
+                "responses": {
+                    "200": {
+                        "description": "Token atualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Retorna os dados do usuário autenticado",
+                "operationId": "70e7e6544dfe8375708bed63ac1ae549",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/campaigns": {
             "get": {
                 "tags": [
@@ -1676,6 +1828,552 @@
                 ]
             }
         },
+        "/api/admin/qrcodes": {
+            "get": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Lista todos os QR Codes",
+                "operationId": "d0283602bb6155df3b756cc8f8f007ed",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Qrcode"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Cria um novo QR Code",
+                "operationId": "ad8f1ec475c06a6427f7a9a6cf0cb313",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreQrcodeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Qrcode"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/qrcodes/{id}": {
+            "get": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Busca um QR Code pelo ID",
+                "operationId": "6362f619e646ef291ef358f87d1312ac",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Qrcode"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "QR Code não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Atualiza um QR Code",
+                "operationId": "45f58e37848617c635c565bf6469f07f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateQrcodeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Qrcode"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "QR Code não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Deleta um QR Code",
+                "operationId": "9d919325aeb6ffe4c493ea51b49e28f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "QR Code não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/short-links": {
+            "get": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Lista todos os links curtos",
+                "operationId": "4accbe1f143b891ab9c616f54ade95db",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShortLink"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Cria um novo link curto",
+                "operationId": "a01442605eba497af7d8357de949ba01",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreShortLinkRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShortLink"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/short-links/{id}": {
+            "get": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Busca um link curto pelo ID",
+                "operationId": "11543b4b363b595eff8ed753bcb41354",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShortLink"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Link curto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Atualiza um link curto",
+                "operationId": "8d34149023c7e685c3ff757cd01aa146",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateShortLinkRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShortLink"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Link curto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Deleta um link curto",
+                "operationId": "7cf3a3790afdbf90a9b718b18f485e10",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Link curto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/site-zen": {
+            "get": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Lista todos os registros de métricas do Site Zen",
+                "operationId": "11a5d4a41a82374f03a827027c265a8c",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SiteZen"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Cria um novo registro de métrica",
+                "operationId": "fbdfcc67ed8bdd5229729adf00b40cdb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSiteZenRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SiteZen"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/site-zen/{id}": {
+            "get": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Busca um registro de métrica pelo ID",
+                "operationId": "327515f4bb0cd4caccccdb408bfa3fae",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SiteZen"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Atualiza um registro de métrica",
+                "operationId": "14da63367f508edcab2607371be809db",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSiteZenRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SiteZen"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Deleta um registro de métrica",
+                "operationId": "7650420321db45a59184cd6ec16997fe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/tasks": {
             "get": {
                 "tags": [
@@ -2221,10 +2919,270 @@
                     }
                 ]
             }
+        },
+        "/api/admin/user-projects": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Lista todas as associações entre usuários e projetos",
+                "operationId": "d594ef839e734b0a3f9d6228667bff49",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserProject"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Cria uma nova associação entre usuário e projeto",
+                "operationId": "06380d175afefe3b973ff2f294dc6068",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserProjectRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProject"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/user-projects/{id}": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Busca uma associação pelo ID",
+                "operationId": "3ef55a291bc555aa733b8f0f878a3a23",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProject"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Atualiza uma associação (não comum, geralmente se deleta e cria)",
+                "operationId": "fe1495c8dd712623f62295f498a35308",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserProjectRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProject"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Deleta uma associação entre usuário e projeto",
+                "operationId": "2948c1ef75f890469527dcc066f9ca20",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "LoginRequest": {
+                "title": "Login Request",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@admin.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResponse": {
+                "title": "Authentication Response",
+                "properties": {
+                    "access_token": {
+                        "description": "O token de acesso JWT",
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
+                    },
+                    "expires_in": {
+                        "description": "Tempo de expiração do token em segundos",
+                        "type": "integer",
+                        "example": 3600
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "title": "Register Request",
+                "required": [
+                    "name",
+                    "nick",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Edson Oliveira"
+                    },
+                    "nick": {
+                        "type": "string",
+                        "example": "edinho"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "edson@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    }
+                },
+                "type": "object"
+            },
             "StoreCampaignRequest": {
                 "required": [
                     "client_id",
@@ -2608,6 +3566,125 @@
                 },
                 "type": "object"
             },
+            "StoreQrcodeRequest": {
+                "required": [
+                    "target_url"
+                ],
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://seusite.com/pagina-de-destino"
+                    },
+                    "slug": {
+                        "description": "Opcional. Se não enviado, um slug único será gerado",
+                        "type": "string",
+                        "example": "promo-verao-25"
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateQrcodeRequest": {
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://seusite.com/nova-pagina"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
+            "StoreShortLinkRequest": {
+                "required": [
+                    "target_url"
+                ],
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/landing-page"
+                    },
+                    "slug": {
+                        "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
+                        "type": "string",
+                        "example": "promo-natal"
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateShortLinkRequest": {
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/nova-landing-page"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreSiteZenRequest": {
+                "required": [
+                    "mes",
+                    "visitas",
+                    "compras"
+                ],
+                "properties": {
+                    "mes": {
+                        "type": "string",
+                        "example": "Fevereiro"
+                    },
+                    "visitas": {
+                        "type": "integer",
+                        "example": 18000
+                    },
+                    "compras": {
+                        "type": "integer",
+                        "example": 450
+                    },
+                    "taxa_conversao": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 3.1
+                    },
+                    "ticket_medio": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 180
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateSiteZenRequest": {
+                "properties": {
+                    "visitas": {
+                        "type": "integer",
+                        "example": 18500
+                    },
+                    "compras": {
+                        "type": "integer",
+                        "example": 470
+                    }
+                },
+                "type": "object"
+            },
             "StoreTaskRequest": {
                 "required": [
                     "name",
@@ -2741,6 +3818,23 @@
                     "status": {
                         "type": "string",
                         "example": "inactive"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserProjectRequest": {
+                "required": [
+                    "user_id",
+                    "project_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "project_id": {
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "type": "object"
@@ -3094,6 +4188,154 @@
                 },
                 "type": "object"
             },
+            "Qrcode": {
+                "title": "QR Code",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "slug": {
+                        "description": "Identificador único para a URL do QR Code",
+                        "type": "string"
+                    },
+                    "target_url": {
+                        "description": "A URL de destino para onde o QR Code aponta",
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "scan_count": {
+                        "description": "Número de vezes que o QR Code foi escaneado",
+                        "type": "integer"
+                    },
+                    "last_scanned_at": {
+                        "description": "Data e hora do último escaneamento",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "qr_image_path": {
+                        "description": "Caminho para a imagem gerada do QR Code",
+                        "type": "string"
+                    },
+                    "is_active": {
+                        "description": "Indica se o QR Code está ativo",
+                        "type": "boolean"
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "created_by": {
+                        "description": "ID do usuário que criou o QR Code",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ShortLink": {
+                "title": "Short Link",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "slug": {
+                        "description": "O código curto gerado para o link",
+                        "type": "string"
+                    },
+                    "target_url": {
+                        "description": "A URL de destino original",
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "short_url": {
+                        "description": "A URL encurtada completa",
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "hits": {
+                        "description": "Número de cliques que o link recebeu",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "SiteZen": {
+                "title": "Site Zen Analytics",
+                "description": "Modelo que representa as métricas mensais de um site",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "mes": {
+                        "type": "string",
+                        "example": "Janeiro"
+                    },
+                    "visitas": {
+                        "type": "integer",
+                        "example": 15000
+                    },
+                    "compras": {
+                        "type": "integer",
+                        "example": 300
+                    },
+                    "taxa_conversao": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2.5
+                    },
+                    "ticket_medio": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 150.75
+                    },
+                    "receita_total": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 45225
+                    },
+                    "produtos_mais_vistos": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "Produto A",
+                            "Produto B"
+                        ]
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
             "Task": {
                 "title": "Task",
                 "properties": {
@@ -3204,6 +4446,32 @@
                     }
                 },
                 "type": "object"
+            },
+            "UserProject": {
+                "title": "User Project Association",
+                "description": "Modelo que representa a ligação entre um usuário e um projeto",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "description": "ID do usuário",
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "description": "ID do projeto",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -3215,6 +4483,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
         {
             "name": "Campaigns",
             "description": "Campaigns"
@@ -3252,6 +4524,18 @@
             "description": "Projects"
         },
         {
+            "name": "QR Codes",
+            "description": "QR Codes"
+        },
+        {
+            "name": "Short Links",
+            "description": "Short Links"
+        },
+        {
+            "name": "Site Zen",
+            "description": "Site Zen"
+        },
+        {
             "name": "Tasks",
             "description": "Tasks"
         },
@@ -3262,6 +4546,10 @@
         {
             "name": "Users",
             "description": "Users"
+        },
+        {
+            "name": "User Projects",
+            "description": "User Projects"
         }
     ]
 }
