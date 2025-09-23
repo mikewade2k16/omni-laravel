@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ShortLinkController;
 use App\Http\Controllers\Admin\SiteZenController;
 use App\Http\Controllers\Admin\ColumnController;
 use App\Http\Controllers\Admin\ColumnHistoryController;
+use App\Http\Controllers\Admin\ProjectPreferenceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -111,6 +112,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('projects/{id}', [ProjectController::class, 'show']);
         Route::put('projects/{id}', [ProjectController::class, 'update']);
         Route::delete('projects/{id}', [ProjectController::class, 'destroy']);
+
+        Route::put('admin/projects/{project}/preferences', [ProjectPreferenceController::class, 'update']);
 
         // Rotas para UserProjects
         Route::get('user-projects', [UserProjectController::class, 'index']);
