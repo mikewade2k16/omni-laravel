@@ -1,0 +1,4631 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Omni - Documentação da API",
+        "description": "Documentação de todos os endpoints da API do sistema Omni.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Autentica um usuário e retorna um token",
+                "operationId": "a871fffd623cec921ae2402ed39073d4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado (credenciais inválidas)"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Registra um novo usuário (requer autenticação)",
+                "operationId": "0f590e5509bbfe84ec316f6d1fbf127f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário registrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Desconecta o usuário (invalida o token)",
+                "operationId": "09065a38576bef522e8d1e034e934f6f",
+                "responses": {
+                    "200": {
+                        "description": "Desconectado com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Atualiza um token expirado",
+                "operationId": "abe884a1ee783cff5c8bab1f13b08971",
+                "responses": {
+                    "200": {
+                        "description": "Token atualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Retorna os dados do usuário autenticado",
+                "operationId": "70e7e6544dfe8375708bed63ac1ae549",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/campaigns": {
+            "get": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Lista todas as campanhas",
+                "operationId": "c0afa54514fef4f26351e42963ea64cf",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Campaign"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Cria uma nova campanha",
+                "operationId": "919b424d5a7176e3f465acbc2ab867e5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCampaignRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/campaigns/{id}": {
+            "get": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Busca uma campanha pelo ID",
+                "operationId": "a8b69cd0e43f001a87e498c21cfa1dc5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Campanha não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Atualiza uma campanha",
+                "operationId": "cf3944f8f10e11f962dfdbbee17ad36a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCampaignRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Campanha não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Deleta uma campanha",
+                "operationId": "da3f681da5a10aa65845cccedc003c4b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Campanha não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/clients": {
+            "get": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Lista todos os clientes",
+                "operationId": "6f606ceba2fad5c8ee58c894625ffdd9",
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Client"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Cria um novo cliente",
+                "operationId": "851e35194d1e3b81037bdc5b287bb338",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreClientRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Client"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/clients/{id}": {
+            "get": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Busca um cliente pelo ID",
+                "operationId": "593c12d3d04096cc17a8e244177eef9c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Client"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Atualiza um cliente existente",
+                "operationId": "21a18c9416c17f56db96645c7bd5bc6a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateClientRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Client"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Deleta um cliente",
+                "operationId": "329a212c464c3210a41934aa82da141e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cliente deletado com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/collections": {
+            "get": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Lista todas as coleções",
+                "operationId": "8e76c986c49f998da6ed83b146f38072",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Collection"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Cria uma nova coleção",
+                "operationId": "3239fa1a71f0eb35ff0b2018c2f58ce5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCollectionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Collection"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/collections/{id}": {
+            "get": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Busca uma coleção pelo ID",
+                "operationId": "7e5f174d68d28530f5ed08ef7ab7b9e0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Collection"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Coleção não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Atualiza uma coleção",
+                "operationId": "2c44a856324b0d24a5712804b8cf67df",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCollectionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Collection"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Coleção não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Collections"
+                ],
+                "summary": "Deleta uma coleção",
+                "operationId": "2cc70dd529750ec0db88244ab51b3b1c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Coleção não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/collection-items": {
+            "get": {
+                "tags": [
+                    "Collection Items"
+                ],
+                "summary": "Lista todos os itens de coleções",
+                "operationId": "6899940d1074535455ae2609f8b198d4",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CollectionItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Collection Items"
+                ],
+                "summary": "Cria um novo item de coleção",
+                "operationId": "ea8c65060114121ef1ac84939aae3c8e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCollectionItemRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CollectionItem"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/collection-items/{id}": {
+            "get": {
+                "tags": [
+                    "Collection Items"
+                ],
+                "summary": "Busca um item de coleção pelo ID",
+                "operationId": "90f3dd1a667122c349d122023726c1d0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CollectionItem"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Item não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Collection Items"
+                ],
+                "summary": "Atualiza um item de coleção",
+                "operationId": "a8b5d129b04b326d8d85628ae463950b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCollectionItemRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CollectionItem"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Item não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Collection Items"
+                ],
+                "summary": "Deleta um item de coleção",
+                "operationId": "f4a8783a3992883b739ffe4251fa2979",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Item não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/collection-views": {
+            "get": {
+                "tags": [
+                    "Collection Views"
+                ],
+                "summary": "Lista todas as visualizações de coleção",
+                "operationId": "1147db05fd3c94782432d8903cbc453d",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CollectionView"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Collection Views"
+                ],
+                "summary": "Cria uma nova visualização de coleção",
+                "operationId": "5c64be431aa5fbad80eda7f179d75301",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCollectionViewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CollectionView"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/collection-views/{id}": {
+            "get": {
+                "tags": [
+                    "Collection Views"
+                ],
+                "summary": "Busca uma visualização pelo ID",
+                "operationId": "82cb46ec42f990e670b5a62c30f8e03e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CollectionView"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Visualização não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Collection Views"
+                ],
+                "summary": "Atualiza uma visualização de coleção",
+                "operationId": "41fd04fdb3b44c3574e0a4b2bb46841c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCollectionViewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CollectionView"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Visualização não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Collection Views"
+                ],
+                "summary": "Deleta uma visualização de coleção",
+                "operationId": "bf06ebd27932e98e4195a3c1723d46d8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Visualização não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/columns": {
+            "get": {
+                "tags": [
+                    "Columns"
+                ],
+                "summary": "Lista todas as colunas",
+                "operationId": "bcff18480617037aca636368f02e964c",
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Column"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Columns"
+                ],
+                "summary": "Cria uma nova coluna",
+                "operationId": "387dc8dc2d443fbaa9ce5583e19a01d3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreColumnRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Coluna criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Column"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/columns/{id}": {
+            "get": {
+                "tags": [
+                    "Columns"
+                ],
+                "summary": "Busca uma coluna pelo ID",
+                "operationId": "2f5b573ae5bc28604694f99a4654e1c2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da coluna",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Column"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Coluna não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Columns"
+                ],
+                "summary": "Atualiza uma coluna existente",
+                "operationId": "670996cb51c845926ee264349f70852f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da coluna a ser atualizada",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateColumnRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Coluna atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Column"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Coluna não encontrada"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Columns"
+                ],
+                "summary": "Deleta uma coluna",
+                "operationId": "4325f3718107d1a06f82caf1c622d048",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da coluna a ser deletada",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Coluna deletada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Coluna não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/column-histories": {
+            "get": {
+                "tags": [
+                    "Column Histories"
+                ],
+                "summary": "Lista todos os históricos de mudança de coluna",
+                "operationId": "5191c1f90525ad17d8e18232faf390f6",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ColumnHistory"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Column Histories"
+                ],
+                "summary": "Cria um novo registro de histórico",
+                "operationId": "c1ce0ab35a29c0f75b084043dd6d4689",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreColumnHistoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ColumnHistory"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/column-histories/{id}": {
+            "get": {
+                "tags": [
+                    "Column Histories"
+                ],
+                "summary": "Busca um registro de histórico pelo ID",
+                "operationId": "7996b60f1a5f790d27d4cf80ed22db56",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ColumnHistory"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Column Histories"
+                ],
+                "summary": "Atualiza um registro de histórico",
+                "operationId": "2bb62b688c4dbd44eed4e1e38c296629",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateColumnHistoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ColumnHistory"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Column Histories"
+                ],
+                "summary": "Deleta um registro de histórico",
+                "operationId": "dcf62749e84e5a42096df5f5f1a040fa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/files-omnis": {
+            "get": {
+                "tags": [
+                    "Files Omni"
+                ],
+                "summary": "Lista todos os arquivos",
+                "operationId": "a0ed84a3db126fda85b61b05616c5b3b",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FilesOmni"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Files Omni"
+                ],
+                "summary": "Cria um novo registro de arquivo",
+                "operationId": "3b939cbae11e24467d17d9958e15cd8d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreFilesOmniRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FilesOmni"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/files-omnis/{id}": {
+            "get": {
+                "tags": [
+                    "Files Omni"
+                ],
+                "summary": "Busca um arquivo pelo ID",
+                "operationId": "a0d7efd1cc09b8667b518ce3d95c6b2e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FilesOmni"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Arquivo não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Files Omni"
+                ],
+                "summary": "Atualiza um registro de arquivo",
+                "operationId": "a545de7d1b23661f840898237140ceef",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateFilesOmniRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FilesOmni"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Arquivo não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Files Omni"
+                ],
+                "summary": "Deleta um registro de arquivo",
+                "operationId": "579ae5286c389cd9375d246424344718",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Arquivo não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/projects": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Lista todos os projetos",
+                "operationId": "c1725e676a2c746e33b7655c04753e65",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Project"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Cria um novo projeto",
+                "operationId": "0b4e209628531c3d1e5bb311f33eae3d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProjectRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Project"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/projects/{id}": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Busca um projeto pelo ID",
+                "operationId": "0402daefb5f33d9b093b69c31c214eeb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Project"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Projeto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Atualiza um projeto",
+                "operationId": "84252f77768bb1c5ddbec6c5a83bbfed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProjectRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Project"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Projeto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Deleta um projeto",
+                "operationId": "27b2bd54546aec83fa51ef03cfc604b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Projeto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/qrcodes": {
+            "get": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Lista todos os QR Codes",
+                "operationId": "d0283602bb6155df3b756cc8f8f007ed",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Qrcode"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Cria um novo QR Code",
+                "operationId": "ad8f1ec475c06a6427f7a9a6cf0cb313",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreQrcodeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Qrcode"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/qrcodes/{id}": {
+            "get": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Busca um QR Code pelo ID",
+                "operationId": "6362f619e646ef291ef358f87d1312ac",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Qrcode"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "QR Code não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Atualiza um QR Code",
+                "operationId": "45f58e37848617c635c565bf6469f07f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateQrcodeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Qrcode"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "QR Code não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "QR Codes"
+                ],
+                "summary": "Deleta um QR Code",
+                "operationId": "9d919325aeb6ffe4c493ea51b49e28f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "QR Code não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/short-links": {
+            "get": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Lista todos os links curtos",
+                "operationId": "4accbe1f143b891ab9c616f54ade95db",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShortLink"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Cria um novo link curto",
+                "operationId": "a01442605eba497af7d8357de949ba01",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreShortLinkRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShortLink"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/short-links/{id}": {
+            "get": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Busca um link curto pelo ID",
+                "operationId": "11543b4b363b595eff8ed753bcb41354",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShortLink"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Link curto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Atualiza um link curto",
+                "operationId": "8d34149023c7e685c3ff757cd01aa146",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateShortLinkRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShortLink"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Link curto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Short Links"
+                ],
+                "summary": "Deleta um link curto",
+                "operationId": "7cf3a3790afdbf90a9b718b18f485e10",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Link curto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/site-zen": {
+            "get": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Lista todos os registros de métricas do Site Zen",
+                "operationId": "11a5d4a41a82374f03a827027c265a8c",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SiteZen"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Cria um novo registro de métrica",
+                "operationId": "fbdfcc67ed8bdd5229729adf00b40cdb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSiteZenRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SiteZen"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/site-zen/{id}": {
+            "get": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Busca um registro de métrica pelo ID",
+                "operationId": "327515f4bb0cd4caccccdb408bfa3fae",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SiteZen"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Atualiza um registro de métrica",
+                "operationId": "14da63367f508edcab2607371be809db",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSiteZenRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SiteZen"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Site Zen"
+                ],
+                "summary": "Deleta um registro de métrica",
+                "operationId": "7650420321db45a59184cd6ec16997fe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/tasks": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Lista todas as tarefas",
+                "operationId": "9de42f2b8d37bba0fd3da4662286a694",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Task"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Cria uma nova tarefa",
+                "operationId": "ae174f78952ad8ebd0e472efe140401a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreTaskRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Task"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/tasks/{id}": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Busca uma tarefa pelo ID",
+                "operationId": "94dc18af69839655cd1780f1ce4b69bd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Task"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Atualiza uma tarefa",
+                "operationId": "f62782e3361db84c6ee7c387990fa2be",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTaskRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Task"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Deleta uma tarefa",
+                "operationId": "4c2257216f878742b97ab75c03c4a6e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/trackings": {
+            "get": {
+                "tags": [
+                    "Trackings"
+                ],
+                "summary": "Lista todos os registros de tracking",
+                "operationId": "8c61fd758e5d35d05aa93362939ab866",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Tracking"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Trackings"
+                ],
+                "summary": "Cria um novo registro de tracking",
+                "operationId": "85a36d594273d0a43902ea109d944512",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreTrackingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Tracking"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/trackings/{id}": {
+            "get": {
+                "tags": [
+                    "Trackings"
+                ],
+                "summary": "Busca um registro de tracking pelo ID",
+                "operationId": "9727db6a75244185e8a239f78bf608fd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Tracking"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Trackings"
+                ],
+                "summary": "Atualiza um registro de tracking",
+                "operationId": "37bb97198f967aa7320644c61106adcd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreTrackingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Tracking"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Trackings"
+                ],
+                "summary": "Deleta um registro de tracking",
+                "operationId": "76503cf6eeec6377d86abc1be6ffae07",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Lista todos os usuários",
+                "operationId": "2979f0297ab881ad0b8b86ee613f077b",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Cria um novo usuário",
+                "operationId": "7601d6cfa9768b3857d0e58d45eb618b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Busca um usuário pelo ID",
+                "operationId": "bc1bd7b0a9c5c03d14165e230c9b74a1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Atualiza um usuário",
+                "operationId": "a13246ab4f01cf3913b77f7d4520bbd7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Deleta um usuário",
+                "operationId": "edba4ea5d13c283794da36b1eb31b2fd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/user-projects": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Lista todas as associações entre usuários e projetos",
+                "operationId": "d594ef839e734b0a3f9d6228667bff49",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserProject"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Cria uma nova associação entre usuário e projeto",
+                "operationId": "06380d175afefe3b973ff2f294dc6068",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserProjectRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProject"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/user-projects/{id}": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Busca uma associação pelo ID",
+                "operationId": "3ef55a291bc555aa733b8f0f878a3a23",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProject"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Atualiza uma associação (não comum, geralmente se deleta e cria)",
+                "operationId": "fe1495c8dd712623f62295f498a35308",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserProjectRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProject"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Deleta uma associação entre usuário e projeto",
+                "operationId": "2948c1ef75f890469527dcc066f9ca20",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginRequest": {
+                "title": "Login Request",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@admin.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResponse": {
+                "title": "Authentication Response",
+                "properties": {
+                    "access_token": {
+                        "description": "O token de acesso JWT",
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
+                    },
+                    "expires_in": {
+                        "description": "Tempo de expiração do token em segundos",
+                        "type": "integer",
+                        "example": 3600
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "title": "Register Request",
+                "required": [
+                    "name",
+                    "nick",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Edson Oliveira"
+                    },
+                    "nick": {
+                        "type": "string",
+                        "example": "edinho"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "edson@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreCampaignRequest": {
+                "required": [
+                    "client_id",
+                    "name",
+                    "start_date",
+                    "end_date"
+                ],
+                "properties": {
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Campanha de Verão"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Descrição da campanha de verão."
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-01-30"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-02-28"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "channels": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "facebook",
+                            "instagram"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateCampaignRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Nova Campanha de Verão"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreClientRequest": {
+                "title": "Store Client Request",
+                "required": [
+                    "nome",
+                    "email",
+                    "cpf",
+                    "user_id"
+                ],
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "João da Silva"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "joao.silva@example.com"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "123.456.789-10"
+                    },
+                    "user_id": {
+                        "description": "ID do usuário responsável",
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateClientRequest": {
+                "title": "Update Client Request",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "João da Silva Santos"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "joao.santos@example.com"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreCollectionRequest": {
+                "required": [
+                    "name",
+                    "slug",
+                    "owner_id"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Leads do Site"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "leads-site"
+                    },
+                    "owner_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "example": "private"
+                    },
+                    "agency_access": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "schema_json": {
+                        "type": "object",
+                        "example": {
+                            "campo_email": "email",
+                            "campo_telefone": "tel"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateCollectionRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Leads Qualificados do Site"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreCollectionItemRequest": {
+                "required": [
+                    "collection_id",
+                    "data"
+                ],
+                "properties": {
+                    "collection_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "data": {
+                        "type": "object",
+                        "example": {
+                            "email": "cliente@example.com",
+                            "telefone": "79999999999"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateCollectionItemRequest": {
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "example": {
+                            "email": "novocliente@example.com",
+                            "status_lead": "convertido"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "StoreCollectionViewRequest": {
+                "required": [
+                    "collection_id",
+                    "name",
+                    "type"
+                ],
+                "properties": {
+                    "collection_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Visualização em Tabela"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "table"
+                    },
+                    "config": {
+                        "type": "object",
+                        "example": {
+                            "columns": [
+                                "email",
+                                "telefone",
+                                "status_lead"
+                            ]
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateCollectionViewRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Visualização Kanban de Leads"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreColumnRequest": {
+                "title": "Store Column Request",
+                "required": [
+                    "project_id",
+                    "name"
+                ],
+                "properties": {
+                    "project_id": {
+                        "description": "ID do projeto ao qual a coluna pertence",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Nome da coluna",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateColumnRequest": {
+                "title": "Update Column Request",
+                "properties": {
+                    "name": {
+                        "description": "Novo nome da coluna",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreColumnHistoryRequest": {
+                "required": [
+                    "task_id",
+                    "new_column_id"
+                ],
+                "properties": {
+                    "task_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "old_column_id": {
+                        "description": "ID da coluna antiga",
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "new_column_id": {
+                        "description": "ID da nova coluna",
+                        "type": "integer",
+                        "example": 2
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateColumnHistoryRequest": {
+                "properties": {
+                    "new_column_id": {
+                        "type": "integer",
+                        "example": 3
+                    }
+                },
+                "type": "object"
+            },
+            "StoreFilesOmniRequest": {
+                "required": [
+                    "client_id",
+                    "uploaded_by",
+                    "file_path",
+                    "file_name",
+                    "file_type"
+                ],
+                "properties": {
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "task_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "uploaded_by": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "file_path": {
+                        "type": "string",
+                        "example": "uploads/clients/file123.pdf"
+                    },
+                    "file_name": {
+                        "type": "string",
+                        "example": "contrato.pdf"
+                    },
+                    "file_type": {
+                        "type": "string",
+                        "example": "application/pdf"
+                    },
+                    "version": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "published": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateFilesOmniRequest": {
+                "properties": {
+                    "file_name": {
+                        "type": "string",
+                        "example": "contrato_assinado.pdf"
+                    },
+                    "published": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
+            "StoreProjectRequest": {
+                "required": [
+                    "client_id",
+                    "name",
+                    "status"
+                ],
+                "properties": {
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Novo Projeto de Marketing"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "not_started"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Descrição detalhada do projeto."
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private"
+                        ],
+                        "example": "private"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateProjectRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Projeto de Marketing Atualizado"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "completed"
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private"
+                        ],
+                        "example": "public"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            3
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "StoreQrcodeRequest": {
+                "required": [
+                    "target_url"
+                ],
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://seusite.com/pagina-de-destino"
+                    },
+                    "slug": {
+                        "description": "Opcional. Se não enviado, um slug único será gerado",
+                        "type": "string",
+                        "example": "promo-verao-25"
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateQrcodeRequest": {
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://seusite.com/nova-pagina"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
+            "StoreShortLinkRequest": {
+                "required": [
+                    "target_url"
+                ],
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/landing-page"
+                    },
+                    "slug": {
+                        "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
+                        "type": "string",
+                        "example": "promo-natal"
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateShortLinkRequest": {
+                "properties": {
+                    "target_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/nova-landing-page"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreSiteZenRequest": {
+                "required": [
+                    "mes",
+                    "visitas",
+                    "compras"
+                ],
+                "properties": {
+                    "mes": {
+                        "type": "string",
+                        "example": "Fevereiro"
+                    },
+                    "visitas": {
+                        "type": "integer",
+                        "example": 18000
+                    },
+                    "compras": {
+                        "type": "integer",
+                        "example": 450
+                    },
+                    "taxa_conversao": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 3.1
+                    },
+                    "ticket_medio": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 180
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateSiteZenRequest": {
+                "properties": {
+                    "visitas": {
+                        "type": "integer",
+                        "example": 18500
+                    },
+                    "compras": {
+                        "type": "integer",
+                        "example": 470
+                    }
+                },
+                "type": "object"
+            },
+            "StoreTaskRequest": {
+                "required": [
+                    "name",
+                    "column_id",
+                    "client_id",
+                    "user_id"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Desenvolver API de Pagamentos"
+                    },
+                    "column_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "description": "ID do usuário 'dono' da tarefa",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Integrar com a API do gateway X."
+                    },
+                    "involved_users": {
+                        "description": "Array de IDs dos usuários responsáveis",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateTaskRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "[CONCLUÍDO] Desenvolver API de Pagamentos"
+                    },
+                    "column_id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "involved_users": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "StoreTrackingRequest": {
+                "required": [
+                    "task_id",
+                    "user_id",
+                    "logged_at"
+                ],
+                "properties": {
+                    "task_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "logged_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-09-18 12:00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Edson Oliveira"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "edson.oliveira@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    },
+                    "nick": {
+                        "type": "string",
+                        "example": "edinho"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "user_type": {
+                        "type": "string",
+                        "example": "editor"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateUserRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Edson Oliveira Jr."
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "inactive"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserProjectRequest": {
+                "required": [
+                    "user_id",
+                    "project_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "project_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "Campaign": {
+                "title": "Campaign",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "client_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-01-30"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-02-28"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "channels": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "facebook",
+                            "instagram"
+                        ]
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Client": {
+                "title": "Client",
+                "properties": {
+                    "id": {
+                        "description": "ID do cliente",
+                        "type": "integer"
+                    },
+                    "nome": {
+                        "description": "Nome completo do cliente",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email do cliente",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "cpf": {
+                        "description": "CPF do cliente",
+                        "type": "string"
+                    },
+                    "data_nasc": {
+                        "description": "Data de nascimento (AAAA-MM-DD)",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "contato_1": {
+                        "description": "Telefone de contato principal",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "ID do usuário que cadastrou",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Collection": {
+                "title": "Collection",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Nome da coleção",
+                        "type": "string"
+                    },
+                    "slug": {
+                        "description": "URL amigável da coleção",
+                        "type": "string"
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "owner_id": {
+                        "description": "ID do usuário dono da coleção",
+                        "type": "integer"
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "example": "public"
+                    },
+                    "agency_access": {
+                        "description": "Se a agência tem acesso",
+                        "type": "boolean"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "schema_json": {
+                        "description": "Estrutura JSON dos campos da coleção",
+                        "type": "object"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CollectionItem": {
+                "title": "Collection Item",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "collection_id": {
+                        "type": "integer"
+                    },
+                    "data": {
+                        "description": "Dados flexíveis em formato JSON",
+                        "type": "object"
+                    },
+                    "created_by": {
+                        "description": "ID do usuário que criou o item",
+                        "type": "integer"
+                    },
+                    "updated_by": {
+                        "description": "ID do usuário que atualizou o item",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CollectionView": {
+                "title": "Collection View",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "collection_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Nome da visualização",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Tipo de visualização (ex: 'table', 'kanban')",
+                        "type": "string"
+                    },
+                    "config": {
+                        "description": "Configurações da view em formato JSON",
+                        "type": "object"
+                    },
+                    "created_by": {
+                        "description": "ID do usuário que criou a view",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Column": {
+                "title": "Column",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ColumnHistory": {
+                "title": "Column History",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "task_id": {
+                        "type": "integer"
+                    },
+                    "old_column": {
+                        "$ref": "#/components/schemas/Column"
+                    },
+                    "new_column": {
+                        "$ref": "#/components/schemas/Column"
+                    },
+                    "changed_at": {
+                        "description": "Quando a mudança ocorreu",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "FilesOmni": {
+                "title": "Files Omni",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "task_id": {
+                        "description": "ID da tarefa associada",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado",
+                        "type": "integer"
+                    },
+                    "uploaded_by": {
+                        "description": "ID do usuário que fez o upload",
+                        "type": "integer"
+                    },
+                    "file_path": {
+                        "description": "Caminho do arquivo no storage",
+                        "type": "string"
+                    },
+                    "file_name": {
+                        "description": "Nome original do arquivo",
+                        "type": "string"
+                    },
+                    "file_type": {
+                        "description": "MIME type do arquivo (ex: 'image/jpeg')",
+                        "type": "string"
+                    },
+                    "version": {
+                        "description": "Versão do arquivo",
+                        "type": "integer"
+                    },
+                    "published": {
+                        "description": "Se o arquivo está publicado ou não",
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Project": {
+                "title": "Project",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "description": "ID do usuário que criou o projeto",
+                        "type": "integer"
+                    },
+                    "client_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "visibility": {
+                        "description": "Visibilidade do projeto",
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "in_progress"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "date_project": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-12-31"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "columns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Column"
+                        }
+                    },
+                    "members": {
+                        "description": "Usuários que têm acesso ao projeto",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Qrcode": {
+                "title": "QR Code",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "slug": {
+                        "description": "Identificador único para a URL do QR Code",
+                        "type": "string"
+                    },
+                    "target_url": {
+                        "description": "A URL de destino para onde o QR Code aponta",
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "scan_count": {
+                        "description": "Número de vezes que o QR Code foi escaneado",
+                        "type": "integer"
+                    },
+                    "last_scanned_at": {
+                        "description": "Data e hora do último escaneamento",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "qr_image_path": {
+                        "description": "Caminho para a imagem gerada do QR Code",
+                        "type": "string"
+                    },
+                    "is_active": {
+                        "description": "Indica se o QR Code está ativo",
+                        "type": "boolean"
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "created_by": {
+                        "description": "ID do usuário que criou o QR Code",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ShortLink": {
+                "title": "Short Link",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "slug": {
+                        "description": "O código curto gerado para o link",
+                        "type": "string"
+                    },
+                    "target_url": {
+                        "description": "A URL de destino original",
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "short_url": {
+                        "description": "A URL encurtada completa",
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "hits": {
+                        "description": "Número de cliques que o link recebeu",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "SiteZen": {
+                "title": "Site Zen Analytics",
+                "description": "Modelo que representa as métricas mensais de um site",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "mes": {
+                        "type": "string",
+                        "example": "Janeiro"
+                    },
+                    "visitas": {
+                        "type": "integer",
+                        "example": 15000
+                    },
+                    "compras": {
+                        "type": "integer",
+                        "example": 300
+                    },
+                    "taxa_conversao": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2.5
+                    },
+                    "ticket_medio": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 150.75
+                    },
+                    "receita_total": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 45225
+                    },
+                    "produtos_mais_vistos": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "Produto A",
+                            "Produto B"
+                        ]
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Task": {
+                "title": "Task",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Nome da tarefa",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Descrição detalhada da tarefa",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "due_date": {
+                        "description": "Data de vencimento",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "column": {
+                        "$ref": "#/components/schemas/Column"
+                    },
+                    "users": {
+                        "description": "Lista de usuários responsáveis pela tarefa",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    },
+                    "involved_users": {
+                        "description": "Campo legado com IDs dos usuários envolvidos",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Tracking": {
+                "title": "Tracking",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "task_id": {
+                        "description": "ID da tarefa associada",
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "description": "ID do usuário que realizou a ação",
+                        "type": "integer"
+                    },
+                    "logged_at": {
+                        "description": "Data e hora do registro",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "nick": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "user_type": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "projects": {
+                        "description": "Projetos criados pelo usuário",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Project"
+                        }
+                    },
+                    "accessibleProjects": {
+                        "description": "Projetos que o usuário tem acesso",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Project"
+                        }
+                    },
+                    "tasks": {
+                        "description": "Tarefas pelas quais o usuário é responsável",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Task"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UserProject": {
+                "title": "User Project Association",
+                "description": "Modelo que representa a ligação entre um usuário e um projeto",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "description": "ID do usuário",
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "description": "ID do projeto",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Campaigns",
+            "description": "Campaigns"
+        },
+        {
+            "name": "Clients",
+            "description": "Clients"
+        },
+        {
+            "name": "Collections",
+            "description": "Collections"
+        },
+        {
+            "name": "Collection Items",
+            "description": "Collection Items"
+        },
+        {
+            "name": "Collection Views",
+            "description": "Collection Views"
+        },
+        {
+            "name": "Columns",
+            "description": "Columns"
+        },
+        {
+            "name": "Column Histories",
+            "description": "Column Histories"
+        },
+        {
+            "name": "Files Omni",
+            "description": "Files Omni"
+        },
+        {
+            "name": "Projects",
+            "description": "Projects"
+        },
+        {
+            "name": "QR Codes",
+            "description": "QR Codes"
+        },
+        {
+            "name": "Short Links",
+            "description": "Short Links"
+        },
+        {
+            "name": "Site Zen",
+            "description": "Site Zen"
+        },
+        {
+            "name": "Tasks",
+            "description": "Tasks"
+        },
+        {
+            "name": "Trackings",
+            "description": "Trackings"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        },
+        {
+            "name": "User Projects",
+            "description": "User Projects"
+        }
+    ]
+}

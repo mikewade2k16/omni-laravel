@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\ProjectRepository;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectService
 {
@@ -20,7 +21,18 @@ class ProjectService
 
     public function store(array $data)
     {
-        return $this->repository->store($data);
+        $members = $data['members'] ?? [];
+        unset($data['members']);
+
+        $data['user_id'] = Auth::id();
+
+        $project = $this->repository->store($data);
+
+        if (!empty($members)) {
+            $project->members()->sync($members);
+        }
+
+        return $project->load(['creator', 'members']);
     }
 
     public function find($id)
@@ -30,7 +42,16 @@ class ProjectService
 
     public function update($id, array $data)
     {
-        return $this->repository->update($id, $data);
+        $members = $data['members'] ?? null;
+        unset($data['members']);
+        
+        $project = $this->repository->update($id, $data);
+
+        if (!is_null($members)) {
+            $project->members()->sync($members);
+        }
+
+        return $project->load(['creator', 'members']);
     }
 
     public function delete($id)

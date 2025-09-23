@@ -15,17 +15,17 @@ class QrcodeService
         $this->repository = $repository;
     }
 
-    public function getAll()
+    public function list()
     {
         return $this->repository->getAll();
     }
 
-    public function getById($id)
+    public function find($id)
     {
-        return $this->repository->findById($id);
+        return $this->repository->find($id);
     }
 
-    public function create(array $data)
+    public function store(array $data)
     {
         DB::beginTransaction();
         try {
@@ -55,9 +55,9 @@ class QrcodeService
     {
         DB::beginTransaction();
         try {
-            $this->repository->delete($id);
+            $deleted = $this->repository->delete($id);
             DB::commit();
-            return true;
+            return $deleted;
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;

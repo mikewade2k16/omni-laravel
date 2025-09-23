@@ -7,8 +7,27 @@ use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * @OA\Schema(
+ * schema="StoreTaskRequest",
+ * required={"name", "column_id", "client_id", "user_id"},
+ * @OA\Property(property="name", type="string", example="Desenvolver API de Pagamentos"),
+ * @OA\Property(property="column_id", type="integer", example=1),
+ * @OA\Property(property="client_id", type="integer", example=1),
+ * @OA\Property(property="user_id", type="integer", example=1, description="ID do usuário 'dono' da tarefa"),
+ * @OA\Property(property="description", type="string", example="Integrar com a API do gateway X."),
+ * @OA\Property(property="involved_users", type="array", @OA\Items(type="integer"), example={1, 2}, description="Array de IDs dos usuários responsáveis")
+ * )
+ *
+ * @OA\Schema(
+ * schema="UpdateTaskRequest",
+ * @OA\Property(property="name", type="string", example="[CONCLUÍDO] Desenvolver API de Pagamentos"),
+ * @OA\Property(property="column_id", type="integer", example=3),
+ * @OA\Property(property="involved_users", type="array", @OA\Items(type="integer"), example={1})
+ * )
+ */
 class TaskController extends Controller
 {
     protected $service;
@@ -18,18 +37,49 @@ class TaskController extends Controller
         $this->service = $service;
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/admin/tasks",
+     * summary="Lista todas as tarefas",
+     * tags={"Tasks"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(response=200, description="Sucesso", @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Task")))
+     * )
+     */
     public function index()
     {
         return TaskResource::collection($this->service->list());
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/admin/tasks/{id}",
+     * summary="Busca uma tarefa pelo ID",
+     * tags={"Tasks"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Sucesso", @OA\JsonContent(ref="#/components/schemas/Task")),
+     * @OA\Response(response=404, description="Tarefa não encontrada")
+     * )
+     */
     public function show($id)
     {
         $task = $this->service->find($id);
         return new TaskResource($task);
     }
 
-    public function store(StoreTaskRequest $request)
+    /**
+     * @OA\Post(
+     * path="/api/admin/tasks",
+     * summary="Cria uma nova tarefa",
+     * tags={"Tasks"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/StoreTaskRequest")),
+     * @OA\Response(response=201, description="Criado com sucesso", @OA\JsonContent(ref="#/components/schemas/Task")),
+     * @OA\Response(response=422, description="Erro de validação")
+     * )
+     */
+    public function store(StoreTaskRequest $request): JsonResponse
     {
         try {
             $task = $this->service->store($request->validated());
@@ -42,7 +92,19 @@ class TaskController extends Controller
         }
     }
 
-    public function update(UpdateTaskRequest $request, $id)
+    /**
+     * @OA\Put(
+     * path="/api/admin/tasks/{id}",
+     * summary="Atualiza uma tarefa",
+     * tags={"Tasks"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/UpdateTaskRequest")),
+     * @OA\Response(response=200, description="Atualizado com sucesso", @OA\JsonContent(ref="#/components/schemas/Task")),
+     * @OA\Response(response=404, description="Tarefa não encontrada")
+     * )
+     */
+    public function update(UpdateTaskRequest $request, $id): JsonResponse
     {
         try {
             $task = $this->service->update($id, $request->validated());
@@ -55,10 +117,21 @@ class TaskController extends Controller
         }
     }
 
-    public function destroy($id)
+    /**
+     * @OA\Delete(
+     * path="/api/admin/tasks/{id}",
+     * summary="Deleta uma tarefa",
+     * tags={"Tasks"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Deletado com sucesso"),
+     * @OA\Response(response=404, description="Tarefa não encontrada")
+     * )
+     */
+    public function destroy($id): JsonResponse
     {
         try {
-            $this->service->destroy($id);
+            $this->service->delete($id);
             return response()->json(['message' => 'Tarefa deletada com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

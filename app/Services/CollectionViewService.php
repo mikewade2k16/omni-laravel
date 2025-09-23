@@ -29,13 +29,17 @@ class CollectionViewService
         return $this->repository->create($data);
     }
 
-    public function update(CollectionView $view, array $data)
+    public function update(int $id, array $data)
     {
+        $view = $this->repository->find($id);
+
         return $this->repository->update($view, $data);
     }
 
-    public function delete(CollectionView $view)
+    public function delete(int $id)
     {
+        $view = $this->repository->find($id);
+
         return $this->repository->delete($view);
     }
 }

@@ -13,27 +13,27 @@ class FilesOmniService
         $this->repository = $repository;
     }
 
-    public function allFiles()
+    public function list() 
     {
         return $this->repository->all();
     }
 
-    public function getFile($id)
+    public function find($id)
     {
         return $this->repository->find($id);
     }
 
-    public function createFile(array $data)
+    public function store(array $data) 
     {
         return $this->repository->create($data);
     }
 
-    public function updateFile($id, array $data)
+    public function update($id, array $data)
     {
         return $this->repository->update($id, $data);
     }
 
-    public function deleteFile($id)
+    public function delete($id) 
     {
         return $this->repository->delete($id);
     }

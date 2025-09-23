@@ -6,6 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @OA\Schema(
+ * schema="ColumnHistory",
+ * type="object",
+ * title="Column History",
+ * properties={
+ * @OA\Property(property="id", type="integer"),
+ * @OA\Property(property="task_id", type="integer"),
+ * @OA\Property(property="old_column", ref="#/components/schemas/Column", description="A coluna de onde a tarefa saiu"),
+ * @OA\Property(property="new_column", ref="#/components/schemas/Column", description="A coluna para onde a tarefa foi"),
+ * @OA\Property(property="changed_at", type="string", format="date-time", description="Quando a mudança ocorreu"),
+ * }
+ * )
+ */
 class ColumnHistory extends Model
 {
     use HasFactory;

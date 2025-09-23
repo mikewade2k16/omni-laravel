@@ -7,9 +7,26 @@ use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * @OA\Schema(
+ * schema="StoreUserRequest",
+ * required={"name", "email", "password"},
+ * @OA\Property(property="name", type="string", example="Edson Oliveira"),
+ * @OA\Property(property="email", type="string", format="email", example="edson.oliveira@example.com"),
+ * @OA\Property(property="password", type="string", format="password", example="senha123"),
+ * @OA\Property(property="nick", type="string", example="edinho"),
+ * @OA\Property(property="status", type="string", example="active"),
+ * @OA\Property(property="user_type", type="string", example="editor")
+ * )
+ *
+ * @OA\Schema(
+ * schema="UpdateUserRequest",
+ * @OA\Property(property="name", type="string", example="Edson Oliveira Jr."),
+ * @OA\Property(property="status", type="string", example="inactive")
+ * )
+ */
 class UserController extends Controller
 {
     protected $service;
@@ -19,25 +36,53 @@ class UserController extends Controller
         $this->service = $service;
     }
 
-    // Listar todos os usuários
+    /**
+     * @OA\Get(
+     * path="/api/admin/users",
+     * summary="Lista todos os usuários",
+     * tags={"Users"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(response=200, description="Sucesso", @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/User")))
+     * )
+     */
     public function index()
     {
         return UserResource::collection($this->service->list());
     }
 
-    // Visualizar um usuário específico
+    /**
+     * @OA\Get(
+     * path="/api/admin/users/{id}",
+     * summary="Busca um usuário pelo ID",
+     * tags={"Users"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Sucesso", @OA\JsonContent(ref="#/components/schemas/User")),
+     * @OA\Response(response=404, description="Usuário não encontrado")
+     * )
+     */
     public function show($id)
     {
         $user = $this->service->find($id);
         return new UserResource($user);
     }
 
-    // Criar um usuário
-    public function store(StoreUserRequest $request)
+    /**
+     * @OA\Post(
+     * path="/api/admin/users",
+     * summary="Cria um novo usuário",
+     * tags={"Users"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/StoreUserRequest")),
+     * @OA\Response(response=201, description="Criado com sucesso", @OA\JsonContent(ref="#/components/schemas/User")),
+     * @OA\Response(response=422, description="Erro de validação")
+     * )
+     */
+    public function store(StoreUserRequest $request): JsonResponse
     {
         try {
             $user = $this->service->store($request->validated());
-            return response()->json($user, 201);
+            return response()->json(new UserResource($user), 201);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao criar usuário',
@@ -46,12 +91,23 @@ class UserController extends Controller
         }
     }
 
-    // Atualizar um usuário
-    public function update(UpdateUserRequest $request, $id)
+    /**
+     * @OA\Put(
+     * path="/api/admin/users/{id}",
+     * summary="Atualiza um usuário",
+     * tags={"Users"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/UpdateUserRequest")),
+     * @OA\Response(response=200, description="Atualizado com sucesso", @OA\JsonContent(ref="#/components/schemas/User")),
+     * @OA\Response(response=404, description="Usuário não encontrado")
+     * )
+     */
+    public function update(UpdateUserRequest $request, $id): JsonResponse
     {
         try {
             $user = $this->service->update($id, $request->validated());
-            return response()->json($user, 200);
+            return response()->json(new UserResource($user), 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao atualizar usuário',
@@ -60,11 +116,21 @@ class UserController extends Controller
         }
     }
 
-    // Deletar um usuário
-    public function destroy($id)
+    /**
+     * @OA\Delete(
+     * path="/api/admin/users/{id}",
+     * summary="Deleta um usuário",
+     * tags={"Users"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Deletado com sucesso"),
+     * @OA\Response(response=404, description="Usuário não encontrado")
+     * )
+     */
+    public function destroy($id): JsonResponse
     {
         try {
-            $this->service->destroy($id);
+            $this->service->delete($id);
             return response()->json(['message' => 'Usuário deletado com sucesso.']);
         } catch (\Exception $e) {
             return response()->json([

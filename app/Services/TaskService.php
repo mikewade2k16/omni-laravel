@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\TaskRepository;
-use Illuminate\Support\Facades\Log;
+use App\Models\Task;
 
 class TaskService
 {
@@ -21,9 +21,15 @@ class TaskService
 
     public function store(array $data)
     {
+        $involvedUserIds = $data['involved_users'] ?? [];
+
         $task = $this->repository->store($data);
-        Log::info('Task criada:', (array)$task);
-        return $task;
+
+        if (!empty($involvedUserIds)) {
+            $task->users()->sync($involvedUserIds);
+        }
+
+        return $task->load(['column', 'users']);
     }
 
     public function find($id)
@@ -33,7 +39,15 @@ class TaskService
 
     public function update($id, array $data)
     {
-        return $this->repository->update($id, $data);
+        $involvedUserIds = $data['involved_users'] ?? null;
+        
+        $task = $this->repository->update($id, $data);
+
+        if (!is_null($involvedUserIds)) {
+            $task->users()->sync($involvedUserIds);
+        }
+
+        return $task->load(['column', 'users']);
     }
 
     public function delete($id)

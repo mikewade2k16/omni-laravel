@@ -20,6 +20,11 @@ class CollectionItemService
 
     public function store(array $data)
     {
+        $userId = auth()->id();
+
+        $data['created_by'] = $userId;
+        $data['updated_by'] = $userId;
+
         return $this->repository->store($data);
     }
 
@@ -30,6 +35,10 @@ class CollectionItemService
 
     public function update($id, array $data)
     {
+        $userId = auth()->id();
+
+        $data['updated_by'] = $userId;
+
         return $this->repository->update($id, $data);
     }
 
