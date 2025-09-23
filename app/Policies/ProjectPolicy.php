@@ -9,6 +9,14 @@ use Illuminate\Auth\Access\Response;
 class ProjectPolicy
 {
     /**
+     * Permite que um usuário crie um novo projeto.
+     */
+    public function create(User $user): bool
+    {
+        return true;
+    }
+
+    /**
      * Permite que um usuário veja um projeto específico.
      */
     public function view(User $user, Project $project): bool
