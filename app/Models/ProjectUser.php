@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @OA\Schema(
- * schema="UserProject",
+ * schema="ProjectUser",
  * type="object",
  * title="User Project Association",
  * description="Modelo que representa a ligação entre um usuário e um projeto",
@@ -20,9 +20,11 @@ use Illuminate\Database\Eloquent\Model;
  * }
  * )
  */
-class UserProject extends Model
+class ProjectUser extends Model
 {
     use HasFactory;
+
+    protected $table = 'project_user';
 
     protected $fillable = [
         'user_id',

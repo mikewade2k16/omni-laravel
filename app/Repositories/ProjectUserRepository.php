@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\UserProject;
+use App\Models\ProjectUser;
 
-class UserProjectRepository
+class ProjectUserRepository
 {
     protected $model;
 
-    public function __construct(UserProject $model)
+    public function __construct(ProjectUser $model)
     {
         $this->model = $model;
     }
