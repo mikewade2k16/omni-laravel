@@ -3,6 +3,11 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\UserStatusEnum;
+use App\Enums\UserLevelEnum;
+use App\Enums\UserTypeEnum;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -21,11 +26,16 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
+        $userId = $this->route('id');
+
         return [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email',
-            'password' => 'sometimes|string|min:6',
+            'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
+            'password' => 'sometimes|string|min:6|confirmed',
             'nick' => 'sometimes|string|max:50',
+            'status' => ['sometimes', new Enum(UserStatusEnum::class)],
+            'level' => ['sometimes', new Enum(UserLevelEnum::class)],
+            'user_type' => ['sometimes', new Enum(UserTypeEnum::class)],
         ];
     }
 }

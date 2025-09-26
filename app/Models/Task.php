@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Enums\TaskTypeEnum;
 
 /**
  * @OA\Schema(
@@ -60,6 +61,7 @@ class Task extends Model
         'last_started'   => 'datetime',
         'time_spent'     => 'integer',
         'timer_status'   => 'integer',
+        'type_task' => TaskTypeEnum::class,
     ];
 
     public function client()

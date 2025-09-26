@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\User\StoreUserRequest;
 
 /**
  * @OA\Schema(
@@ -101,28 +102,30 @@ class AuthController extends Controller
      * @OA\Response(response=400, description="Erro de validação")
      * )
      */
-    public function register(Request $request): JsonResponse
+    public function register(StoreUserRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'nick' => 'required|string|between:2,50|unique:users',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-        ]);
+        try {
+            // Os dados já são validados pelo StoreUserRequest
+            $validatedData = $request->validated();
 
-        if($validator->fails()){
-            return response()->json($validator->errors()->toArray(), 400);
+            $user = User::create([
+                'name'      => $validatedData['name'],
+                'email'     => $validatedData['email'],
+                'nick'      => $validatedData['nick'],
+                'password'  => Hash::make($validatedData['password']),
+                'status'    => $validatedData['status'],    // ✅ DADO ADICIONADO
+                'level'     => $validatedData['level'],     // ✅ DADO ADICIONADO
+                'user_type' => $validatedData['user_type'], // ✅ DADO ADICIONADO
+            ]);
+
+            return response()->json([
+                'message' => 'Usuário registrado com sucesso!',
+                'user' => $user
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao registrar usuário', 'error' => $e->getMessage()], 500);
         }
-
-        $user = User::create(array_merge(
-                    $validator->validated(),
-                    ['password' => Hash::make($request->password)]
-                ));
-
-        return response()->json([
-            'message' => 'Usuário registrado com sucesso!',
-            'user' => $user
-        ], 201);
     }
 
     /**

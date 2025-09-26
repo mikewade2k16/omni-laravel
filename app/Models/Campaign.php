@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\CampaignStatusEnum;
 
 /**
  * @OA\Schema(
@@ -43,6 +44,7 @@ class Campaign extends Model
         'start_date' => 'date',
         'end_date'   => 'date',
         'channels'   => 'array',
+        'status' => CampaignStatusEnum::class,
     ];
 
     /**

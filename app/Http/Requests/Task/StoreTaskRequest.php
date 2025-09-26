@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Task;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\TaskTypeEnum;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -19,8 +21,8 @@ class StoreTaskRequest extends FormRequest
             'user_id'        => 'required|integer',
             'name'           => 'required|string|max:255',
             'column_id'      => 'required|integer|exists:columns,id',
-            // 'status'      => 'nullable|string|max:50',            
-            'type_task'      => 'nullable|string|max:50',
+            // 'status'      => 'nullable|string|max:50',
+            'type_task' => ['nullable', new Enum(TaskTypeEnum::class)],
             'number'         => 'nullable|integer',
             'description'    => 'nullable|string',
             'comment'        => 'nullable|string',

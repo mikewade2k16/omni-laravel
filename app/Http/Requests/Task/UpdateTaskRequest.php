@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Task;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\TaskTypeEnum;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -20,7 +22,7 @@ class UpdateTaskRequest extends FormRequest
             'name'           => 'sometimes|string|max:255',
             'column_id'      => 'sometimes|integer|exists:columns,id',
             // 'status'      => 'sometimes|string|max:50',            
-            'type_task'      => 'sometimes|string|max:50',
+            'type_task'      => ['sometimes', new Enum(TaskTypeEnum::class)],
             'number'         => 'sometimes|integer',
             'description'    => 'sometimes|string',
             'comment'        => 'sometimes|string',

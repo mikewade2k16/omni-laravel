@@ -10,6 +10,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\UserLevelEnum;
+use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 
 /**
  * @OA\Schema(
@@ -47,6 +50,7 @@ class User extends Authenticatable implements JWTSubject
         'nick',
         'status',
         'user_type',
+        'level',
     ];
 
     /**
@@ -67,6 +71,9 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'status' => UserStatusEnum::class,    
+        'level' => UserLevelEnum::class,       
+        'user_type' => UserTypeEnum::class,
     ];
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -102,7 +109,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Os projetos aos quais o usuário tem acesso (como membro).
      */
-    public function accessibleProjects(): BelongsToMany
+    public function accessibleProjects(): BelongsToMany 
     {
         return $this->belongsToMany(Project::class, 'project_user');
     }

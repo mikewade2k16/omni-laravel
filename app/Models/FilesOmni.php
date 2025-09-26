@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\FilesOmniVersionEnum;
+use App\Enums\FilesOmniVideoOrientationEnum;
 
 /**
  * @OA\Schema(
@@ -46,6 +48,8 @@ class FilesOmni extends Model
 
     protected $casts = [
         'published' => 'boolean',
+        'version' => FilesOmniVersionEnum::class,
+        'video_orientation' => FilesOmniVideoOrientationEnum::class,
     ];
 
     /**

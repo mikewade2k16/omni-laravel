@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Enums\ProjectStatusEnum;
 
 /**
  * @OA\Schema(
@@ -51,6 +52,7 @@ class Project extends Model
 
     protected $casts = [
         'date_project' => 'date',
+        'status' => ProjectStatusEnum::class,
     ];
 
     /**

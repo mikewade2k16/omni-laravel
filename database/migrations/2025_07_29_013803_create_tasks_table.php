@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('status', 50)->default('Raw');
             $table->date('start_date')->nullable();
-            $table->enum('type_task', ['design', 'vídeo', 'filme', 'copy', '3D', 'site', 'planejamento', 'CRM', 'tráfego pago'])->nullable();
+            $table->string('type_task')->nullable();
             $table->integer('number')->nullable();
             $table->text('description')->nullable();
             $table->text('comment')->nullable();

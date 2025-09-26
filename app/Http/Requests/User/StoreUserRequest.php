@@ -3,6 +3,10 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\UserStatusEnum;
+use App\Enums\UserLevelEnum;
+use App\Enums\UserTypeEnum;
 
 class StoreUserRequest extends FormRequest
 {
@@ -22,11 +26,13 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:6',
-            'nick' => 'required|string|max:50',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|string|email|max:255|unique:users,email',
+            'password'  => 'required|string|min:6|confirmed',
+            'nick'      => 'required|string|max:50',
+            'status'    => ['required', new Enum(UserStatusEnum::class)],
+            'level'     => ['required', new Enum(UserLevelEnum::class)],
+            'user_type' => ['required', new Enum(UserTypeEnum::class)],
         ];
     }
-    
 }
