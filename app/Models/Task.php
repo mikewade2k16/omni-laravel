@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Enums\TaskTypeEnum;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @OA\Schema(
@@ -29,7 +31,7 @@ use App\Enums\TaskTypeEnum;
  */
 class Task extends Model
 {
-    use HasFactory;
+     use HasFactory, LogsActivity;
 
     protected $fillable = [
         'client_id',
@@ -63,7 +65,21 @@ class Task extends Model
         'timer_status'   => 'integer',
         'type_task' => TaskTypeEnum::class,
     ];
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            // Loga todos os atributos que estão no seu array $fillable
+            ->logFillable()
 
+            // Só cria um log se algum campo realmente mudou
+            ->logOnlyDirty()
+
+            // Descreve o que aconteceu no log
+            ->setDescriptionForEvent(fn(string $eventName) => "Tarefa {$eventName}")
+
+            // Não salva logs de "update" onde nada mudou
+            ->dontSubmitEmptyLogs();
+    }
     public function client()
     {
         return $this->belongsTo(Client::class);

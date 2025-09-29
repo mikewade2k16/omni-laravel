@@ -2556,6 +2556,49 @@
                 ]
             }
         },
+        "/api/admin/tasks/{task}/activities": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Lista o histórico de atividades de uma tarefa",
+                "operationId": "40938de65b8f337fee68f8825ce7a45b",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "ID da tarefa",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ActivityLog"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/tasks": {
             "get": {
                 "tags": [
@@ -3111,41 +3154,57 @@
                     "email",
                     "password"
                 ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "admin@admin.com"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "password": {
-                        "type": "string",
-                        "format": "password",
-                        "example": "password"
+                    {
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "example": "admin@admin.com"
+                            },
+                            "password": {
+                                "type": "string",
+                                "format": "password",
+                                "example": "password"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "AuthResponse": {
                 "title": "Authentication Response",
-                "properties": {
-                    "access_token": {
-                        "description": "O token de acesso JWT",
-                        "type": "string"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "token_type": {
-                        "type": "string",
-                        "example": "bearer"
-                    },
-                    "expires_in": {
-                        "description": "Tempo de expiração do token em segundos",
-                        "type": "integer",
-                        "example": 3600
-                    },
-                    "user": {
-                        "$ref": "#/components/schemas/User"
+                    {
+                        "properties": {
+                            "access_token": {
+                                "description": "O token de acesso JWT",
+                                "type": "string"
+                            },
+                            "token_type": {
+                                "type": "string",
+                                "example": "bearer"
+                            },
+                            "expires_in": {
+                                "description": "Tempo de expiração do token em segundos",
+                                "type": "integer",
+                                "example": 3600
+                            },
+                            "user": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "RegisterRequest": {
                 "title": "Register Request",
@@ -3156,32 +3215,40 @@
                     "password",
                     "password_confirmation"
                 ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Edson Oliveira"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "nick": {
-                        "type": "string",
-                        "example": "edinho"
-                    },
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "edson@example.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "format": "password",
-                        "example": "senha123"
-                    },
-                    "password_confirmation": {
-                        "type": "string",
-                        "format": "password",
-                        "example": "senha123"
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Edson Oliveira"
+                            },
+                            "nick": {
+                                "type": "string",
+                                "example": "edinho"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "example": "edson@example.com"
+                            },
+                            "password": {
+                                "type": "string",
+                                "format": "password",
+                                "example": "senha123"
+                            },
+                            "password_confirmation": {
+                                "type": "string",
+                                "format": "password",
+                                "example": "senha123"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreCampaignRequest": {
                 "title": "Store Campaign Request",
@@ -3192,72 +3259,88 @@
                     "end_date",
                     "status"
                 ],
-                "properties": {
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "name": {
-                        "type": "string",
-                        "example": "Campanha de Dia das Mães"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "Descrição detalhada da campanha.",
-                        "nullable": true
-                    },
-                    "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2025-05-01"
-                    },
-                    "end_date": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2025-05-12"
-                    },
-                    "banner_image": {
-                        "type": "string",
-                        "example": "path/to/image.jpg",
-                        "nullable": true
-                    },
-                    "status": {
-                        "type": "string",
-                        "enum": [
-                            "ativa",
-                            "em_pausa",
-                            "concluida",
-                            "cancelada"
-                        ],
-                        "example": "ativa"
-                    },
-                    "channels": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
+                    {
+                        "properties": {
+                            "client_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Campanha de Dia das Mães"
+                            },
+                            "description": {
+                                "type": "string",
+                                "example": "Descrição detalhada da campanha.",
+                                "nullable": true
+                            },
+                            "start_date": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-05-01"
+                            },
+                            "end_date": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-05-12"
+                            },
+                            "banner_image": {
+                                "type": "string",
+                                "example": "path/to/image.jpg",
+                                "nullable": true
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "ativa",
+                                    "em_pausa",
+                                    "concluida",
+                                    "cancelada"
+                                ],
+                                "example": "ativa"
+                            },
+                            "channels": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "facebook",
+                                    "instagram"
+                                ],
+                                "nullable": true
+                            }
                         },
-                        "example": [
-                            "facebook",
-                            "instagram"
-                        ],
-                        "nullable": true
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateCampaignRequest": {
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Nova Campanha de Verão"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "description": {
-                        "type": "string",
-                        "example": "Descrição detalhada da campanha.",
-                        "nullable": true
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Nova Campanha de Verão"
+                            },
+                            "description": {
+                                "type": "string",
+                                "example": "Descrição detalhada da campanha.",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreClientRequest": {
                 "title": "Store Client Request",
@@ -3275,80 +3358,96 @@
                     "bairro",
                     "numero"
                 ],
-                "properties": {
-                    "nome": {
-                        "type": "string",
-                        "example": "João da Silva"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "cpf": {
-                        "type": "string",
-                        "example": "123.456.789-10"
-                    },
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "joao.silva@example.com"
-                    },
-                    "data_nasc": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "1990-01-15"
-                    },
-                    "rg": {
-                        "type": "string",
-                        "example": "1234567"
-                    },
-                    "contato_1": {
-                        "type": "string",
-                        "example": "79999999999"
-                    },
-                    "endereco": {
-                        "type": "string",
-                        "example": "Rua das Flores"
-                    },
-                    "cep": {
-                        "type": "string",
-                        "example": "49000-000"
-                    },
-                    "uf": {
-                        "type": "string",
-                        "example": "SE"
-                    },
-                    "cidade": {
-                        "type": "string",
-                        "example": "Aracaju"
-                    },
-                    "bairro": {
-                        "type": "string",
-                        "example": "Centro"
-                    },
-                    "numero": {
-                        "type": "string",
-                        "example": "123"
-                    },
-                    "user_id": {
-                        "description": "ID do usuário responsável",
-                        "type": "integer",
-                        "example": 1,
-                        "nullable": true
+                    {
+                        "properties": {
+                            "nome": {
+                                "type": "string",
+                                "example": "João da Silva"
+                            },
+                            "cpf": {
+                                "type": "string",
+                                "example": "123.456.789-10"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "example": "joao.silva@example.com"
+                            },
+                            "data_nasc": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "1990-01-15"
+                            },
+                            "rg": {
+                                "type": "string",
+                                "example": "1234567"
+                            },
+                            "contato_1": {
+                                "type": "string",
+                                "example": "79999999999"
+                            },
+                            "endereco": {
+                                "type": "string",
+                                "example": "Rua das Flores"
+                            },
+                            "cep": {
+                                "type": "string",
+                                "example": "49000-000"
+                            },
+                            "uf": {
+                                "type": "string",
+                                "example": "SE"
+                            },
+                            "cidade": {
+                                "type": "string",
+                                "example": "Aracaju"
+                            },
+                            "bairro": {
+                                "type": "string",
+                                "example": "Centro"
+                            },
+                            "numero": {
+                                "type": "string",
+                                "example": "123"
+                            },
+                            "user_id": {
+                                "description": "ID do usuário responsável",
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateClientRequest": {
                 "title": "Update Client Request",
-                "properties": {
-                    "nome": {
-                        "type": "string",
-                        "example": "João da Silva Santos"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "joao.santos@example.com"
+                    {
+                        "properties": {
+                            "nome": {
+                                "type": "string",
+                                "example": "João da Silva Santos"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "example": "joao.santos@example.com"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreCollectionRequest": {
                 "required": [
@@ -3356,82 +3455,114 @@
                     "slug",
                     "owner_id"
                 ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Leads do Site"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "slug": {
-                        "type": "string",
-                        "example": "leads-site"
-                    },
-                    "owner_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1,
-                        "nullable": true
-                    },
-                    "visibility": {
-                        "type": "string",
-                        "example": "private"
-                    },
-                    "agency_access": {
-                        "type": "boolean",
-                        "example": true
-                    },
-                    "schema_json": {
-                        "type": "object",
-                        "example": {
-                            "campo_email": "email",
-                            "campo_telefone": "tel"
-                        }
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Leads do Site"
+                            },
+                            "slug": {
+                                "type": "string",
+                                "example": "leads-site"
+                            },
+                            "owner_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "client_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                            },
+                            "visibility": {
+                                "type": "string",
+                                "example": "private"
+                            },
+                            "agency_access": {
+                                "type": "boolean",
+                                "example": true
+                            },
+                            "schema_json": {
+                                "type": "object",
+                                "example": {
+                                    "campo_email": "email",
+                                    "campo_telefone": "tel"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateCollectionRequest": {
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Leads Qualificados do Site"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Leads Qualificados do Site"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreCollectionItemRequest": {
                 "required": [
                     "collection_id",
                     "data"
                 ],
-                "properties": {
-                    "collection_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "data": {
-                        "type": "object",
-                        "example": {
-                            "email": "cliente@example.com",
-                            "telefone": "79999999999"
-                        }
+                    {
+                        "properties": {
+                            "collection_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "data": {
+                                "type": "object",
+                                "example": {
+                                    "email": "cliente@example.com",
+                                    "telefone": "79999999999"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateCollectionItemRequest": {
-                "properties": {
-                    "data": {
-                        "type": "object",
-                        "example": {
-                            "email": "novocliente@example.com",
-                            "status_lead": "convertido"
-                        }
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "type": "object",
+                                "example": {
+                                    "email": "novocliente@example.com",
+                                    "status_lead": "convertido"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreCollectionViewRequest": {
                 "required": [
@@ -3439,40 +3570,56 @@
                     "name",
                     "type"
                 ],
-                "properties": {
-                    "collection_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "name": {
-                        "type": "string",
-                        "example": "Visualização em Tabela"
-                    },
-                    "type": {
-                        "type": "string",
-                        "example": "table"
-                    },
-                    "config": {
-                        "type": "object",
-                        "example": {
-                            "columns": [
-                                "email",
-                                "telefone",
-                                "status_lead"
-                            ]
-                        }
+                    {
+                        "properties": {
+                            "collection_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Visualização em Tabela"
+                            },
+                            "type": {
+                                "type": "string",
+                                "example": "table"
+                            },
+                            "config": {
+                                "type": "object",
+                                "example": {
+                                    "columns": [
+                                        "email",
+                                        "telefone",
+                                        "status_lead"
+                                    ]
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateCollectionViewRequest": {
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Visualização Kanban de Leads"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Visualização Kanban de Leads"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreColumnRequest": {
                 "title": "Store Column Request",
@@ -3480,60 +3627,94 @@
                     "project_id",
                     "name"
                 ],
-                "properties": {
-                    "project_id": {
-                        "description": "ID do projeto ao qual a coluna pertence",
-                        "type": "integer"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "name": {
-                        "description": "Nome da coluna",
-                        "type": "string"
+                    {
+                        "properties": {
+                            "project_id": {
+                                "description": "ID do projeto ao qual a coluna pertence",
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "description": "Nome da coluna",
+                                "type": "string",
+                                "example": "A Fazer"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateColumnRequest": {
                 "title": "Update Column Request",
-                "properties": {
-                    "name": {
-                        "description": "Novo nome da coluna",
-                        "type": "string"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "Novo nome da coluna",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreColumnHistoryRequest": {
                 "required": [
                     "task_id",
                     "new_column_id"
                 ],
-                "properties": {
-                    "task_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "old_column_id": {
-                        "description": "ID da coluna antiga",
-                        "type": "integer",
-                        "example": 1,
-                        "nullable": true
-                    },
-                    "new_column_id": {
-                        "description": "ID da nova coluna",
-                        "type": "integer",
-                        "example": 2
+                    {
+                        "properties": {
+                            "task_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "old_column_id": {
+                                "description": "ID da coluna antiga",
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                            },
+                            "new_column_id": {
+                                "description": "ID da nova coluna",
+                                "type": "integer",
+                                "example": 2
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateColumnHistoryRequest": {
-                "properties": {
-                    "new_column_id": {
-                        "type": "integer",
-                        "example": 3
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
+                    },
+                    {
+                        "properties": {
+                            "new_column_id": {
+                                "type": "integer",
+                                "example": 3
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreFilesOmniRequest": {
                 "title": "Store FilesOmni Request",
@@ -3546,71 +3727,87 @@
                     "file_type",
                     "version"
                 ],
-                "properties": {
-                    "task_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "uploaded_by": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "file_path": {
-                        "type": "string",
-                        "example": "uploads/clients/file123.pdf"
-                    },
-                    "file_name": {
-                        "type": "string",
-                        "example": "contrato.pdf"
-                    },
-                    "file_type": {
-                        "type": "string",
-                        "example": "application/pdf"
-                    },
-                    "version": {
-                        "type": "string",
-                        "enum": [
-                            "preview",
-                            "final",
-                            "for_color"
-                        ],
-                        "example": "final"
-                    },
-                    "video_orientation": {
-                        "type": "string",
-                        "enum": [
-                            "vertical",
-                            "horizontal"
-                        ],
-                        "example": "vertical"
-                    },
-                    "cover_image": {
-                        "type": "string",
-                        "example": "path/to/cover.jpg"
-                    },
-                    "published": {
-                        "type": "boolean",
-                        "example": true
+                    {
+                        "properties": {
+                            "task_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "client_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "uploaded_by": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "file_path": {
+                                "type": "string",
+                                "example": "uploads/clients/file123.pdf"
+                            },
+                            "file_name": {
+                                "type": "string",
+                                "example": "contrato.pdf"
+                            },
+                            "file_type": {
+                                "type": "string",
+                                "example": "application/pdf"
+                            },
+                            "version": {
+                                "type": "string",
+                                "enum": [
+                                    "preview",
+                                    "final",
+                                    "for_color"
+                                ],
+                                "example": "final"
+                            },
+                            "video_orientation": {
+                                "type": "string",
+                                "enum": [
+                                    "vertical",
+                                    "horizontal"
+                                ],
+                                "example": "vertical"
+                            },
+                            "cover_image": {
+                                "type": "string",
+                                "example": "path/to/cover.jpg"
+                            },
+                            "published": {
+                                "type": "boolean",
+                                "example": true
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateFilesOmniRequest": {
-                "properties": {
-                    "file_name": {
-                        "type": "string",
-                        "example": "contrato_assinado.pdf"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "published": {
-                        "type": "boolean",
-                        "example": false
+                    {
+                        "properties": {
+                            "file_name": {
+                                "type": "string",
+                                "example": "contrato_assinado.pdf"
+                            },
+                            "published": {
+                                "type": "boolean",
+                                "example": false
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreProjectRequest": {
                 "title": "Store Project Request",
@@ -3621,199 +3818,255 @@
                     "type_project",
                     "date_project"
                 ],
-                "properties": {
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "name": {
-                        "type": "string",
-                        "example": "Novo Projeto de Website"
-                    },
-                    "status": {
-                        "description": "Status do projeto",
-                        "type": "string",
-                        "enum": [
-                            "not_started",
-                            "raw",
-                            "started",
-                            "in_progress",
-                            "awaiting_approval",
-                            "completed",
-                            "postponed",
-                            "canceled"
-                        ],
-                        "example": "not_started"
-                    },
-                    "type_project": {
-                        "type": "string",
-                        "example": "Desenvolvimento"
-                    },
-                    "date_project": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2025-12-31"
-                    },
-                    "visibility": {
-                        "type": "string",
-                        "enum": [
-                            "public",
-                            "private"
-                        ],
-                        "example": "private",
-                        "nullable": true
-                    },
-                    "members": {
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
+                    {
+                        "properties": {
+                            "client_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Novo Projeto de Website"
+                            },
+                            "status": {
+                                "description": "Status do projeto",
+                                "type": "string",
+                                "enum": [
+                                    "not_started",
+                                    "raw",
+                                    "started",
+                                    "in_progress",
+                                    "awaiting_approval",
+                                    "completed",
+                                    "postponed",
+                                    "canceled"
+                                ],
+                                "example": "not_started"
+                            },
+                            "type_project": {
+                                "type": "string",
+                                "example": "Desenvolvimento"
+                            },
+                            "date_project": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-12-31"
+                            },
+                            "visibility": {
+                                "type": "string",
+                                "enum": [
+                                    "public",
+                                    "private"
+                                ],
+                                "example": "private",
+                                "nullable": true
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                },
+                                "example": [
+                                    1,
+                                    2
+                                ],
+                                "nullable": true
+                            },
+                            "description": {
+                                "type": "string",
+                                "example": "Descrição detalhada do projeto.",
+                                "nullable": true
+                            },
+                            "link": {
+                                "type": "string",
+                                "format": "url",
+                                "example": "https://projeto.com",
+                                "nullable": true
+                            },
+                            "goal": {
+                                "type": "string",
+                                "example": "Aumentar as vendas em 20%",
+                                "nullable": true
+                            }
                         },
-                        "example": [
-                            1,
-                            2
-                        ],
-                        "nullable": true
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "Descrição detalhada do projeto.",
-                        "nullable": true
-                    },
-                    "link": {
-                        "type": "string",
-                        "format": "url",
-                        "example": "https://projeto.com",
-                        "nullable": true
-                    },
-                    "goal": {
-                        "type": "string",
-                        "example": "Aumentar as vendas em 20%",
-                        "nullable": true
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateProjectRequest": {
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Projeto de Marketing Atualizado"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "status": {
-                        "type": "string",
-                        "example": "completed"
-                    },
-                    "visibility": {
-                        "type": "string",
-                        "enum": [
-                            "public",
-                            "private"
-                        ],
-                        "example": "public"
-                    },
-                    "members": {
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Projeto de Marketing Atualizado"
+                            },
+                            "status": {
+                                "type": "string",
+                                "example": "completed"
+                            },
+                            "visibility": {
+                                "type": "string",
+                                "enum": [
+                                    "public",
+                                    "private"
+                                ],
+                                "example": "public"
+                            },
+                            "members": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                },
+                                "example": [
+                                    1,
+                                    3
+                                ]
+                            }
                         },
-                        "example": [
-                            1,
-                            3
-                        ]
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreProjectUserRequest": {
                 "required": [
                     "user_id",
                     "project_id"
                 ],
-                "properties": {
-                    "user_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "project_id": {
-                        "type": "integer",
-                        "example": 1
+                    {
+                        "properties": {
+                            "user_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "project_id": {
+                                "type": "integer",
+                                "example": 1
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreQrcodeRequest": {
                 "required": [
                     "target_url"
                 ],
-                "properties": {
-                    "target_url": {
-                        "type": "string",
-                        "format": "url",
-                        "example": "https://seusite.com/pagina-de-destino"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "slug": {
-                        "description": "Opcional. Se não enviado, um slug único será gerado",
-                        "type": "string",
-                        "example": "promo-verao-25"
-                    },
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1,
-                        "nullable": true
-                    },
-                    "is_active": {
-                        "type": "boolean",
-                        "example": true
+                    {
+                        "properties": {
+                            "target_url": {
+                                "type": "string",
+                                "format": "url",
+                                "example": "https://seusite.com/pagina-de-destino"
+                            },
+                            "slug": {
+                                "description": "Opcional. Se não enviado, um slug único será gerado",
+                                "type": "string",
+                                "example": "promo-verao-25"
+                            },
+                            "client_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                            },
+                            "is_active": {
+                                "type": "boolean",
+                                "example": true
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateQrcodeRequest": {
-                "properties": {
-                    "target_url": {
-                        "type": "string",
-                        "format": "url",
-                        "example": "https://seusite.com/nova-pagina"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "is_active": {
-                        "type": "boolean",
-                        "example": false
+                    {
+                        "properties": {
+                            "target_url": {
+                                "type": "string",
+                                "format": "url",
+                                "example": "https://seusite.com/nova-pagina"
+                            },
+                            "is_active": {
+                                "type": "boolean",
+                                "example": false
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreShortLinkRequest": {
                 "required": [
                     "target_url"
                 ],
-                "properties": {
-                    "target_url": {
-                        "type": "string",
-                        "format": "url",
-                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/landing-page"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "slug": {
-                        "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
-                        "type": "string",
-                        "example": "promo-natal"
-                    },
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1,
-                        "nullable": true
+                    {
+                        "properties": {
+                            "target_url": {
+                                "type": "string",
+                                "format": "url",
+                                "example": "https://minha-url-muito-longa-para-uma-campanha.com/landing-page"
+                            },
+                            "slug": {
+                                "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
+                                "type": "string",
+                                "example": "promo-natal"
+                            },
+                            "client_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateShortLinkRequest": {
-                "properties": {
-                    "target_url": {
-                        "type": "string",
-                        "format": "url",
-                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/nova-landing-page"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
+                    },
+                    {
+                        "properties": {
+                            "target_url": {
+                                "type": "string",
+                                "format": "url",
+                                "example": "https://minha-url-muito-longa-para-uma-campanha.com/nova-landing-page"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreSiteZenRequest": {
                 "required": [
@@ -3821,44 +4074,60 @@
                     "visitas",
                     "compras"
                 ],
-                "properties": {
-                    "mes": {
-                        "type": "string",
-                        "example": "Fevereiro"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "visitas": {
-                        "type": "integer",
-                        "example": 18000
-                    },
-                    "compras": {
-                        "type": "integer",
-                        "example": 450
-                    },
-                    "taxa_conversao": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 3.1
-                    },
-                    "ticket_medio": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 180
+                    {
+                        "properties": {
+                            "mes": {
+                                "type": "string",
+                                "example": "Fevereiro"
+                            },
+                            "visitas": {
+                                "type": "integer",
+                                "example": 18000
+                            },
+                            "compras": {
+                                "type": "integer",
+                                "example": 450
+                            },
+                            "taxa_conversao": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 3.1
+                            },
+                            "ticket_medio": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 180
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateSiteZenRequest": {
-                "properties": {
-                    "visitas": {
-                        "type": "integer",
-                        "example": 18500
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "compras": {
-                        "type": "integer",
-                        "example": 470
+                    {
+                        "properties": {
+                            "visitas": {
+                                "type": "integer",
+                                "example": 18500
+                            },
+                            "compras": {
+                                "type": "integer",
+                                "example": 470
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreTaskRequest": {
                 "title": "Store Task Request",
@@ -3870,106 +4139,122 @@
                     "type_task",
                     "priority"
                 ],
-                "properties": {
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "campaign_id": {
-                        "type": "integer",
-                        "example": 1,
-                        "nullable": true
-                    },
-                    "user_id": {
-                        "description": "ID do usuário 'dono' da tarefa",
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "Desenvolver API de Pagamentos"
-                    },
-                    "column_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "type_task": {
-                        "description": "Tipo da tarefa",
-                        "type": "string",
-                        "enum": [
-                            "design",
-                            "video",
-                            "filme",
-                            "copy",
-                            "3D",
-                            "site",
-                            "planejamento",
-                            "CRM",
-                            "tráfego pago"
-                        ]
-                    },
-                    "number": {
-                        "type": "integer",
-                        "example": 101,
-                        "nullable": true
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "Integrar com a API do gateway X.",
-                        "nullable": true
-                    },
-                    "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2025-10-01",
-                        "nullable": true
-                    },
-                    "due_date": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2025-10-15",
-                        "nullable": true
-                    },
-                    "priority": {
-                        "description": "Prioridade da tarefa",
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "involved_users": {
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
+                    {
+                        "properties": {
+                            "client_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "campaign_id": {
+                                "type": "integer",
+                                "example": 1,
+                                "nullable": true
+                            },
+                            "user_id": {
+                                "description": "ID do usuário 'dono' da tarefa",
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Desenvolver API de Pagamentos"
+                            },
+                            "column_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "type_task": {
+                                "description": "Tipo da tarefa",
+                                "type": "string",
+                                "enum": [
+                                    "design",
+                                    "video",
+                                    "filme",
+                                    "copy",
+                                    "3D",
+                                    "site",
+                                    "planejamento",
+                                    "CRM",
+                                    "tráfego pago"
+                                ]
+                            },
+                            "number": {
+                                "type": "integer",
+                                "example": 101,
+                                "nullable": true
+                            },
+                            "description": {
+                                "type": "string",
+                                "example": "Integrar com a API do gateway X.",
+                                "nullable": true
+                            },
+                            "start_date": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-10-01",
+                                "nullable": true
+                            },
+                            "due_date": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-10-15",
+                                "nullable": true
+                            },
+                            "priority": {
+                                "description": "Prioridade da tarefa",
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "involved_users": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                },
+                                "example": [
+                                    1,
+                                    2
+                                ],
+                                "nullable": true
+                            }
                         },
-                        "example": [
-                            1,
-                            2
-                        ],
-                        "nullable": true
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateTaskRequest": {
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "[CONCLUÍDO] Desenvolver API de Pagamentos"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "column_id": {
-                        "type": "integer",
-                        "example": 3
-                    },
-                    "involved_users": {
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "[CONCLUÍDO] Desenvolver API de Pagamentos"
+                            },
+                            "column_id": {
+                                "type": "integer",
+                                "example": 3
+                            },
+                            "involved_users": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                },
+                                "example": [
+                                    1
+                                ]
+                            }
                         },
-                        "example": [
-                            1
-                        ]
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreTrackingRequest": {
                 "required": [
@@ -3977,22 +4262,30 @@
                     "user_id",
                     "logged_at"
                 ],
-                "properties": {
-                    "task_id": {
-                        "type": "integer",
-                        "example": 1
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "user_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "logged_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2025-09-18 12:00:00"
+                    {
+                        "properties": {
+                            "task_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "user_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "logged_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-09-18 12:00:00"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreUserRequest": {
                 "required": [
@@ -4004,72 +4297,127 @@
                     "level",
                     "user_type"
                 ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Edson Oliveira"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "edson.oliveira@example.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "format": "password",
-                        "example": "senha123"
-                    },
-                    "password_confirmation": {
-                        "type": "string",
-                        "format": "password",
-                        "example": "senha123"
-                    },
-                    "nick": {
-                        "type": "string",
-                        "example": "edinho"
-                    },
-                    "status": {
-                        "type": "string",
-                        "enum": [
-                            "active",
-                            "inactive"
-                        ],
-                        "example": "active"
-                    },
-                    "level": {
-                        "type": "string",
-                        "enum": [
-                            "admin",
-                            "manager",
-                            "marketing",
-                            "finance"
-                        ],
-                        "example": "marketing"
-                    },
-                    "user_type": {
-                        "type": "string",
-                        "enum": [
-                            "client",
-                            "admin"
-                        ],
-                        "example": "client"
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Edson Oliveira"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "example": "edson.oliveira@example.com"
+                            },
+                            "password": {
+                                "type": "string",
+                                "format": "password",
+                                "example": "senha123"
+                            },
+                            "password_confirmation": {
+                                "type": "string",
+                                "format": "password",
+                                "example": "senha123"
+                            },
+                            "nick": {
+                                "type": "string",
+                                "example": "edinho"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "active",
+                                    "inactive"
+                                ],
+                                "example": "active"
+                            },
+                            "level": {
+                                "type": "string",
+                                "enum": [
+                                    "admin",
+                                    "manager",
+                                    "marketing",
+                                    "finance"
+                                ],
+                                "example": "marketing"
+                            },
+                            "user_type": {
+                                "type": "string",
+                                "enum": [
+                                    "client",
+                                    "admin"
+                                ],
+                                "example": "client"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateUserRequest": {
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Edson Oliveira Jr."
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ActivityLog"
                     },
-                    "status": {
+                    {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Edson Oliveira Jr."
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "active",
+                                    "inactive"
+                                ],
+                                "example": "inactive"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "ActivityLog": {
+                "title": "Activity Log Record",
+                "description": "Registro de uma atividade (log) realizada em um modelo",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "log_name": {
                         "type": "string",
-                        "enum": [
-                            "active",
-                            "inactive"
-                        ],
-                        "example": "inactive"
+                        "example": "Task"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "updated"
+                    },
+                    "subject_type": {
+                        "type": "string",
+                        "example": "App\\Models\\Task"
+                    },
+                    "subject_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "causer_id": {
+                        "description": "ID do usuário que causou a ação",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "properties": {
+                        "description": "JSON com os dados antigos e novos",
+                        "type": "object"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -4297,21 +4645,29 @@
                 "title": "Column",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID da Coluna",
+                        "type": "integer",
+                        "example": 1
                     },
                     "project_id": {
-                        "type": "integer"
+                        "description": "ID do projeto ao qual a coluna pertence",
+                        "type": "integer",
+                        "example": 1
                     },
                     "name": {
-                        "type": "string"
+                        "description": "Nome da coluna",
+                        "type": "string",
+                        "example": "A Fazer"
                     },
                     "created_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2025-09-29T11:00:00.000000Z"
                     },
                     "updated_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2025-09-29T11:00:00.000000Z"
                     }
                 },
                 "type": "object"

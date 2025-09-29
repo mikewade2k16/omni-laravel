@@ -16,8 +16,8 @@ use Illuminate\Http\JsonResponse;
  * title="Store Column Request",
  * required={"project_id", "name"},
  * properties={
- * @OA\Property(property="project_id", type="integer", description="ID do projeto ao qual a coluna pertence"),
- * @OA\Property(property="name", type="string", description="Nome da coluna")
+ * @OA\Property(property="project_id", type="integer", description="ID do projeto ao qual a coluna pertence", example=1),
+ * @OA\Property(property="name", type="string", description="Nome da coluna", example="A Fazer")
  * }
  * )
  *

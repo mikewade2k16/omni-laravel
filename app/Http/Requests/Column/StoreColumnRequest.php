@@ -8,7 +8,7 @@ class StoreColumnRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Ou adicione sua lógica de autorização
+        return true;
     }
 
     public function rules(): array

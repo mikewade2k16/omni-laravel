@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ShortLinkController;
 use App\Http\Controllers\Admin\SiteZenController;
 use App\Http\Controllers\Admin\ColumnController;
 use App\Http\Controllers\Admin\ColumnHistoryController;
+use App\Http\Controllers\Admin\TaskActivityController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,6 +56,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('tasks/{id}', [TaskController::class, 'show']);
         Route::put('tasks/{id}', [TaskController::class, 'update']);
         Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
+        Route::get('tasks/{task}/activities', [TaskActivityController::class, 'index']);
 
         // Rotas para Clients
         Route::get('clients', [ClientController::class, 'index']);
