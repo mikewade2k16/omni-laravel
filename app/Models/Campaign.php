@@ -18,7 +18,7 @@ use App\Enums\CampaignStatusEnum;
  * @OA\Property(property="description", type="string"),
  * @OA\Property(property="start_date", type="string", format="date", example="2025-01-30"),
  * @OA\Property(property="end_date", type="string", format="date", example="2025-02-28"),
- * @OA\Property(property="status", type="string", example="active"),
+ * @OA\Property(property="status", type="string", enum={"ativa", "em_pausa", "concluida", "cancelada"}, example="ativa"),
  * @OA\Property(property="channels", type="array", @OA\Items(type="string"), example={"facebook", "instagram"}),
  * @OA\Property(property="created_at", type="string", format="date-time"),
  * @OA\Property(property="updated_at", type="string", format="date-time")

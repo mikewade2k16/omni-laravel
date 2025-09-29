@@ -17,7 +17,7 @@ class StoreFilesOmniRequest extends FormRequest
     public function rules()
     {
         return [
-            'task_id' => 'nullable|exists:tasks,id',
+            'task_id' => 'required|exists:tasks,id',
             'client_id' => 'required|exists:clients,id',
             'uploaded_by' => 'required|exists:users,id',
             'file_path' => 'required|string',

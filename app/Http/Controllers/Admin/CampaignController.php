@@ -7,24 +7,30 @@ use App\Http\Requests\Campaign\StoreCampaignRequest;
 use App\Http\Requests\Campaign\UpdateCampaignRequest;
 use App\Http\Resources\CampaignResource;
 use App\Services\CampaignService;
-use Illuminate\Http\JsonResponse; // Importar JsonResponse
+use Illuminate\Http\JsonResponse;
 
 /**
  * @OA\Schema(
  * schema="StoreCampaignRequest",
- * required={"client_id", "name", "start_date", "end_date"},
+ * type="object",
+ * title="Store Campaign Request",
+ * required={"client_id", "name", "start_date", "end_date", "status"},
+ * properties={
  * @OA\Property(property="client_id", type="integer", example=1),
- * @OA\Property(property="name", type="string", example="Campanha de Verão"),
- * @OA\Property(property="description", type="string", example="Descrição da campanha de verão."),
- * @OA\Property(property="start_date", type="string", format="date", example="2025-01-30"),
- * @OA\Property(property="end_date", type="string", format="date", example="2025-02-28"),
- * @OA\Property(property="status", type="string", example="active"),
- * @OA\Property(property="channels", type="array", @OA\Items(type="string"), example={"facebook", "instagram"})
+ * @OA\Property(property="name", type="string", example="Campanha de Dia das Mães"),
+ * @OA\Property(property="description", type="string", example="Descrição detalhada da campanha.", nullable=true),
+ * @OA\Property(property="start_date", type="string", format="date", example="2025-05-01"),
+ * @OA\Property(property="end_date", type="string", format="date", example="2025-05-12"),
+ * @OA\Property(property="banner_image", type="string", example="path/to/image.jpg", nullable=true),
+ * @OA\Property(property="status", type="string", enum={"ativa", "em_pausa", "concluida", "cancelada"}, example="ativa"),
+ * @OA\Property(property="channels", type="array", @OA\Items(type="string"), example={"facebook", "instagram"}, nullable=true)
+ * }
  * )
  *
  * @OA\Schema(
  * schema="UpdateCampaignRequest",
- * @OA\Property(property="name", type="string", example="Nova Campanha de Verão")
+ * @OA\Property(property="name", type="string", example="Nova Campanha de Verão"),
+ * @OA\Property(property="description", type="string", example="Descrição detalhada da campanha.", nullable=true),
  * )
  */
 class CampaignController extends Controller

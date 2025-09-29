@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Property(property="cpf", type="string", description="CPF do cliente"),
  * @OA\Property(property="data_nasc", type="string", format="date", description="Data de nascimento (AAAA-MM-DD)"),
  * @OA\Property(property="contato_1", type="string", description="Telefone de contato principal"),
- * @OA\Property(property="user_id", type="integer", description="ID do usuário que cadastrou"),
+ * @OA\Property(property="user_id", type="integer", description="ID do usuário que cadastrou", example=1),
  * @OA\Property(property="created_at", type="string", format="date-time"),
  * @OA\Property(property="updated_at", type="string", format="date-time")
  * }

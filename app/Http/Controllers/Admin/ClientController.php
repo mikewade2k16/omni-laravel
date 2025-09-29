@@ -14,12 +14,21 @@ use Illuminate\Http\JsonResponse; // Importar JsonResponse para o type-hint
  * schema="StoreClientRequest",
  * type="object",
  * title="Store Client Request",
- * required={"nome", "email", "cpf", "user_id"},
+ * required={"nome", "cpf", "email", "data_nasc", "rg", "contato_1", "endereco", "cep", "uf", "cidade", "bairro", "numero"},
  * properties={
  * @OA\Property(property="nome", type="string", example="João da Silva"),
- * @OA\Property(property="email", type="string", format="email", example="joao.silva@example.com"),
  * @OA\Property(property="cpf", type="string", example="123.456.789-10"),
- * @OA\Property(property="user_id", type="integer", description="ID do usuário responsável", example=1)
+ * @OA\Property(property="email", type="string", format="email", example="joao.silva@example.com"),
+ * @OA\Property(property="data_nasc", type="string", format="date", example="1990-01-15"),
+ * @OA\Property(property="rg", type="string", example="1234567"),
+ * @OA\Property(property="contato_1", type="string", example="79999999999"),
+ * @OA\Property(property="endereco", type="string", example="Rua das Flores"),
+ * @OA\Property(property="cep", type="string", example="49000-000"),
+ * @OA\Property(property="uf", type="string", example="SE"),
+ * @OA\Property(property="cidade", type="string", example="Aracaju"),
+ * @OA\Property(property="bairro", type="string", example="Centro"),
+ * @OA\Property(property="numero", type="string", example="123"),
+ * @OA\Property(property="user_id", type="integer", description="ID do usuário responsável", example=1, nullable=true)
  * }
  * )
  *
@@ -143,7 +152,6 @@ class ClientController extends Controller
     {
         try {
             $client = $this->service->update($id, $request->validated());
-            // O código de sucesso para update é 200 OK, não 201 Created.
             return response()->json(new ClientResource($client), 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Erro ao atualizar Cliente', 'error' => $e->getMessage()], 500);

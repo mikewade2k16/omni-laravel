@@ -1828,6 +1828,188 @@
                 ]
             }
         },
+        "/api/admin/user-projects": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Lista todas as associações entre usuários e projetos",
+                "operationId": "8e269613632d1dea3c13f967c0d7e08a",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProjectUser"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Cria uma nova associação entre usuário e projeto",
+                "operationId": "c7f7de8c78d1b7ec173931e3d2b14b1f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProjectUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectUser"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/user-projects/{id}": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Busca uma associação pelo ID",
+                "operationId": "6c87327046738a6dd7686b3354098f3d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectUser"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Atualiza uma associação (não comum, geralmente se deleta e cria)",
+                "operationId": "a938178ea283620eed5971fa8515c653",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProjectUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectUser"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Deleta uma associação entre usuário e projeto",
+                "operationId": "f4eddcf48f960191f32dcb7904f25902",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/qrcodes": {
             "get": {
                 "tags": [
@@ -2919,188 +3101,6 @@
                     }
                 ]
             }
-        },
-        "/api/admin/user-projects": {
-            "get": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Lista todas as associações entre usuários e projetos",
-                "operationId": "d594ef839e734b0a3f9d6228667bff49",
-                "responses": {
-                    "200": {
-                        "description": "Sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/UserProject"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Cria uma nova associação entre usuário e projeto",
-                "operationId": "06380d175afefe3b973ff2f294dc6068",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/StoreUserProjectRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Criado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserProject"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Erro de validação"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/user-projects/{id}": {
-            "get": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Busca uma associação pelo ID",
-                "operationId": "3ef55a291bc555aa733b8f0f878a3a23",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserProject"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Associação não encontrada"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Atualiza uma associação (não comum, geralmente se deleta e cria)",
-                "operationId": "fe1495c8dd712623f62295f498a35308",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/StoreUserProjectRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Atualizado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserProject"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Associação não encontrada"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Deleta uma associação entre usuário e projeto",
-                "operationId": "2948c1ef75f890469527dcc066f9ca20",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Deletado com sucesso"
-                    },
-                    "404": {
-                        "description": "Associação não encontrada"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
@@ -3184,11 +3184,13 @@
                 "type": "object"
             },
             "StoreCampaignRequest": {
+                "title": "Store Campaign Request",
                 "required": [
                     "client_id",
                     "name",
                     "start_date",
-                    "end_date"
+                    "end_date",
+                    "status"
                 ],
                 "properties": {
                     "client_id": {
@@ -3197,25 +3199,37 @@
                     },
                     "name": {
                         "type": "string",
-                        "example": "Campanha de Verão"
+                        "example": "Campanha de Dia das Mães"
                     },
                     "description": {
                         "type": "string",
-                        "example": "Descrição da campanha de verão."
+                        "example": "Descrição detalhada da campanha.",
+                        "nullable": true
                     },
                     "start_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2025-01-30"
+                        "example": "2025-05-01"
                     },
                     "end_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2025-02-28"
+                        "example": "2025-05-12"
+                    },
+                    "banner_image": {
+                        "type": "string",
+                        "example": "path/to/image.jpg",
+                        "nullable": true
                     },
                     "status": {
                         "type": "string",
-                        "example": "active"
+                        "enum": [
+                            "ativa",
+                            "em_pausa",
+                            "concluida",
+                            "cancelada"
+                        ],
+                        "example": "ativa"
                     },
                     "channels": {
                         "type": "array",
@@ -3225,7 +3239,8 @@
                         "example": [
                             "facebook",
                             "instagram"
-                        ]
+                        ],
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3235,6 +3250,11 @@
                     "name": {
                         "type": "string",
                         "example": "Nova Campanha de Verão"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Descrição detalhada da campanha.",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3243,28 +3263,74 @@
                 "title": "Store Client Request",
                 "required": [
                     "nome",
-                    "email",
                     "cpf",
-                    "user_id"
+                    "email",
+                    "data_nasc",
+                    "rg",
+                    "contato_1",
+                    "endereco",
+                    "cep",
+                    "uf",
+                    "cidade",
+                    "bairro",
+                    "numero"
                 ],
                 "properties": {
                     "nome": {
                         "type": "string",
                         "example": "João da Silva"
                     },
+                    "cpf": {
+                        "type": "string",
+                        "example": "123.456.789-10"
+                    },
                     "email": {
                         "type": "string",
                         "format": "email",
                         "example": "joao.silva@example.com"
                     },
-                    "cpf": {
+                    "data_nasc": {
                         "type": "string",
-                        "example": "123.456.789-10"
+                        "format": "date",
+                        "example": "1990-01-15"
+                    },
+                    "rg": {
+                        "type": "string",
+                        "example": "1234567"
+                    },
+                    "contato_1": {
+                        "type": "string",
+                        "example": "79999999999"
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua das Flores"
+                    },
+                    "cep": {
+                        "type": "string",
+                        "example": "49000-000"
+                    },
+                    "uf": {
+                        "type": "string",
+                        "example": "SE"
+                    },
+                    "cidade": {
+                        "type": "string",
+                        "example": "Aracaju"
+                    },
+                    "bairro": {
+                        "type": "string",
+                        "example": "Centro"
+                    },
+                    "numero": {
+                        "type": "string",
+                        "example": "123"
                     },
                     "user_id": {
                         "description": "ID do usuário responsável",
                         "type": "integer",
-                        "example": 1
+                        "example": 1,
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3470,22 +3536,24 @@
                 "type": "object"
             },
             "StoreFilesOmniRequest": {
+                "title": "Store FilesOmni Request",
                 "required": [
+                    "task_id",
                     "client_id",
                     "uploaded_by",
                     "file_path",
                     "file_name",
-                    "file_type"
+                    "file_type",
+                    "version"
                 ],
                 "properties": {
-                    "client_id": {
+                    "task_id": {
                         "type": "integer",
                         "example": 1
                     },
-                    "task_id": {
+                    "client_id": {
                         "type": "integer",
-                        "example": 1,
-                        "nullable": true
+                        "example": 1
                     },
                     "uploaded_by": {
                         "type": "integer",
@@ -3504,8 +3572,25 @@
                         "example": "application/pdf"
                     },
                     "version": {
-                        "type": "integer",
-                        "example": 1
+                        "type": "string",
+                        "enum": [
+                            "preview",
+                            "final",
+                            "for_color"
+                        ],
+                        "example": "final"
+                    },
+                    "video_orientation": {
+                        "type": "string",
+                        "enum": [
+                            "vertical",
+                            "horizontal"
+                        ],
+                        "example": "vertical"
+                    },
+                    "cover_image": {
+                        "type": "string",
+                        "example": "path/to/cover.jpg"
                     },
                     "published": {
                         "type": "boolean",
@@ -3528,10 +3613,13 @@
                 "type": "object"
             },
             "StoreProjectRequest": {
+                "title": "Store Project Request",
                 "required": [
                     "client_id",
                     "name",
-                    "status"
+                    "status",
+                    "type_project",
+                    "date_project"
                 ],
                 "properties": {
                     "client_id": {
@@ -3540,15 +3628,31 @@
                     },
                     "name": {
                         "type": "string",
-                        "example": "Novo Projeto de Marketing"
+                        "example": "Novo Projeto de Website"
                     },
                     "status": {
+                        "description": "Status do projeto",
                         "type": "string",
+                        "enum": [
+                            "not_started",
+                            "raw",
+                            "started",
+                            "in_progress",
+                            "awaiting_approval",
+                            "completed",
+                            "postponed",
+                            "canceled"
+                        ],
                         "example": "not_started"
                     },
-                    "description": {
+                    "type_project": {
                         "type": "string",
-                        "example": "Descrição detalhada do projeto."
+                        "example": "Desenvolvimento"
+                    },
+                    "date_project": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-12-31"
                     },
                     "visibility": {
                         "type": "string",
@@ -3556,7 +3660,8 @@
                             "public",
                             "private"
                         ],
-                        "example": "private"
+                        "example": "private",
+                        "nullable": true
                     },
                     "members": {
                         "type": "array",
@@ -3566,7 +3671,24 @@
                         "example": [
                             1,
                             2
-                        ]
+                        ],
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Descrição detalhada do projeto.",
+                        "nullable": true
+                    },
+                    "link": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://projeto.com",
+                        "nullable": true
+                    },
+                    "goal": {
+                        "type": "string",
+                        "example": "Aumentar as vendas em 20%",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3598,6 +3720,23 @@
                             1,
                             3
                         ]
+                    }
+                },
+                "type": "object"
+            },
+            "StoreProjectUserRequest": {
+                "required": [
+                    "user_id",
+                    "project_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "project_id": {
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "type": "object"
@@ -3722,13 +3861,30 @@
                 "type": "object"
             },
             "StoreTaskRequest": {
+                "title": "Store Task Request",
                 "required": [
+                    "client_id",
+                    "user_id",
                     "name",
                     "column_id",
-                    "client_id",
-                    "user_id"
+                    "type_task",
+                    "priority"
                 ],
                 "properties": {
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "campaign_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "user_id": {
+                        "description": "ID do usuário 'dono' da tarefa",
+                        "type": "integer",
+                        "example": 1
+                    },
                     "name": {
                         "type": "string",
                         "example": "Desenvolver API de Pagamentos"
@@ -3737,21 +3893,49 @@
                         "type": "integer",
                         "example": 1
                     },
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1
+                    "type_task": {
+                        "description": "Tipo da tarefa",
+                        "type": "string",
+                        "enum": [
+                            "design",
+                            "video",
+                            "filme",
+                            "copy",
+                            "3D",
+                            "site",
+                            "planejamento",
+                            "CRM",
+                            "tráfego pago"
+                        ]
                     },
-                    "user_id": {
-                        "description": "ID do usuário 'dono' da tarefa",
+                    "number": {
                         "type": "integer",
-                        "example": 1
+                        "example": 101,
+                        "nullable": true
                     },
                     "description": {
                         "type": "string",
-                        "example": "Integrar com a API do gateway X."
+                        "example": "Integrar com a API do gateway X.",
+                        "nullable": true
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-01",
+                        "nullable": true
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-15",
+                        "nullable": true
+                    },
+                    "priority": {
+                        "description": "Prioridade da tarefa",
+                        "type": "integer",
+                        "example": 1
                     },
                     "involved_users": {
-                        "description": "Array de IDs dos usuários responsáveis",
                         "type": "array",
                         "items": {
                             "type": "integer"
@@ -3759,7 +3943,8 @@
                         "example": [
                             1,
                             2
-                        ]
+                        ],
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3813,7 +3998,11 @@
                 "required": [
                     "name",
                     "email",
-                    "password"
+                    "password",
+                    "nick",
+                    "status",
+                    "level",
+                    "user_type"
                 ],
                 "properties": {
                     "name": {
@@ -3830,17 +4019,40 @@
                         "format": "password",
                         "example": "senha123"
                     },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    },
                     "nick": {
                         "type": "string",
                         "example": "edinho"
                     },
                     "status": {
                         "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
                         "example": "active"
+                    },
+                    "level": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "manager",
+                            "marketing",
+                            "finance"
+                        ],
+                        "example": "marketing"
                     },
                     "user_type": {
                         "type": "string",
-                        "example": "editor"
+                        "enum": [
+                            "client",
+                            "admin"
+                        ],
+                        "example": "client"
                     }
                 },
                 "type": "object"
@@ -3853,24 +4065,11 @@
                     },
                     "status": {
                         "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
                         "example": "inactive"
-                    }
-                },
-                "type": "object"
-            },
-            "StoreUserProjectRequest": {
-                "required": [
-                    "user_id",
-                    "project_id"
-                ],
-                "properties": {
-                    "user_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "project_id": {
-                        "type": "integer",
-                        "example": 1
                     }
                 },
                 "type": "object"
@@ -3902,7 +4101,13 @@
                     },
                     "status": {
                         "type": "string",
-                        "example": "active"
+                        "enum": [
+                            "ativa",
+                            "em_pausa",
+                            "concluida",
+                            "cancelada"
+                        ],
+                        "example": "ativa"
                     },
                     "channels": {
                         "type": "array",
@@ -3956,7 +4161,8 @@
                     },
                     "user_id": {
                         "description": "ID do usuário que cadastrou",
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 1
                     },
                     "created_at": {
                         "type": "string",
@@ -4243,6 +4449,32 @@
                 },
                 "type": "object"
             },
+            "ProjectUser": {
+                "title": "User Project Association",
+                "description": "Modelo que representa a ligação entre um usuário e um projeto",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "description": "ID do usuário",
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "description": "ID do projeto",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
             "Qrcode": {
                 "title": "QR Code",
                 "properties": {
@@ -4522,32 +4754,6 @@
                     }
                 },
                 "type": "object"
-            },
-            "UserProject": {
-                "title": "User Project Association",
-                "description": "Modelo que representa a ligação entre um usuário e um projeto",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "user_id": {
-                        "description": "ID do usuário",
-                        "type": "integer"
-                    },
-                    "project_id": {
-                        "description": "ID do projeto",
-                        "type": "integer"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                },
-                "type": "object"
             }
         },
         "securitySchemes": {
@@ -4600,6 +4806,10 @@
             "description": "Projects"
         },
         {
+            "name": "User Projects",
+            "description": "User Projects"
+        },
+        {
             "name": "QR Codes",
             "description": "QR Codes"
         },
@@ -4622,10 +4832,6 @@
         {
             "name": "Users",
             "description": "Users"
-        },
-        {
-            "name": "User Projects",
-            "description": "User Projects"
         }
     ]
 }
