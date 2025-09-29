@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * schema="ColumnHistory",
  * type="object",
  * title="Column History",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="task_id", type="integer"),
- * @OA\Property(property="old_column", ref="#/components/schemas/Column", description="A coluna de onde a tarefa saiu"),
- * @OA\Property(property="new_column", ref="#/components/schemas/Column", description="A coluna para onde a tarefa foi"),
- * @OA\Property(property="changed_at", type="string", format="date-time", description="Quando a mudança ocorreu"),
- * }
+ * description="Registra o histórico de movimentação de uma tarefa entre colunas.",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único do registro de histórico"),
+ * @OA\Property(property="task_id", type="integer", description="ID da tarefa que foi movida"),
+ * @OA\Property(property="old_column_id", type="integer", description="ID da coluna de origem da tarefa"),
+ * @OA\Property(property="new_column_id", type="integer", description="ID da coluna de destino da tarefa"),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data em que a mudança ocorreu"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização do registro")
  * )
  */
 class ColumnHistory extends Model

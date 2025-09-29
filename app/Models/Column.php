@@ -11,13 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * schema="Column",
  * type="object",
  * title="Column",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="project_id", type="integer"),
- * @OA\Property(property="name", type="string"),
- * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time")
- * }
+ * description="Representa uma coluna (ou estágio) dentro de um projeto Kanban.",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único da coluna"),
+ * @OA\Property(property="project_id", type="integer", description="ID do projeto ao qual a coluna pertence", example=1),
+ * @OA\Property(property="name", type="string", description="Nome da coluna", example="A Fazer"),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização")
  * )
  */
 class Column extends Model

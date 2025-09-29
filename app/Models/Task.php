@@ -16,22 +16,34 @@ use Spatie\Activitylog\LogOptions;
  * schema="Task",
  * type="object",
  * title="Task",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="name", type="string", description="Nome da tarefa"),
+ * description="Representa uma tarefa dentro de um projeto ou campanha.",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único da tarefa"),
+ * @OA\Property(property="client_id", type="integer", nullable=true, description="ID do cliente associado à tarefa"),
+ * @OA\Property(property="campaign_id", type="integer", nullable=true, description="ID da campanha associada à tarefa"),
+ * @OA\Property(property="user_id", type="integer", description="ID do usuário que criou a tarefa"),
+ * @OA\Property(property="column_id", type="integer", description="ID da coluna (status) à qual a tarefa pertence"),
+ * @OA\Property(property="name", type="string", description="Nome ou título da tarefa", example="Criar layout para post de Instagram"),
+ * @OA\Property(property="start_date", type="string", format="date", nullable=true, description="Data de início da tarefa"),
+ * @OA\Property(property="type_task", type="string", enum={"bug", "feature", "improvement", "epic"}, description="Tipo da tarefa", example="feature"),
+ * @OA\Property(property="number", type="integer", nullable=true, description="Número identificador da tarefa (se aplicável)"),
  * @OA\Property(property="description", type="string", nullable=true, description="Descrição detalhada da tarefa"),
- * @OA\Property(property="due_date", type="string", format="date", description="Data de vencimento"),
- * @OA\Property(property="column", ref="#/components/schemas/Column", description="A coluna (status) à qual a tarefa pertence"),
- * @OA\Property(property="users", type="array", @OA\Items(ref="#/components/schemas/User"), description="Lista de usuários responsáveis pela tarefa"),
- * @OA\Property(property="involved_users", type="array", @OA\Items(type="integer"), description="Campo legado com IDs dos usuários envolvidos"),
- * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time")
- * }
+ * @OA\Property(property="comment", type="string", nullable=true, description="Comentários adicionais sobre a tarefa"),
+ * @OA\Property(property="due_date", type="string", format="date", nullable=true, description="Data de vencimento da tarefa"),
+ * @OA\Property(property="priority", type="string", enum={"low", "medium", "high", "urgent"}, description="Nível de prioridade da tarefa", example="high"),
+ * @OA\Property(property="file", type="string", nullable=true, description="Caminho para um arquivo anexo à tarefa"),
+ * @OA\Property(property="archived", type="boolean", description="Indica se a tarefa está arquivada", default=false),
+ * @OA\Property(property="order_position", type="integer", description="Posição ordinal da tarefa dentro da sua coluna para ordenação", example=1),
+ * @OA\Property(property="involved_users", type="array", @OA\Items(type="integer"), description="Array com os IDs dos usuários envolvidos/responsáveis pela tarefa", example={1, 5}),
+ * @OA\Property(property="timer_status", type="integer", description="Status do cronômetro (ex: 0=parado, 1=rodando)", example=0),
+ * @OA\Property(property="last_started", type="string", format="date-time", nullable=true, description="Última vez que o cronômetro da tarefa foi iniciado"),
+ * @OA\Property(property="time_spent", type="integer", description="Tempo total gasto na tarefa (em segundos)", example=3600),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização")
  * )
  */
 class Task extends Model
 {
-     use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'client_id',
@@ -63,7 +75,7 @@ class Task extends Model
         'last_started'   => 'datetime',
         'time_spent'     => 'integer',
         'timer_status'   => 'integer',
-        'type_task' => TaskTypeEnum::class,
+        'type_task'      => TaskTypeEnum::class,
     ];
     public function getActivitylogOptions(): LogOptions
     {
@@ -95,7 +107,7 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function column(): BelongsTo 
+    public function column(): BelongsTo
     {
         return $this->belongsTo(Column::class);
     }
@@ -105,7 +117,7 @@ class Task extends Model
         return $this->hasMany(ColumnHistory::class);
     }
 
-        public function users(): BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_user');
     }

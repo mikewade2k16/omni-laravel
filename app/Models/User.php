@@ -19,19 +19,21 @@ use App\Enums\UserTypeEnum;
  * schema="User",
  * type="object",
  * title="User",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="name", type="string"),
- * @OA\Property(property="email", type="string", format="email"),
- * @OA\Property(property="nick", type="string"),
- * @OA\Property(property="status", type="string"),
- * @OA\Property(property="user_type", type="string"),
- * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time"),
- * @OA\Property(property="projects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Projetos criados pelo usuário"),
- * @OA\Property(property="accessibleProjects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Projetos que o usuário tem acesso"),
- * @OA\Property(property="tasks", type="array", @OA\Items(ref="#/components/schemas/Task"), description="Tarefas pelas quais o usuário é responsável")
- * }
+ * description="Modelo de dados do usuário, contendo informações de autenticação e perfil.",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único do usuário"),
+ * @OA\Property(property="name", type="string", description="Nome completo do usuário", example="João da Silva"),
+ * @OA\Property(property="email", type="string", format="email", description="Endereço de e-mail do usuário", example="joao.silva@example.com"),
+ * @OA\Property(property="password", type="string", format="password", writeOnly=true, description="Senha do usuário (apenas para escrita)"),
+ * @OA\Property(property="nick", type="string", description="Apelido ou nome de usuário", example="joao.s"),
+ * @OA\Property(property="status", type="string", enum={"active", "inactive", "suspended"}, description="Status da conta do usuário", example="active"),
+ * @OA\Property(property="user_type", type="string", enum={"admin", "manager", "member", "client"}, description="Tipo de usuário no sistema", example="member"),
+ * @OA\Property(property="level", type="string", enum={"beginner", "intermediate", "advanced", "specialist"}, description="Nível de experiência ou cargo do usuário", example="intermediate"),
+ * @OA\Property(property="email_verified_at", type="string", format="date-time", readOnly=true, nullable=true, description="Data e hora da verificação do e-mail"),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação do usuário"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização do usuário"),
+ * @OA\Property(property="projects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Lista de projetos criados pelo usuário (geralmente carregado sob demanda)."),
+ * @OA\Property(property="accessibleProjects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Lista de projetos aos quais o usuário tem acesso como membro (geralmente carregado sob demanda)."),
+ * @OA\Property(property="tasks", type="array", @OA\Items(ref="#/components/schemas/Task"), description="Lista de tarefas atribuídas ao usuário (geralmente carregado sob demanda).")
  * )
  */
 class User extends Authenticatable implements JWTSubject
@@ -71,8 +73,8 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'status' => UserStatusEnum::class,    
-        'level' => UserLevelEnum::class,       
+        'status' => UserStatusEnum::class,
+        'level' => UserLevelEnum::class,
         'user_type' => UserTypeEnum::class,
     ];
     /**
@@ -109,7 +111,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Os projetos aos quais o usuário tem acesso (como membro).
      */
-    public function accessibleProjects(): BelongsToMany 
+    public function accessibleProjects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'project_user');
     }
