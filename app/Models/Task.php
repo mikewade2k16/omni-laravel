@@ -20,7 +20,7 @@ use Spatie\Activitylog\LogOptions;
  * @OA\Property(property="id", type="integer", readOnly=true, description="ID único da tarefa"),
  * @OA\Property(property="client_id", type="integer", nullable=true, description="ID do cliente associado à tarefa"),
  * @OA\Property(property="campaign_id", type="integer", nullable=true, description="ID da campanha associada à tarefa"),
- * @OA\Property(property="user_id", type="integer", description="ID do usuário que criou a tarefa"),
+ * @OA\Property(property="user_id", type="integer", description="ID do usuário que criou a tarefa (Esse usuário é automaticamente adicionado como envolvido)"),
  * @OA\Property(property="column_id", type="integer", description="ID da coluna (status) à qual a tarefa pertence"),
  * @OA\Property(property="name", type="string", description="Nome ou título da tarefa", example="Criar layout para post de Instagram"),
  * @OA\Property(property="start_date", type="string", format="date", nullable=true, description="Data de início da tarefa"),
@@ -77,6 +77,19 @@ class Task extends Model
         'timer_status'   => 'integer',
         'type_task'      => TaskTypeEnum::class,
     ];
+    /**
+     * O método "boot" do model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($task) {
+            $task->users()->attach($task->user_id, [], false);
+        });
+    }
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
