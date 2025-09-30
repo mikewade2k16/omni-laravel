@@ -3197,7 +3197,10 @@
                     "nick",
                     "email",
                     "password",
-                    "password_confirmation"
+                    "password_confirmation",
+                    "status",
+                    "level",
+                    "user_type"
                 ],
                 "properties": {
                     "name": {
@@ -3222,6 +3225,21 @@
                         "type": "string",
                         "format": "password",
                         "example": "senha123"
+                    },
+                    "status": {
+                        "description": "Status do usuário (ex: active, inactive)",
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "level": {
+                        "description": "Nível de acesso do usuário",
+                        "type": "string",
+                        "example": "marketing"
+                    },
+                    "user_type": {
+                        "description": "Tipo de usuário (ex: admin, client)",
+                        "type": "string",
+                        "example": "admin"
                     }
                 },
                 "type": "object"
@@ -3394,6 +3412,7 @@
                 "type": "object"
             },
             "StoreCollectionRequest": {
+                "title": "Store Collection Request",
                 "required": [
                     "name",
                     "slug",
@@ -3419,27 +3438,104 @@
                     },
                     "visibility": {
                         "type": "string",
+                        "enum": [
+                            "public",
+                            "private",
+                            "unlisted"
+                        ],
                         "example": "private"
                     },
                     "agency_access": {
                         "type": "boolean",
                         "example": true
                     },
+                    "icon": {
+                        "description": "Ícone associado à coleção",
+                        "type": "string",
+                        "example": "fa-users",
+                        "nullable": true
+                    },
+                    "description": {
+                        "description": "Descrição detalhada sobre o propósito da coleção",
+                        "type": "string",
+                        "nullable": true
+                    },
                     "schema_json": {
                         "type": "object",
                         "example": {
-                            "campo_email": "email",
-                            "campo_telefone": "tel"
+                            "fields": [
+                                {
+                                    "name": "email",
+                                    "type": "email"
+                                },
+                                {
+                                    "name": "telefone",
+                                    "type": "tel"
+                                }
+                            ]
                         }
                     }
                 },
                 "type": "object"
             },
             "UpdateCollectionRequest": {
+                "title": "Update Collection Request",
+                "description": "Todos os campos são opcionais. Envie apenas os que deseja alterar.",
                 "properties": {
                     "name": {
                         "type": "string",
                         "example": "Leads Qualificados do Site"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "leads-qualificados-site"
+                    },
+                    "owner_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private",
+                            "unlisted"
+                        ],
+                        "example": "private"
+                    },
+                    "agency_access": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "icon": {
+                        "type": "string",
+                        "example": "fa-star",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Coleção atualizada para leads qualificados.",
+                        "nullable": true
+                    },
+                    "schema_json": {
+                        "type": "object",
+                        "example": {
+                            "fields": [
+                                {
+                                    "name": "email",
+                                    "type": "email"
+                                },
+                                {
+                                    "name": "status",
+                                    "type": "string"
+                                }
+                            ]
+                        }
                     }
                 },
                 "type": "object"

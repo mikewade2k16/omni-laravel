@@ -6,29 +6,31 @@ use App\Models\CollectionView;
 
 class CollectionViewRepository
 {
-    public function all()
+    public function list()
     {
         return CollectionView::all();
     }
 
-    public function find($id)
+    public function findOrFail($id)
     {
         return CollectionView::findOrFail($id);
     }
 
-    public function create(array $data)
+    public function store(array $data)
     {
         return CollectionView::create($data);
     }
 
-    public function update(CollectionView $view, array $data)
+    public function update(int $id, array $data)
     {
+        $view = $this->findOrFail($id);
         $view->update($data);
         return $view;
     }
 
-    public function delete(CollectionView $view)
+    public function delete(int $id)
     {
+        $view = $this->findOrFail($id);
         return $view->delete();
     }
 }

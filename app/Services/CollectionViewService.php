@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\CollectionViewRepository;
-use App\Models\CollectionView;
 
 class CollectionViewService
 {
@@ -14,32 +13,31 @@ class CollectionViewService
         $this->repository = $repository;
     }
 
-    public function getAll()
+    public function list()
     {
-        return $this->repository->all();
+        return $this->repository->list();
     }
 
     public function getById($id)
     {
-        return $this->repository->find($id);
+        return $this->repository->findOrFail($id);
     }
 
-    public function create(array $data)
+    public function store(array $data)
     {
-        return $this->repository->create($data);
+        $userId = auth()->id();
+        $data['created_by'] = $userId;
+        return $this->repository->store($data);
     }
 
     public function update(int $id, array $data)
     {
-        $view = $this->repository->find($id);
-
-        return $this->repository->update($view, $data);
+        return $this->repository->update($id, $data);
     }
+
 
     public function delete(int $id)
     {
-        $view = $this->repository->find($id);
-
-        return $this->repository->delete($view);
+        return $this->repository->delete($id);
     }
 }

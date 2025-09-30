@@ -38,12 +38,15 @@ use App\Http\Requests\User\StoreUserRequest;
  * schema="RegisterRequest",
  * type="object",
  * title="Register Request",
- * required={"name", "nick", "email", "password", "password_confirmation"},
+ * required={"name", "nick", "email", "password", "password_confirmation", "status", "level", "user_type"},
  * @OA\Property(property="name", type="string", example="Edson Oliveira"),
  * @OA\Property(property="nick", type="string", example="edinho"),
  * @OA\Property(property="email", type="string", format="email", example="edson@example.com"),
  * @OA\Property(property="password", type="string", format="password", example="senha123"),
- * @OA\Property(property="password_confirmation", type="string", format="password", example="senha123")
+ * @OA\Property(property="password_confirmation", type="string", format="password", example="senha123"),
+ * @OA\Property(property="status", type="string", example="active", description="Status do usuário (ex: active, inactive)"),
+ * @OA\Property(property="level", type="string", example="marketing", description="Nível de acesso do usuário"),
+ * @OA\Property(property="user_type", type="string", example="admin", description="Tipo de usuário (ex: admin, client)")
  * )
  */
 class AuthController extends Controller

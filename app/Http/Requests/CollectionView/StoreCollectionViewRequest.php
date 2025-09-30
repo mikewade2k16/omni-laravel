@@ -18,7 +18,7 @@ class StoreCollectionViewRequest extends FormRequest
             'name'          => 'required|string|max:255',
             'type'          => 'required|string|max:50',
             'config'        => 'nullable|array',
-            'created_by'    => 'required|exists:users,id',
+            // 'created_by'    => 'required|exists:users,id',
         ];
     }
 }
