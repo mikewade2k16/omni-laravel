@@ -69,10 +69,18 @@ class FilesOmniController extends Controller
      * @OA\Response(response=404, description="Arquivo não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $file = $this->service->find($id);
-        return new FilesOmniResource($file);
+        try {
+            $file = $this->service->find($id);
+
+            if (!$file) {
+                return response()->json(['message' => 'Arquivo não encontrado'], 404);
+            }
+            return response()->json(new FilesOmniResource($file), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar arquivo', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

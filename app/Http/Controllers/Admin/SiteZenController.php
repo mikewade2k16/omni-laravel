@@ -76,10 +76,18 @@ class SiteZenController extends Controller
      * @OA\Response(response=404, description="Registro não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $siteZen = $this->service->find($id);
-        return new SiteZenResource($siteZen);
+        try {
+            $siteZen = $this->service->find($id);
+
+            if (!$siteZen) {
+                return response()->json(['message' => 'SiteZen não encontrada'], 404);
+            }
+            return response()->json(new SiteZenResource($siteZen), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar SiteZen', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

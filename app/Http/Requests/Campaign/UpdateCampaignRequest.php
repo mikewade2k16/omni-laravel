@@ -24,7 +24,7 @@ class UpdateCampaignRequest extends FormRequest
     public function rules()
     {
         return [
-            'client_id' => 'required|integer|exists:clients,id',
+            'client_id' => 'nullable|integer|exists:clients,id',
             'name'      => 'required|string|max:255',
             'description' => 'nullable|string',
             'start_date' => 'nullable|date',

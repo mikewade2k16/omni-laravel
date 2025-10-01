@@ -64,10 +64,18 @@ class CollectionViewController extends Controller
      * @OA\Response(response=404, description="Visualização não encontrada")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $view = $this->service->find($id);
-        return new CollectionViewResource($view);
+        try {
+            $view = $this->service->find($id);
+
+            if (!$view) {
+                return response()->json(['message' => 'CollectionView não encontrada'], 404);
+            }
+            return response()->json(new CollectionViewResource($view), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar CollectionView', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

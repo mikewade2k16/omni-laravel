@@ -67,10 +67,18 @@ class CampaignController extends Controller
      * @OA\Response(response=404, description="Campanha não encontrada")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $campaign = $this->service->find($id);
-        return new CampaignResource($campaign);
+        try {
+            $campaign = $this->service->find($id);
+
+            if (!$campaign) {
+                return response()->json(['message' => 'Campanha não encontrada'], 404);
+            }
+            return response()->json(new CampaignResource($campaign), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar campanha', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

@@ -50,9 +50,18 @@ class ProjectUserController extends Controller
      * @OA\Response(response=404, description="Associação não encontrada")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        return $this->service->find($id);
+        try {
+            $projectUser = $this->service->find($id);
+
+            if (!$projectUser) {
+                return response()->json(['message' => 'ProjectUser não encontrada'], 404);
+            }
+            return response()->json(new \App\Http\Resources\ProjectUserResource($projectUser), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar ProjectUser', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

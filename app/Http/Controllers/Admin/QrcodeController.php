@@ -61,15 +61,18 @@ class QrcodeController extends Controller
      * @OA\Response(response=404, description="QR Code não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $qrcode = $this->service->find($id);
+        try {
+            $qrcode = $this->service->find($id);
 
-        if (!$qrcode) {
-            return response()->json(['message' => 'QR Code não encontrado'], Response::HTTP_NOT_FOUND);
+            if (!$qrcode) {
+                return response()->json(['message' => 'QR Code não encontrada'], 404);
+            }
+            return response()->json(new QrcodeResource($qrcode), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar QR Code', 'error' => $e->getMessage()], 500);
         }
-
-        return new QrcodeResource($qrcode);
     }
 
     /**

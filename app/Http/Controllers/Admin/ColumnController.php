@@ -79,10 +79,18 @@ class ColumnController extends Controller
      * @OA\Response(response=404, description="Coluna não encontrada")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $column = $this->service->find($id);
-        return new ColumnResource($column);
+        try {
+            $column = $this->service->find($id);
+
+            if (!$column) {
+                return response()->json(['message' => 'Coluna não encontrada'], 404);
+            }
+            return response()->json(new ColumnResource($column), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar coluna', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

@@ -73,11 +73,18 @@ class ProjectController extends Controller
      * @OA\Response(response=404, description="Projeto não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $project = $this->service->find($id);
-        $this->authorize('view', $project); // ✅ VERIFICA A PERMISSÃO
-        return new ProjectResource($project);
+        try {
+            $project = $this->service->find($id);
+
+            if (!$project) {
+                return response()->json(['message' => 'Projeto não encontrado'], 404);
+            }
+            return response()->json(new ProjectResource($project), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar projeto', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

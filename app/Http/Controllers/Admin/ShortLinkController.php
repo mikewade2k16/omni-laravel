@@ -62,10 +62,18 @@ class ShortLinkController extends Controller
      * @OA\Response(response=404, description="Link curto não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $shortLink = $this->service->find($id);
-        return new ShortLinkResource($shortLink);
+        try {
+            $shortLink = $this->service->find($id);
+
+            if (!$shortLink) {
+                return response()->json(['message' => 'ShortLink não encontrado'], 404);
+            }
+            return response()->json(new ShortLinkResource($shortLink), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar ShortLink', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

@@ -63,10 +63,18 @@ class UserController extends Controller
      * @OA\Response(response=404, description="Usuário não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $user = $this->service->find($id);
-        return new UserResource($user);
+        try {
+            $user = $this->service->find($id);
+
+            if (!$user) {
+                return response()->json(['message' => 'Usuário não encontrado'], 404);
+            }
+            return response()->json(new UserResource($user), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar usuário', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

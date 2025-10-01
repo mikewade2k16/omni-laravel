@@ -18,7 +18,7 @@ class CollectionViewService
         return $this->repository->list();
     }
 
-    public function getById($id)
+    public function find($id)
     {
         return $this->repository->findOrFail($id);
     }
