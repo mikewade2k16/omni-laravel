@@ -27,7 +27,7 @@ class ProjectUserController extends Controller
 
     /**
      * @OA\Get(
-     * path="/api/admin/user-projects",
+     * path="/api/admin/projects-user",
      * summary="Lista todas as associações entre usuários e projetos",
      * tags={"User Projects"},
      * security={{"bearerAuth":{}}},
@@ -41,7 +41,7 @@ class ProjectUserController extends Controller
 
     /**
      * @OA\Get(
-     * path="/api/admin/user-projects/{id}",
+     * path="/api/admin/projects-user/{id}",
      * summary="Busca uma associação pelo ID",
      * tags={"User Projects"},
      * security={{"bearerAuth":{}}},
@@ -57,7 +57,7 @@ class ProjectUserController extends Controller
 
     /**
      * @OA\Post(
-     * path="/api/admin/user-projects",
+     * path="/api/admin/projects-user",
      * summary="Cria uma nova associação entre usuário e projeto",
      * tags={"User Projects"},
      * security={{"bearerAuth":{}}},
@@ -81,7 +81,7 @@ class ProjectUserController extends Controller
 
     /**
      * @OA\Put(
-     * path="/api/admin/user-projects/{id}",
+     * path="/api/admin/projects-user/{id}",
      * summary="Atualiza uma associação (não comum, geralmente se deleta e cria)",
      * tags={"User Projects"},
      * security={{"bearerAuth":{}}},
@@ -106,7 +106,7 @@ class ProjectUserController extends Controller
 
     /**
      * @OA\Delete(
-     * path="/api/admin/user-projects/{id}",
+     * path="/api/admin/projects-user/{id}",
      * summary="Deleta uma associação entre usuário e projeto",
      * tags={"User Projects"},
      * security={{"bearerAuth":{}}},

@@ -27,6 +27,10 @@ class QrcodeService
 
     public function store(array $data)
     {
+        $userId = auth()->id();
+
+        $data['created_by'] = $userId;
+
         DB::beginTransaction();
         try {
             $qrcode = $this->repository->create($data);

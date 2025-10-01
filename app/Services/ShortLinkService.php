@@ -18,12 +18,12 @@ class ShortLinkService
         return $this->repository->all();
     }
 
-    public function get(int $id)
+    public function find(int $id)
     {
         return $this->repository->find($id);
     }
 
-    public function create(array $data)
+    public function store(array $data)
     {
         return $this->repository->create($data);
     }

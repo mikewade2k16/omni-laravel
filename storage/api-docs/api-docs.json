@@ -1828,13 +1828,13 @@
                 ]
             }
         },
-        "/api/admin/user-projects": {
+        "/api/admin/projects-user": {
             "get": {
                 "tags": [
                     "User Projects"
                 ],
                 "summary": "Lista todas as associações entre usuários e projetos",
-                "operationId": "8e269613632d1dea3c13f967c0d7e08a",
+                "operationId": "7acabf2de1bf66dce0044418d4f5027e",
                 "responses": {
                     "200": {
                         "description": "Sucesso",
@@ -1861,7 +1861,7 @@
                     "User Projects"
                 ],
                 "summary": "Cria uma nova associação entre usuário e projeto",
-                "operationId": "c7f7de8c78d1b7ec173931e3d2b14b1f",
+                "operationId": "874f99848eee9944c0103cb9dea91bb9",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1894,13 +1894,13 @@
                 ]
             }
         },
-        "/api/admin/user-projects/{id}": {
+        "/api/admin/projects-user/{id}": {
             "get": {
                 "tags": [
                     "User Projects"
                 ],
                 "summary": "Busca uma associação pelo ID",
-                "operationId": "6c87327046738a6dd7686b3354098f3d",
+                "operationId": "007a57dcf3251970fd505d07d4f4c84c",
                 "parameters": [
                     {
                         "name": "id",
@@ -1937,7 +1937,7 @@
                     "User Projects"
                 ],
                 "summary": "Atualiza uma associação (não comum, geralmente se deleta e cria)",
-                "operationId": "a938178ea283620eed5971fa8515c653",
+                "operationId": "87fa88ce2c69e2c2cd62066914433aaa",
                 "parameters": [
                     {
                         "name": "id",
@@ -1984,7 +1984,7 @@
                     "User Projects"
                 ],
                 "summary": "Deleta uma associação entre usuário e projeto",
-                "operationId": "f4eddcf48f960191f32dcb7904f25902",
+                "operationId": "33abfd75d38a2d71a8825ea807431151",
                 "parameters": [
                     {
                         "name": "id",
@@ -3933,6 +3933,12 @@
                         "format": "url",
                         "example": "https://minha-url-muito-longa-para-uma-campanha.com/landing-page"
                     },
+                    "short_url": {
+                        "description": "A URL encurtada completa, pronta para ser compartilhada",
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://meu.site/aB1cD2eF"
+                    },
                     "slug": {
                         "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
                         "type": "string",
@@ -3951,7 +3957,23 @@
                     "target_url": {
                         "type": "string",
                         "format": "url",
-                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/nova-landing-page"
+                        "example": "https://novo-url-muito-longa-para-uma-campanha.com/landing-page"
+                    },
+                    "short_url": {
+                        "description": "A URL encurtada completa, pronta para ser compartilhada",
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://campanha.site/aB1cD2eF"
+                    },
+                    "slug": {
+                        "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
+                        "type": "string",
+                        "example": "promo-ano-novo"
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3960,43 +3982,134 @@
                 "required": [
                     "mes",
                     "visitas",
-                    "compras"
+                    "compras",
+                    "novas_visitas",
+                    "taxa_conversao",
+                    "ticket_medio",
+                    "pa",
+                    "receita_total"
                 ],
                 "properties": {
                     "mes": {
                         "type": "string",
-                        "example": "Fevereiro"
+                        "maxLength": 50,
+                        "example": "Janeiro"
                     },
                     "visitas": {
                         "type": "integer",
-                        "example": 18000
+                        "format": "int32",
+                        "example": 1500
                     },
                     "compras": {
                         "type": "integer",
-                        "example": 450
+                        "format": "int32",
+                        "example": 50
+                    },
+                    "novas_visitas": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1200
                     },
                     "taxa_conversao": {
                         "type": "number",
                         "format": "float",
-                        "example": 3.1
+                        "example": 3.33
                     },
                     "ticket_medio": {
                         "type": "number",
                         "format": "float",
-                        "example": 180
+                        "example": 250.75
+                    },
+                    "pa": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.5
+                    },
+                    "receita_total": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 12537.5
+                    },
+                    "produtos_mais_vistos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "produtos_comprados": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "funil_usuarios": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"
             },
             "UpdateSiteZenRequest": {
                 "properties": {
+                    "mes": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "example": "Janeiro"
+                    },
                     "visitas": {
                         "type": "integer",
-                        "example": 18500
+                        "format": "int32",
+                        "example": 1500
                     },
                     "compras": {
                         "type": "integer",
-                        "example": 470
+                        "format": "int32",
+                        "example": 50
+                    },
+                    "novas_visitas": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1200
+                    },
+                    "taxa_conversao": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 3.33
+                    },
+                    "ticket_medio": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 250.75
+                    },
+                    "pa": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.5
+                    },
+                    "receita_total": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 12537.5
+                    },
+                    "produtos_mais_vistos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "produtos_comprados": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "funil_usuarios": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"

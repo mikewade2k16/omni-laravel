@@ -19,7 +19,7 @@ class StoreQrcodeRequest extends FormRequest
             'qr_image_path' => 'nullable|string',
             'is_active' => 'boolean',
             'client_id' => 'nullable|exists:clients,id',
-            'created_by' => 'required|exists:users,id',
+            //'created_by' => 'required|exists:users,id',
         ];
     }
 }

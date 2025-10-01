@@ -14,14 +14,18 @@ use Illuminate\Http\JsonResponse;
  * schema="StoreShortLinkRequest",
  * required={"target_url"},
  * @OA\Property(property="target_url", type="string", format="url", example="https://minha-url-muito-longa-para-uma-campanha.com/landing-page"),
+ * @OA\Property(property="short_url", type="string", format="url", description="A URL encurtada completa, pronta para ser compartilhada", example="https://meu.site/aB1cD2eF"),
  * @OA\Property(property="slug", type="string", example="promo-natal", description="Opcional. Se não enviado, um slug aleatório será gerado."),
  * @OA\Property(property="client_id", type="integer", example=1, nullable=true)
  * )
  *
  * @OA\Schema(
  * schema="UpdateShortLinkRequest",
- * @OA\Property(property="target_url", type="string", format="url", example="https://minha-url-muito-longa-para-uma-campanha.com/nova-landing-page")
- * )
+ * @OA\Property(property="target_url", type="string", format="url", example="https://novo-url-muito-longa-para-uma-campanha.com/landing-page"),
+ * @OA\Property(property="short_url", type="string", format="url", description="A URL encurtada completa, pronta para ser compartilhada", example="https://campanha.site/aB1cD2eF"),
+ * @OA\Property(property="slug", type="string", example="promo-ano-novo", description="Opcional. Se não enviado, um slug aleatório será gerado."),
+ * @OA\Property(property="client_id", type="integer", example=1, nullable=true)
+ * ) 
  */
 class ShortLinkController extends Controller
 {
