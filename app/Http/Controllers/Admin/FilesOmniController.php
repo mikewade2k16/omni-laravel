@@ -12,15 +12,21 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Schema(
  * schema="StoreFilesOmniRequest",
- * required={"client_id", "uploaded_by", "file_path", "file_name", "file_type"},
+ * type="object",
+ * title="Store FilesOmni Request",
+ * required={"task_id", "client_id", "uploaded_by", "file_path", "file_name", "file_type", "version"},
+ * properties={
+ * @OA\Property(property="task_id", type="integer", example=1),
  * @OA\Property(property="client_id", type="integer", example=1),
- * @OA\Property(property="task_id", type="integer", example=1, nullable=true),
  * @OA\Property(property="uploaded_by", type="integer", example=1),
  * @OA\Property(property="file_path", type="string", example="uploads/clients/file123.pdf"),
  * @OA\Property(property="file_name", type="string", example="contrato.pdf"),
  * @OA\Property(property="file_type", type="string", example="application/pdf"),
- * @OA\Property(property="version", type="integer", example=1),
+ * @OA\Property(property="version", type="string", enum={"preview", "final", "for_color"}, example="final"),
+ * @OA\Property(property="video_orientation", type="string", enum={"vertical", "horizontal"}, example="vertical"),
+ * @OA\Property(property="cover_image", type="string", example="path/to/cover.jpg"),
  * @OA\Property(property="published", type="boolean", example=true)
+ * }
  * )
  *
  * @OA\Schema(

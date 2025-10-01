@@ -13,12 +13,13 @@ use App\Http\Controllers\Admin\CollectionItemController;
 use App\Http\Controllers\Admin\CollectionViewController;
 use App\Http\Controllers\Admin\FilesOmniController;
 use App\Http\Controllers\Admin\ProjectController;
-use App\Http\Controllers\Admin\UserProjectController;
+use App\Http\Controllers\Admin\ProjectUserController;
 use App\Http\Controllers\Admin\QrcodeController;
 use App\Http\Controllers\Admin\ShortLinkController;
 use App\Http\Controllers\Admin\SiteZenController;
 use App\Http\Controllers\Admin\ColumnController;
 use App\Http\Controllers\Admin\ColumnHistoryController;
+use App\Http\Controllers\Admin\TaskActivityController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,6 +56,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('tasks/{id}', [TaskController::class, 'show']);
         Route::put('tasks/{id}', [TaskController::class, 'update']);
         Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
+        Route::get('tasks/{task}/activities', [TaskActivityController::class, 'index']);
 
         // Rotas para Clients
         Route::get('clients', [ClientController::class, 'index']);
@@ -112,12 +114,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('projects/{id}', [ProjectController::class, 'update']);
         Route::delete('projects/{id}', [ProjectController::class, 'destroy']);
 
-        // Rotas para UserProjects
-        Route::get('user-projects', [UserProjectController::class, 'index']);
-        Route::post('user-projects', [UserProjectController::class, 'store']);
-        Route::get('user-projects/{id}', [UserProjectController::class, 'show']);
-        Route::put('user-projects/{id}', [UserProjectController::class, 'update']);
-        Route::delete('user-projects/{id}', [UserProjectController::class, 'destroy']);
+        // Rotas para ProjectUsers
+        Route::get('projects-user', [ProjectUserController::class, 'index']);
+        Route::post('projects-user', [ProjectUserController::class, 'store']);
+        Route::get('projects-user/{id}', [ProjectUserController::class, 'show']);
+        Route::put('projects-user/{id}', [ProjectUserController::class, 'update']);
+        Route::delete('projects-user/{id}', [ProjectUserController::class, 'destroy']);
 
         // Rotas para Qrcodes
         Route::get('qrcodes', [QrcodeController::class, 'index']);

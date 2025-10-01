@@ -10,16 +10,31 @@ use Illuminate\Database\Eloquent\Model;
  * schema="CollectionView",
  * type="object",
  * title="Collection View",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="collection_id", type="integer"),
- * @OA\Property(property="name", type="string", description="Nome da visualização"),
- * @OA\Property(property="type", type="string", description="Tipo de visualização (ex: 'table', 'kanban')"),
- * @OA\Property(property="config", type="object", description="Configurações da view em formato JSON"),
- * @OA\Property(property="created_by", type="integer", description="ID do usuário que criou a view"),
- * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time")
- * }
+ * description="Representa uma visualização salva (ex: tabela, kanban) para uma coleção de dados.",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único da visualização"),
+ * @OA\Property(property="collection_id", type="integer", description="ID da coleção à qual esta visualização pertence", example=1),
+ * @OA\Property(property="name", type="string", description="Nome da visualização", example="Visão de Tabela Padrão"),
+ * @OA\Property(property="type", type="string", enum={"table", "kanban", "calendar"}, description="Tipo de visualização", example="kanban"),
+ * @OA\Property(property="created_by", type="integer", description="ID do usuário que criou a visualização", example=1),
+ * @OA\Property(
+ * property="config",
+ * type="object",
+ * description="Configurações JSON da visualização, como colunas visíveis, filtros e ordenação.",
+ * @OA\Property(
+ * property="columns",
+ * type="array",
+ * @OA\Items(type="string"),
+ * example={"id", "name", "due_date"}
+ * ),
+ * @OA\Property(
+ * property="filter",
+ * type="object",
+ * @OA\Property(property="status", type="string", example="active")
+ * ),
+ * @OA\Property(property="sort_by", type="string", example="due_date")
+ * ),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização")
  * )
  */
 class CollectionView extends Model
@@ -35,7 +50,7 @@ class CollectionView extends Model
     ];
 
     protected $casts = [
-        'config' => 'array', // converte JSON armazenado em array automaticamente
+        'config' => 'array',
     ];
 
     /**
@@ -54,3 +69,4 @@ class CollectionView extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
+

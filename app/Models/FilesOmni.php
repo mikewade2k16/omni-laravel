@@ -4,25 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\FilesOmniVersionEnum;
+use App\Enums\FilesOmniVideoOrientationEnum;
 
 /**
  * @OA\Schema(
  * schema="FilesOmni",
  * type="object",
  * title="Files Omni",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="task_id", type="integer", nullable=true, description="ID da tarefa associada"),
+ * description="Representa um arquivo genérico no sistema, associado a um cliente e opcionalmente a uma tarefa.",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único do arquivo"),
+ * @OA\Property(property="task_id", type="integer", nullable=true, description="ID da tarefa associada (opcional)"),
  * @OA\Property(property="client_id", type="integer", description="ID do cliente associado"),
  * @OA\Property(property="uploaded_by", type="integer", description="ID do usuário que fez o upload"),
- * @OA\Property(property="file_path", type="string", description="Caminho do arquivo no storage"),
- * @OA\Property(property="file_name", type="string", description="Nome original do arquivo"),
- * @OA\Property(property="file_type", type="string", description="MIME type do arquivo (ex: 'image/jpeg')"),
- * @OA\Property(property="version", type="integer", description="Versão do arquivo"),
- * @OA\Property(property="published", type="boolean", description="Se o arquivo está publicado ou não"),
- * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time")
- * }
+ * @OA\Property(property="file_path", type="string", description="Caminho do arquivo no storage", example="clients/1/tasks/123/video.mp4"),
+ * @OA\Property(property="file_name", type="string", description="Nome original do arquivo", example="video_casamento.mp4"),
+ * @OA\Property(property="file_type", type="string", description="MIME type do arquivo", example="video/mp4"),
+ * @OA\Property(property="version", type="string", description="Versão do arquivo (ex: original, editado)", enum={"original", "editado", "preview"}, example="original"),
+ * @OA\Property(property="cover_image", type="string", nullable=true, description="Caminho para a imagem de capa do arquivo (geralmente para vídeos)", example="clients/1/tasks/123/cover.jpg"),
+ * @OA\Property(property="video_orientation", type="string", nullable=true, description="Orientação do vídeo", enum={"landscape", "portrait"}, example="landscape"),
+ * @OA\Property(property="published", type="boolean", description="Indica se o arquivo está publicado e visível para o cliente", example=true),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização")
  * )
  */
 class FilesOmni extends Model
@@ -46,6 +49,8 @@ class FilesOmni extends Model
 
     protected $casts = [
         'published' => 'boolean',
+        'version' => FilesOmniVersionEnum::class,
+        'video_orientation' => FilesOmniVideoOrientationEnum::class,
     ];
 
     /**

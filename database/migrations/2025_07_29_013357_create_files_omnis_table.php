@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('file_path');
             $table->string('file_name');
             $table->string('file_type', 50);
-            $table->enum('version', ['preview', 'final', 'for_color'])->default('preview');
+            $table->string('version')->default('preview');
+            $table->string('video_orientation')->nullable();
             $table->string('cover_image')->nullable();
-            $table->enum('video_orientation', ['vertical', 'horizontal'])->nullable();
             $table->boolean('published')->default(false);
             $table->timestamps();
         });

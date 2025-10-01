@@ -12,18 +12,33 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Schema(
  * schema="StoreSiteZenRequest",
- * required={"mes", "visitas", "compras"},
- * @OA\Property(property="mes", type="string", example="Fevereiro"),
- * @OA\Property(property="visitas", type="integer", example=18000),
- * @OA\Property(property="compras", type="integer", example=450),
- * @OA\Property(property="taxa_conversao", type="number", format="float", example=3.1),
- * @OA\Property(property="ticket_medio", type="number", format="float", example=180.00)
+ * required={"mes", "visitas", "compras", "novas_visitas", "taxa_conversao", "ticket_medio", "pa", "receita_total"},
+ * @OA\Property(property="mes", type="string", maxLength=50, example="Janeiro"),
+ * @OA\Property(property="visitas", type="integer", format="int32", example=1500),
+ * @OA\Property(property="compras", type="integer", format="int32", example=50),
+ * @OA\Property(property="novas_visitas", type="integer", format="int32", example=1200),
+ * @OA\Property(property="taxa_conversao", type="number", format="float", example=3.33),
+ * @OA\Property(property="ticket_medio", type="number", format="float", example=250.75),
+ * @OA\Property(property="pa", type="number", format="float", example=1.5),
+ * @OA\Property(property="receita_total", type="number", format="float", example=12537.50),
+ * @OA\Property(property="produtos_mais_vistos", type="array", @OA\Items(type="object")),
+ * @OA\Property(property="produtos_comprados", type="array", @OA\Items(type="object")),
+ * @OA\Property(property="funil_usuarios", type="array", @OA\Items(type="object"))
  * )
  *
  * @OA\Schema(
  * schema="UpdateSiteZenRequest",
- * @OA\Property(property="visitas", type="integer", example=18500),
- * @OA\Property(property="compras", type="integer", example=470)
+ * @OA\Property(property="mes", type="string", maxLength=50, example="Janeiro"),
+ * @OA\Property(property="visitas", type="integer", format="int32", example=1500),
+ * @OA\Property(property="compras", type="integer", format="int32", example=50),
+ * @OA\Property(property="novas_visitas", type="integer", format="int32", example=1200),
+ * @OA\Property(property="taxa_conversao", type="number", format="float", example=3.33),
+ * @OA\Property(property="ticket_medio", type="number", format="float", example=250.75),
+ * @OA\Property(property="pa", type="number", format="float", example=1.5),
+ * @OA\Property(property="receita_total", type="number", format="float", example=12537.50),
+ * @OA\Property(property="produtos_mais_vistos", type="array", @OA\Items(type="object")),
+ * @OA\Property(property="produtos_comprados", type="array", @OA\Items(type="object")),
+ * @OA\Property(property="funil_usuarios", type="array", @OA\Items(type="object"))
  * )
  */
 class SiteZenController extends Controller

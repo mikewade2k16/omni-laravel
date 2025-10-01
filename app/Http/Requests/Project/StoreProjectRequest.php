@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Project;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\ProjectStatusEnum;
 
 class StoreProjectRequest extends FormRequest
 {
@@ -16,7 +18,7 @@ class StoreProjectRequest extends FormRequest
         return [
             'client_id' => 'required|integer|exists:clients,id',
             'name' => 'required|string|max:255',
-            'status' => 'required|string|max:50',
+            'status' => ['required', new Enum(ProjectStatusEnum::class)],
             'visibility'   => 'sometimes|string|in:public,private',
             'members'      => 'nullable|array',                    
             'members.*'    => 'integer|exists:users,id',   

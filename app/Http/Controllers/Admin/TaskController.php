@@ -12,13 +12,23 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Schema(
  * schema="StoreTaskRequest",
- * required={"name", "column_id", "client_id", "user_id"},
+ * type="object",
+ * title="Store Task Request",
+ * required={"client_id", "user_id", "name", "column_id", "type_task", "priority"},
+ * properties={
+ * @OA\Property(property="client_id", type="integer", example=1),
+ * @OA\Property(property="campaign_id", type="integer", example=1, nullable=true),
+ * @OA\Property(property="user_id", type="integer", example=1, description="ID do usuário 'dono' da tarefa"),
  * @OA\Property(property="name", type="string", example="Desenvolver API de Pagamentos"),
  * @OA\Property(property="column_id", type="integer", example=1),
- * @OA\Property(property="client_id", type="integer", example=1),
- * @OA\Property(property="user_id", type="integer", example=1, description="ID do usuário 'dono' da tarefa"),
- * @OA\Property(property="description", type="string", example="Integrar com a API do gateway X."),
- * @OA\Property(property="involved_users", type="array", @OA\Items(type="integer"), example={1, 2}, description="Array de IDs dos usuários responsáveis")
+ * @OA\Property(property="type_task", type="string", description="Tipo da tarefa", enum={"design", "video", "filme", "copy", "3D", "site", "planejamento", "CRM", "tráfego pago"}),
+ * @OA\Property(property="number", type="integer", example=101, nullable=true),
+ * @OA\Property(property="description", type="string", example="Integrar com a API do gateway X.", nullable=true),
+ * @OA\Property(property="start_date", type="string", format="date", example="2025-10-01", nullable=true),
+ * @OA\Property(property="due_date", type="string", format="date", example="2025-10-15", nullable=true),
+ * @OA\Property(property="priority", type="integer", description="Prioridade da tarefa", example=1),
+ * @OA\Property(property="involved_users", type="array", @OA\Items(type="integer"), example={1, 2}, nullable=true)
+ * }
  * )
  *
  * @OA\Schema(

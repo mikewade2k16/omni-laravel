@@ -1828,6 +1828,188 @@
                 ]
             }
         },
+        "/api/admin/projects-user": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Lista todas as associações entre usuários e projetos",
+                "operationId": "7acabf2de1bf66dce0044418d4f5027e",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProjectUser"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Cria uma nova associação entre usuário e projeto",
+                "operationId": "874f99848eee9944c0103cb9dea91bb9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProjectUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectUser"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/projects-user/{id}": {
+            "get": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Busca uma associação pelo ID",
+                "operationId": "007a57dcf3251970fd505d07d4f4c84c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectUser"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Atualiza uma associação (não comum, geralmente se deleta e cria)",
+                "operationId": "87fa88ce2c69e2c2cd62066914433aaa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProjectUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectUser"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User Projects"
+                ],
+                "summary": "Deleta uma associação entre usuário e projeto",
+                "operationId": "33abfd75d38a2d71a8825ea807431151",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Associação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/qrcodes": {
             "get": {
                 "tags": [
@@ -2365,6 +2547,49 @@
                     },
                     "404": {
                         "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/tasks/{task}/activities": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Lista o histórico de atividades de uma tarefa",
+                "operationId": "40938de65b8f337fee68f8825ce7a45b",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "ID da tarefa",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ActivityLog"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada"
                     }
                 },
                 "security": [
@@ -2919,188 +3144,6 @@
                     }
                 ]
             }
-        },
-        "/api/admin/user-projects": {
-            "get": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Lista todas as associações entre usuários e projetos",
-                "operationId": "d594ef839e734b0a3f9d6228667bff49",
-                "responses": {
-                    "200": {
-                        "description": "Sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/UserProject"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Cria uma nova associação entre usuário e projeto",
-                "operationId": "06380d175afefe3b973ff2f294dc6068",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/StoreUserProjectRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Criado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserProject"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Erro de validação"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/user-projects/{id}": {
-            "get": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Busca uma associação pelo ID",
-                "operationId": "3ef55a291bc555aa733b8f0f878a3a23",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserProject"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Associação não encontrada"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Atualiza uma associação (não comum, geralmente se deleta e cria)",
-                "operationId": "fe1495c8dd712623f62295f498a35308",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/StoreUserProjectRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Atualizado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserProject"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Associação não encontrada"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "User Projects"
-                ],
-                "summary": "Deleta uma associação entre usuário e projeto",
-                "operationId": "2948c1ef75f890469527dcc066f9ca20",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Deletado com sucesso"
-                    },
-                    "404": {
-                        "description": "Associação não encontrada"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
@@ -3154,7 +3197,10 @@
                     "nick",
                     "email",
                     "password",
-                    "password_confirmation"
+                    "password_confirmation",
+                    "status",
+                    "level",
+                    "user_type"
                 ],
                 "properties": {
                     "name": {
@@ -3179,16 +3225,33 @@
                         "type": "string",
                         "format": "password",
                         "example": "senha123"
+                    },
+                    "status": {
+                        "description": "Status do usuário (ex: active, inactive)",
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "level": {
+                        "description": "Nível de acesso do usuário",
+                        "type": "string",
+                        "example": "marketing"
+                    },
+                    "user_type": {
+                        "description": "Tipo de usuário (ex: admin, client)",
+                        "type": "string",
+                        "example": "admin"
                     }
                 },
                 "type": "object"
             },
             "StoreCampaignRequest": {
+                "title": "Store Campaign Request",
                 "required": [
                     "client_id",
                     "name",
                     "start_date",
-                    "end_date"
+                    "end_date",
+                    "status"
                 ],
                 "properties": {
                     "client_id": {
@@ -3197,25 +3260,37 @@
                     },
                     "name": {
                         "type": "string",
-                        "example": "Campanha de Verão"
+                        "example": "Campanha de Dia das Mães"
                     },
                     "description": {
                         "type": "string",
-                        "example": "Descrição da campanha de verão."
+                        "example": "Descrição detalhada da campanha.",
+                        "nullable": true
                     },
                     "start_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2025-01-30"
+                        "example": "2025-05-01"
                     },
                     "end_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2025-02-28"
+                        "example": "2025-05-12"
+                    },
+                    "banner_image": {
+                        "type": "string",
+                        "example": "path/to/image.jpg",
+                        "nullable": true
                     },
                     "status": {
                         "type": "string",
-                        "example": "active"
+                        "enum": [
+                            "ativa",
+                            "em_pausa",
+                            "concluida",
+                            "cancelada"
+                        ],
+                        "example": "ativa"
                     },
                     "channels": {
                         "type": "array",
@@ -3225,7 +3300,8 @@
                         "example": [
                             "facebook",
                             "instagram"
-                        ]
+                        ],
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3235,6 +3311,11 @@
                     "name": {
                         "type": "string",
                         "example": "Nova Campanha de Verão"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Descrição detalhada da campanha.",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3243,28 +3324,74 @@
                 "title": "Store Client Request",
                 "required": [
                     "nome",
-                    "email",
                     "cpf",
-                    "user_id"
+                    "email",
+                    "data_nasc",
+                    "rg",
+                    "contato_1",
+                    "endereco",
+                    "cep",
+                    "uf",
+                    "cidade",
+                    "bairro",
+                    "numero"
                 ],
                 "properties": {
                     "nome": {
                         "type": "string",
                         "example": "João da Silva"
                     },
+                    "cpf": {
+                        "type": "string",
+                        "example": "123.456.789-10"
+                    },
                     "email": {
                         "type": "string",
                         "format": "email",
                         "example": "joao.silva@example.com"
                     },
-                    "cpf": {
+                    "data_nasc": {
                         "type": "string",
-                        "example": "123.456.789-10"
+                        "format": "date",
+                        "example": "1990-01-15"
+                    },
+                    "rg": {
+                        "type": "string",
+                        "example": "1234567"
+                    },
+                    "contato_1": {
+                        "type": "string",
+                        "example": "79999999999"
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua das Flores"
+                    },
+                    "cep": {
+                        "type": "string",
+                        "example": "49000-000"
+                    },
+                    "uf": {
+                        "type": "string",
+                        "example": "SE"
+                    },
+                    "cidade": {
+                        "type": "string",
+                        "example": "Aracaju"
+                    },
+                    "bairro": {
+                        "type": "string",
+                        "example": "Centro"
+                    },
+                    "numero": {
+                        "type": "string",
+                        "example": "123"
                     },
                     "user_id": {
                         "description": "ID do usuário responsável",
                         "type": "integer",
-                        "example": 1
+                        "example": 1,
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3285,6 +3412,7 @@
                 "type": "object"
             },
             "StoreCollectionRequest": {
+                "title": "Store Collection Request",
                 "required": [
                     "name",
                     "slug",
@@ -3310,27 +3438,104 @@
                     },
                     "visibility": {
                         "type": "string",
+                        "enum": [
+                            "public",
+                            "private",
+                            "unlisted"
+                        ],
                         "example": "private"
                     },
                     "agency_access": {
                         "type": "boolean",
                         "example": true
                     },
+                    "icon": {
+                        "description": "Ícone associado à coleção",
+                        "type": "string",
+                        "example": "fa-users",
+                        "nullable": true
+                    },
+                    "description": {
+                        "description": "Descrição detalhada sobre o propósito da coleção",
+                        "type": "string",
+                        "nullable": true
+                    },
                     "schema_json": {
                         "type": "object",
                         "example": {
-                            "campo_email": "email",
-                            "campo_telefone": "tel"
+                            "fields": [
+                                {
+                                    "name": "email",
+                                    "type": "email"
+                                },
+                                {
+                                    "name": "telefone",
+                                    "type": "tel"
+                                }
+                            ]
                         }
                     }
                 },
                 "type": "object"
             },
             "UpdateCollectionRequest": {
+                "title": "Update Collection Request",
+                "description": "Todos os campos são opcionais. Envie apenas os que deseja alterar.",
                 "properties": {
                     "name": {
                         "type": "string",
                         "example": "Leads Qualificados do Site"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "leads-qualificados-site"
+                    },
+                    "owner_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "enum": [
+                            "public",
+                            "private",
+                            "unlisted"
+                        ],
+                        "example": "private"
+                    },
+                    "agency_access": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "icon": {
+                        "type": "string",
+                        "example": "fa-star",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Coleção atualizada para leads qualificados.",
+                        "nullable": true
+                    },
+                    "schema_json": {
+                        "type": "object",
+                        "example": {
+                            "fields": [
+                                {
+                                    "name": "email",
+                                    "type": "email"
+                                },
+                                {
+                                    "name": "status",
+                                    "type": "string"
+                                }
+                            ]
+                        }
                     }
                 },
                 "type": "object"
@@ -3417,11 +3622,13 @@
                 "properties": {
                     "project_id": {
                         "description": "ID do projeto ao qual a coluna pertence",
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 1
                     },
                     "name": {
                         "description": "Nome da coluna",
-                        "type": "string"
+                        "type": "string",
+                        "example": "A Fazer"
                     }
                 },
                 "type": "object"
@@ -3470,22 +3677,24 @@
                 "type": "object"
             },
             "StoreFilesOmniRequest": {
+                "title": "Store FilesOmni Request",
                 "required": [
+                    "task_id",
                     "client_id",
                     "uploaded_by",
                     "file_path",
                     "file_name",
-                    "file_type"
+                    "file_type",
+                    "version"
                 ],
                 "properties": {
-                    "client_id": {
+                    "task_id": {
                         "type": "integer",
                         "example": 1
                     },
-                    "task_id": {
+                    "client_id": {
                         "type": "integer",
-                        "example": 1,
-                        "nullable": true
+                        "example": 1
                     },
                     "uploaded_by": {
                         "type": "integer",
@@ -3504,8 +3713,25 @@
                         "example": "application/pdf"
                     },
                     "version": {
-                        "type": "integer",
-                        "example": 1
+                        "type": "string",
+                        "enum": [
+                            "preview",
+                            "final",
+                            "for_color"
+                        ],
+                        "example": "final"
+                    },
+                    "video_orientation": {
+                        "type": "string",
+                        "enum": [
+                            "vertical",
+                            "horizontal"
+                        ],
+                        "example": "vertical"
+                    },
+                    "cover_image": {
+                        "type": "string",
+                        "example": "path/to/cover.jpg"
                     },
                     "published": {
                         "type": "boolean",
@@ -3528,10 +3754,13 @@
                 "type": "object"
             },
             "StoreProjectRequest": {
+                "title": "Store Project Request",
                 "required": [
                     "client_id",
                     "name",
-                    "status"
+                    "status",
+                    "type_project",
+                    "date_project"
                 ],
                 "properties": {
                     "client_id": {
@@ -3540,15 +3769,31 @@
                     },
                     "name": {
                         "type": "string",
-                        "example": "Novo Projeto de Marketing"
+                        "example": "Novo Projeto de Website"
                     },
                     "status": {
+                        "description": "Status do projeto",
                         "type": "string",
+                        "enum": [
+                            "not_started",
+                            "raw",
+                            "started",
+                            "in_progress",
+                            "awaiting_approval",
+                            "completed",
+                            "postponed",
+                            "canceled"
+                        ],
                         "example": "not_started"
                     },
-                    "description": {
+                    "type_project": {
                         "type": "string",
-                        "example": "Descrição detalhada do projeto."
+                        "example": "Desenvolvimento"
+                    },
+                    "date_project": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-12-31"
                     },
                     "visibility": {
                         "type": "string",
@@ -3556,7 +3801,8 @@
                             "public",
                             "private"
                         ],
-                        "example": "private"
+                        "example": "private",
+                        "nullable": true
                     },
                     "members": {
                         "type": "array",
@@ -3566,7 +3812,24 @@
                         "example": [
                             1,
                             2
-                        ]
+                        ],
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Descrição detalhada do projeto.",
+                        "nullable": true
+                    },
+                    "link": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://projeto.com",
+                        "nullable": true
+                    },
+                    "goal": {
+                        "type": "string",
+                        "example": "Aumentar as vendas em 20%",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3598,6 +3861,23 @@
                             1,
                             3
                         ]
+                    }
+                },
+                "type": "object"
+            },
+            "StoreProjectUserRequest": {
+                "required": [
+                    "user_id",
+                    "project_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "project_id": {
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "type": "object"
@@ -3653,6 +3933,12 @@
                         "format": "url",
                         "example": "https://minha-url-muito-longa-para-uma-campanha.com/landing-page"
                     },
+                    "short_url": {
+                        "description": "A URL encurtada completa, pronta para ser compartilhada",
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://meu.site/aB1cD2eF"
+                    },
                     "slug": {
                         "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
                         "type": "string",
@@ -3671,7 +3957,23 @@
                     "target_url": {
                         "type": "string",
                         "format": "url",
-                        "example": "https://minha-url-muito-longa-para-uma-campanha.com/nova-landing-page"
+                        "example": "https://novo-url-muito-longa-para-uma-campanha.com/landing-page"
+                    },
+                    "short_url": {
+                        "description": "A URL encurtada completa, pronta para ser compartilhada",
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://campanha.site/aB1cD2eF"
+                    },
+                    "slug": {
+                        "description": "Opcional. Se não enviado, um slug aleatório será gerado.",
+                        "type": "string",
+                        "example": "promo-ano-novo"
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3680,55 +3982,202 @@
                 "required": [
                     "mes",
                     "visitas",
-                    "compras"
+                    "compras",
+                    "novas_visitas",
+                    "taxa_conversao",
+                    "ticket_medio",
+                    "pa",
+                    "receita_total"
                 ],
                 "properties": {
                     "mes": {
                         "type": "string",
-                        "example": "Fevereiro"
+                        "maxLength": 50,
+                        "example": "Janeiro"
                     },
                     "visitas": {
                         "type": "integer",
-                        "example": 18000
+                        "format": "int32",
+                        "example": 1500
                     },
                     "compras": {
                         "type": "integer",
-                        "example": 450
+                        "format": "int32",
+                        "example": 50
+                    },
+                    "novas_visitas": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1200
                     },
                     "taxa_conversao": {
                         "type": "number",
                         "format": "float",
-                        "example": 3.1
+                        "example": 3.33
                     },
                     "ticket_medio": {
                         "type": "number",
                         "format": "float",
-                        "example": 180
+                        "example": 250.75
+                    },
+                    "pa": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.5
+                    },
+                    "receita_total": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 12537.5
+                    },
+                    "produtos_mais_vistos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "produtos_comprados": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "funil_usuarios": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"
             },
             "UpdateSiteZenRequest": {
                 "properties": {
+                    "mes": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "example": "Janeiro"
+                    },
                     "visitas": {
                         "type": "integer",
-                        "example": 18500
+                        "format": "int32",
+                        "example": 1500
                     },
                     "compras": {
                         "type": "integer",
-                        "example": 470
+                        "format": "int32",
+                        "example": 50
+                    },
+                    "novas_visitas": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1200
+                    },
+                    "taxa_conversao": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 3.33
+                    },
+                    "ticket_medio": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 250.75
+                    },
+                    "pa": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.5
+                    },
+                    "receita_total": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 12537.5
+                    },
+                    "produtos_mais_vistos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "produtos_comprados": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "funil_usuarios": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ActivityLog": {
+                "title": "Activity Log Record",
+                "description": "Registro de uma atividade (log) realizada em um modelo",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "log_name": {
+                        "type": "string",
+                        "example": "Task"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "updated"
+                    },
+                    "subject_type": {
+                        "type": "string",
+                        "example": "App\\Models\\Task"
+                    },
+                    "subject_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "causer_id": {
+                        "description": "ID do usuário que causou a ação",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "properties": {
+                        "description": "JSON com os dados antigos e novos",
+                        "type": "object"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
             },
             "StoreTaskRequest": {
+                "title": "Store Task Request",
                 "required": [
+                    "client_id",
+                    "user_id",
                     "name",
                     "column_id",
-                    "client_id",
-                    "user_id"
+                    "type_task",
+                    "priority"
                 ],
                 "properties": {
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "campaign_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "user_id": {
+                        "description": "ID do usuário 'dono' da tarefa",
+                        "type": "integer",
+                        "example": 1
+                    },
                     "name": {
                         "type": "string",
                         "example": "Desenvolver API de Pagamentos"
@@ -3737,21 +4186,49 @@
                         "type": "integer",
                         "example": 1
                     },
-                    "client_id": {
-                        "type": "integer",
-                        "example": 1
+                    "type_task": {
+                        "description": "Tipo da tarefa",
+                        "type": "string",
+                        "enum": [
+                            "design",
+                            "video",
+                            "filme",
+                            "copy",
+                            "3D",
+                            "site",
+                            "planejamento",
+                            "CRM",
+                            "tráfego pago"
+                        ]
                     },
-                    "user_id": {
-                        "description": "ID do usuário 'dono' da tarefa",
+                    "number": {
                         "type": "integer",
-                        "example": 1
+                        "example": 101,
+                        "nullable": true
                     },
                     "description": {
                         "type": "string",
-                        "example": "Integrar com a API do gateway X."
+                        "example": "Integrar com a API do gateway X.",
+                        "nullable": true
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-01",
+                        "nullable": true
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-15",
+                        "nullable": true
+                    },
+                    "priority": {
+                        "description": "Prioridade da tarefa",
+                        "type": "integer",
+                        "example": 1
                     },
                     "involved_users": {
-                        "description": "Array de IDs dos usuários responsáveis",
                         "type": "array",
                         "items": {
                             "type": "integer"
@@ -3759,7 +4236,8 @@
                         "example": [
                             1,
                             2
-                        ]
+                        ],
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -3813,7 +4291,11 @@
                 "required": [
                     "name",
                     "email",
-                    "password"
+                    "password",
+                    "nick",
+                    "status",
+                    "level",
+                    "user_type"
                 ],
                 "properties": {
                     "name": {
@@ -3830,17 +4312,40 @@
                         "format": "password",
                         "example": "senha123"
                     },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    },
                     "nick": {
                         "type": "string",
                         "example": "edinho"
                     },
                     "status": {
                         "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
                         "example": "active"
+                    },
+                    "level": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "manager",
+                            "marketing",
+                            "finance"
+                        ],
+                        "example": "marketing"
                     },
                     "user_type": {
                         "type": "string",
-                        "example": "editor"
+                        "enum": [
+                            "client",
+                            "admin"
+                        ],
+                        "example": "client"
                     }
                 },
                 "type": "object"
@@ -3853,294 +4358,524 @@
                     },
                     "status": {
                         "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
                         "example": "inactive"
-                    }
-                },
-                "type": "object"
-            },
-            "StoreUserProjectRequest": {
-                "required": [
-                    "user_id",
-                    "project_id"
-                ],
-                "properties": {
-                    "user_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "project_id": {
-                        "type": "integer",
-                        "example": 1
                     }
                 },
                 "type": "object"
             },
             "Campaign": {
                 "title": "Campaign",
+                "description": "Modelo de Campanha de Marketing",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único da campanha",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "client_id": {
+                        "description": "ID do cliente ao qual a campanha pertence",
                         "type": "integer"
                     },
                     "name": {
-                        "type": "string"
+                        "description": "Nome da campanha",
+                        "type": "string",
+                        "example": "Promoção de Verão"
                     },
                     "description": {
+                        "description": "Descrição detalhada da campanha",
                         "type": "string"
                     },
                     "start_date": {
+                        "description": "Data de início da campanha (AAAA-MM-DD)",
                         "type": "string",
                         "format": "date",
                         "example": "2025-01-30"
                     },
                     "end_date": {
+                        "description": "Data de término da campanha (AAAA-MM-DD)",
                         "type": "string",
                         "format": "date",
                         "example": "2025-02-28"
                     },
-                    "status": {
+                    "banner_image": {
+                        "description": "URL da imagem do banner da campanha",
                         "type": "string",
-                        "example": "active"
+                        "nullable": true
+                    },
+                    "status": {
+                        "description": "Status atual da campanha",
+                        "type": "string",
+                        "enum": [
+                            "ativa",
+                            "em_pausa",
+                            "concluida",
+                            "cancelada"
+                        ],
+                        "example": "ativa"
                     },
                     "channels": {
+                        "description": "Canais de veiculação da campanha",
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
                         "example": [
                             "facebook",
-                            "instagram"
+                            "instagram",
+                            "google_ads"
                         ]
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Client": {
                 "title": "Client",
+                "description": "Modelo de Cliente",
                 "properties": {
                     "id": {
-                        "description": "ID do cliente",
-                        "type": "integer"
+                        "description": "ID único do cliente",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "nome": {
                         "description": "Nome completo do cliente",
-                        "type": "string"
+                        "type": "string",
+                        "example": "João da Silva"
+                    },
+                    "cpf": {
+                        "description": "CPF do cliente",
+                        "type": "string",
+                        "example": "123.456.789-00"
                     },
                     "email": {
                         "description": "Email do cliente",
                         "type": "string",
-                        "format": "email"
-                    },
-                    "cpf": {
-                        "description": "CPF do cliente",
-                        "type": "string"
+                        "format": "email",
+                        "example": "joao.silva@example.com"
                     },
                     "data_nasc": {
                         "description": "Data de nascimento (AAAA-MM-DD)",
                         "type": "string",
-                        "format": "date"
+                        "format": "date",
+                        "example": "1990-01-15"
+                    },
+                    "rg": {
+                        "description": "RG do cliente",
+                        "type": "string",
+                        "example": "1234567"
+                    },
+                    "org_exp": {
+                        "description": "Órgão expedidor do RG",
+                        "type": "string",
+                        "example": "SSP/SP"
                     },
                     "contato_1": {
                         "description": "Telefone de contato principal",
-                        "type": "string"
+                        "type": "string",
+                        "example": "(11) 99999-8888"
+                    },
+                    "contato_2": {
+                        "description": "Telefone de contato secundário",
+                        "type": "string",
+                        "example": "(11) 98888-7777",
+                        "nullable": true
+                    },
+                    "endereco": {
+                        "description": "Endereço (nome da rua, avenida, etc.)",
+                        "type": "string",
+                        "example": "Rua das Flores"
+                    },
+                    "cep": {
+                        "description": "Código de Endereçamento Postal (CEP)",
+                        "type": "string",
+                        "example": "01234-567"
+                    },
+                    "referencia": {
+                        "description": "Ponto de referência do endereço",
+                        "type": "string",
+                        "example": "Próximo ao mercado",
+                        "nullable": true
                     },
                     "user_id": {
-                        "description": "ID do usuário que cadastrou",
-                        "type": "integer"
+                        "description": "ID do usuário que cadastrou o cliente",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "comp_residence": {
+                        "description": "Comprovante de residência (URL ou nome do arquivo)",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "selfie": {
+                        "description": "Selfie do cliente (URL ou nome do arquivo)",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "comp_instalacao": {
+                        "description": "Comprovante do local de instalação (URL ou nome do arquivo)",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "uf": {
+                        "description": "Unidade Federativa (Estado)",
+                        "type": "string",
+                        "example": "SP"
+                    },
+                    "cidade": {
+                        "description": "Cidade do endereço",
+                        "type": "string",
+                        "example": "São Paulo"
+                    },
+                    "bairro": {
+                        "description": "Bairro do endereço",
+                        "type": "string",
+                        "example": "Centro"
+                    },
+                    "numero": {
+                        "description": "Número do endereço",
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "complemento": {
+                        "description": "Complemento do endereço",
+                        "type": "string",
+                        "example": "Apto 101",
+                        "nullable": true
+                    },
+                    "forma_pagamento": {
+                        "description": "Forma de pagamento",
+                        "type": "string",
+                        "example": "Boleto"
+                    },
+                    "outros_form_pag": {
+                        "description": "Descrição para outras formas de pagamento",
+                        "type": "string",
+                        "nullable": true
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Collection": {
                 "title": "Collection",
+                "description": "Modelo de Coleção de Dados customizável",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único da coleção",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "name": {
                         "description": "Nome da coleção",
-                        "type": "string"
+                        "type": "string",
+                        "example": "Leads de Marketing"
                     },
                     "slug": {
-                        "description": "URL amigável da coleção",
-                        "type": "string"
+                        "description": "URL amigável da coleção (geralmente gerado a partir do nome)",
+                        "type": "string",
+                        "example": "leads-de-marketing"
                     },
                     "client_id": {
-                        "description": "ID do cliente associado",
+                        "description": "ID do cliente ao qual esta coleção está associada (opcional)",
                         "type": "integer",
                         "nullable": true
                     },
                     "owner_id": {
-                        "description": "ID do usuário dono da coleção",
-                        "type": "integer"
+                        "description": "ID do usuário que é dono da coleção",
+                        "type": "integer",
+                        "example": 1
                     },
                     "visibility": {
+                        "description": "Define quem pode ver a coleção",
                         "type": "string",
+                        "enum": [
+                            "public",
+                            "private",
+                            "unlisted"
+                        ],
                         "example": "public"
                     },
                     "agency_access": {
-                        "description": "Se a agência tem acesso",
-                        "type": "boolean"
+                        "description": "Indica se a agência tem acesso a esta coleção",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "icon": {
+                        "description": "Ícone associado à coleção (ex: nome do ícone de uma biblioteca ou URL)",
+                        "type": "string",
+                        "example": "fa-users",
+                        "nullable": true
                     },
                     "description": {
+                        "description": "Descrição detalhada sobre o propósito da coleção",
                         "type": "string",
                         "nullable": true
                     },
                     "schema_json": {
-                        "description": "Estrutura JSON dos campos da coleção",
-                        "type": "object"
+                        "description": "Estrutura JSON que define os campos customizados da coleção",
+                        "type": "object",
+                        "example": {
+                            "fields": [
+                                {
+                                    "name": "nome_completo",
+                                    "type": "string",
+                                    "required": true
+                                },
+                                {
+                                    "name": "email",
+                                    "type": "email",
+                                    "required": true
+                                }
+                            ]
+                        }
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "CollectionItem": {
                 "title": "Collection Item",
+                "description": "Representa um item individual dentro de uma Coleção customizada.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do item da coleção",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "collection_id": {
+                        "description": "ID da coleção à qual este item pertence",
                         "type": "integer"
                     },
                     "data": {
-                        "description": "Dados flexíveis em formato JSON",
-                        "type": "object"
+                        "description": "Objeto JSON com os dados do item, seguindo a estrutura definida no 'schema_json' da coleção pai.",
+                        "type": "object",
+                        "example": {
+                            "nome_completo": "Maria da Silva",
+                            "email": "maria.silva@example.com"
+                        }
                     },
                     "created_by": {
                         "description": "ID do usuário que criou o item",
                         "type": "integer"
                     },
                     "updated_by": {
-                        "description": "ID do usuário que atualizou o item",
-                        "type": "integer"
+                        "description": "ID do usuário que realizou a última atualização do item",
+                        "type": "integer",
+                        "nullable": true
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "CollectionView": {
                 "title": "Collection View",
+                "description": "Representa uma visualização salva (ex: tabela, kanban) para uma coleção de dados.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único da visualização",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "collection_id": {
-                        "type": "integer"
+                        "description": "ID da coleção à qual esta visualização pertence",
+                        "type": "integer",
+                        "example": 1
                     },
                     "name": {
                         "description": "Nome da visualização",
-                        "type": "string"
+                        "type": "string",
+                        "example": "Visão de Tabela Padrão"
                     },
                     "type": {
-                        "description": "Tipo de visualização (ex: 'table', 'kanban')",
-                        "type": "string"
-                    },
-                    "config": {
-                        "description": "Configurações da view em formato JSON",
-                        "type": "object"
+                        "description": "Tipo de visualização",
+                        "type": "string",
+                        "enum": [
+                            "table",
+                            "kanban",
+                            "calendar"
+                        ],
+                        "example": "kanban"
                     },
                     "created_by": {
-                        "description": "ID do usuário que criou a view",
-                        "type": "integer"
+                        "description": "ID do usuário que criou a visualização",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "config": {
+                        "description": "Configurações JSON da visualização, como colunas visíveis, filtros e ordenação.",
+                        "properties": {
+                            "columns": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "id",
+                                    "name",
+                                    "due_date"
+                                ]
+                            },
+                            "filter": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "active"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "sort_by": {
+                                "type": "string",
+                                "example": "due_date"
+                            }
+                        },
+                        "type": "object"
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Column": {
                 "title": "Column",
+                "description": "Representa uma coluna (ou estágio) dentro de um projeto Kanban.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único da coluna",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "project_id": {
-                        "type": "integer"
+                        "description": "ID do projeto ao qual a coluna pertence",
+                        "type": "integer",
+                        "example": 1
                     },
                     "name": {
-                        "type": "string"
+                        "description": "Nome da coluna",
+                        "type": "string",
+                        "example": "A Fazer"
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "ColumnHistory": {
                 "title": "Column History",
+                "description": "Registra o histórico de movimentação de uma tarefa entre colunas.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do registro de histórico",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "task_id": {
+                        "description": "ID da tarefa que foi movida",
                         "type": "integer"
                     },
-                    "old_column": {
-                        "$ref": "#/components/schemas/Column"
+                    "old_column_id": {
+                        "description": "ID da coluna de origem da tarefa",
+                        "type": "integer"
                     },
-                    "new_column": {
-                        "$ref": "#/components/schemas/Column"
+                    "new_column_id": {
+                        "description": "ID da coluna de destino da tarefa",
+                        "type": "integer"
                     },
-                    "changed_at": {
-                        "description": "Quando a mudança ocorreu",
+                    "created_at": {
+                        "description": "Data em que a mudança ocorreu",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "description": "Data da última atualização do registro",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "FilesOmni": {
                 "title": "Files Omni",
+                "description": "Representa um arquivo genérico no sistema, associado a um cliente e opcionalmente a uma tarefa.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do arquivo",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "task_id": {
-                        "description": "ID da tarefa associada",
+                        "description": "ID da tarefa associada (opcional)",
                         "type": "integer",
                         "nullable": true
                     },
@@ -4154,50 +4889,102 @@
                     },
                     "file_path": {
                         "description": "Caminho do arquivo no storage",
-                        "type": "string"
+                        "type": "string",
+                        "example": "clients/1/tasks/123/video.mp4"
                     },
                     "file_name": {
                         "description": "Nome original do arquivo",
-                        "type": "string"
+                        "type": "string",
+                        "example": "video_casamento.mp4"
                     },
                     "file_type": {
-                        "description": "MIME type do arquivo (ex: 'image/jpeg')",
-                        "type": "string"
+                        "description": "MIME type do arquivo",
+                        "type": "string",
+                        "example": "video/mp4"
                     },
                     "version": {
-                        "description": "Versão do arquivo",
-                        "type": "integer"
+                        "description": "Versão do arquivo (ex: original, editado)",
+                        "type": "string",
+                        "enum": [
+                            "original",
+                            "editado",
+                            "preview"
+                        ],
+                        "example": "original"
+                    },
+                    "cover_image": {
+                        "description": "Caminho para a imagem de capa do arquivo (geralmente para vídeos)",
+                        "type": "string",
+                        "example": "clients/1/tasks/123/cover.jpg",
+                        "nullable": true
+                    },
+                    "video_orientation": {
+                        "description": "Orientação do vídeo",
+                        "type": "string",
+                        "enum": [
+                            "landscape",
+                            "portrait"
+                        ],
+                        "example": "landscape",
+                        "nullable": true
                     },
                     "published": {
-                        "description": "Se o arquivo está publicado ou não",
-                        "type": "boolean"
+                        "description": "Indica se o arquivo está publicado e visível para o cliente",
+                        "type": "boolean",
+                        "example": true
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Project": {
                 "title": "Project",
+                "description": "Representa um projeto, que contém colunas, tarefas e membros.",
                 "properties": {
                     "id": {
+                        "description": "ID único do projeto",
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado ao projeto",
                         "type": "integer"
                     },
                     "user_id": {
                         "description": "ID do usuário que criou o projeto",
                         "type": "integer"
                     },
-                    "client_id": {
-                        "type": "integer"
-                    },
                     "name": {
-                        "type": "string"
+                        "description": "Nome do projeto",
+                        "type": "string",
+                        "example": "Lançamento Campanha de Verão"
+                    },
+                    "description": {
+                        "description": "Descrição detalhada do projeto",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "description": "Status atual do projeto",
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "in_progress",
+                            "completed",
+                            "canceled"
+                        ],
+                        "example": "in_progress"
                     },
                     "visibility": {
                         "description": "Visibilidade do projeto",
@@ -4205,62 +4992,134 @@
                         "enum": [
                             "public",
                             "private"
-                        ]
+                        ],
+                        "example": "private"
                     },
-                    "status": {
+                    "type_project": {
+                        "description": "Tipo ou natureza do projeto",
                         "type": "string",
-                        "example": "in_progress"
+                        "example": "Marketing Digital",
+                        "nullable": true
                     },
-                    "description": {
-                        "type": "string"
+                    "link": {
+                        "description": "Link externo relacionado ao projeto",
+                        "type": "string",
+                        "format": "uri",
+                        "example": "http://miro.com/board/12345",
+                        "nullable": true
+                    },
+                    "goal": {
+                        "description": "O objetivo principal do projeto",
+                        "type": "string",
+                        "nullable": true
                     },
                     "date_project": {
+                        "description": "Data de início ou entrega do projeto",
                         "type": "string",
                         "format": "date",
                         "example": "2025-12-31"
                     },
-                    "created_at": {
+                    "category": {
+                        "description": "Categoria do projeto",
                         "type": "string",
-                        "format": "date-time"
+                        "example": "E-commerce",
+                        "nullable": true
+                    },
+                    "segment": {
+                        "description": "Segmento de mercado do projeto",
+                        "type": "string",
+                        "example": "Moda",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Data de criação",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "columns": {
+                        "description": "Lista de colunas do projeto",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Column"
-                        }
+                        },
+                        "readOnly": true
                     },
                     "members": {
                         "description": "Usuários que têm acesso ao projeto",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/User"
-                        }
+                        },
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "ProjectUser": {
+                "title": "User Project Association",
+                "description": "Modelo que representa a ligação entre um usuário e um projeto",
+                "properties": {
+                    "id": {
+                        "description": "ID único da associação",
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "user_id": {
+                        "description": "ID do usuário associado",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "project_id": {
+                        "description": "ID do projeto associado",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "description": "Data de criação da associação",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "description": "Data da última atualização da associação",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Qrcode": {
                 "title": "QR Code",
+                "description": "Representa um QR Code dinâmico que pode ser rastreado.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do QR Code",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "slug": {
-                        "description": "Identificador único para a URL do QR Code",
-                        "type": "string"
+                        "description": "Identificador único para a URL de acesso do QR Code",
+                        "type": "string",
+                        "example": "campanha-verao-2025"
                     },
                     "target_url": {
-                        "description": "A URL de destino para onde o QR Code aponta",
+                        "description": "A URL de destino para onde o QR Code redireciona",
                         "type": "string",
-                        "format": "url"
+                        "format": "url",
+                        "example": "https://minhaempresa.com/promocao"
                     },
                     "scan_count": {
                         "description": "Número de vezes que o QR Code foi escaneado",
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 150
                     },
                     "last_scanned_at": {
                         "description": "Data e hora do último escaneamento",
@@ -4269,15 +5128,17 @@
                         "nullable": true
                     },
                     "qr_image_path": {
-                        "description": "Caminho para a imagem gerada do QR Code",
-                        "type": "string"
+                        "description": "Caminho para a imagem gerada do QR Code no storage",
+                        "type": "string",
+                        "example": "qrcodes/campanha-verao-2025.svg"
                     },
                     "is_active": {
-                        "description": "Indica se o QR Code está ativo",
-                        "type": "boolean"
+                        "description": "Indica se o QR Code está ativo e pode ser escaneado",
+                        "type": "boolean",
+                        "example": true
                     },
                     "client_id": {
-                        "description": "ID do cliente associado",
+                        "description": "ID do cliente associado a este QR Code (opcional)",
                         "type": "integer",
                         "nullable": true
                     },
@@ -4286,265 +5147,458 @@
                         "type": "integer"
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "ShortLink": {
                 "title": "Short Link",
+                "description": "Representa um link encurtado com rastreamento de cliques.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do link encurtado",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "slug": {
-                        "description": "O código curto gerado para o link",
-                        "type": "string"
+                        "description": "O código curto e único gerado para o link",
+                        "type": "string",
+                        "example": "aB1cD2eF"
                     },
                     "target_url": {
-                        "description": "A URL de destino original",
+                        "description": "A URL de destino original e longa",
                         "type": "string",
-                        "format": "url"
+                        "format": "url",
+                        "example": "https://uma-url-muito-longa-para-uma-campanha-especifica.com/landing-page"
                     },
                     "short_url": {
-                        "description": "A URL encurtada completa",
+                        "description": "A URL encurtada completa, pronta para ser compartilhada",
                         "type": "string",
-                        "format": "url"
+                        "format": "url",
+                        "example": "https://meu.site/aB1cD2eF"
                     },
                     "client_id": {
-                        "description": "ID do cliente associado",
+                        "description": "ID do cliente associado a este link (opcional)",
                         "type": "integer",
                         "nullable": true
                     },
                     "hits": {
                         "description": "Número de cliques que o link recebeu",
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 542
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "SiteZen": {
                 "title": "Site Zen Analytics",
-                "description": "Modelo que representa as métricas mensais de um site",
+                "description": "Modelo que representa as métricas consolidadas de um site, geralmente agrupadas por mês.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do registro de métrica",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "mes": {
+                        "description": "Mês de referência das métricas",
                         "type": "string",
                         "example": "Janeiro"
                     },
                     "visitas": {
+                        "description": "Número total de visitas ao site no mês",
                         "type": "integer",
                         "example": 15000
                     },
                     "compras": {
+                        "description": "Número total de compras realizadas no mês",
                         "type": "integer",
                         "example": 300
                     },
+                    "novas_visitas": {
+                        "description": "Número de visitantes que acessaram o site pela primeira vez",
+                        "type": "integer",
+                        "example": 9500
+                    },
                     "taxa_conversao": {
+                        "description": "Taxa de conversão de visitas para compras (%)",
                         "type": "number",
                         "format": "float",
-                        "example": 2.5
+                        "example": 2
                     },
                     "ticket_medio": {
+                        "description": "Valor médio gasto por compra",
                         "type": "number",
                         "format": "float",
                         "example": 150.75
                     },
+                    "pa": {
+                        "description": "Métrica de performance 'PA' (Produtos por Atendimento/Atração)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.2
+                    },
                     "receita_total": {
+                        "description": "Receita total gerada no mês",
                         "type": "number",
                         "format": "float",
                         "example": 45225
                     },
                     "produtos_mais_vistos": {
+                        "description": "Lista dos nomes dos produtos mais visualizados",
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
                         "example": [
                             "Produto A",
-                            "Produto B"
+                            "Produto B",
+                            "Produto C"
                         ]
                     },
+                    "produtos_comprados": {
+                        "description": "Lista dos nomes dos produtos mais comprados",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "Produto A",
+                            "Produto D"
+                        ]
+                    },
+                    "funil_usuarios": {
+                        "description": "Dados do funil de conversão de usuários",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "etapa": {
+                                    "type": "string",
+                                    "example": "Homepage"
+                                },
+                                "usuarios": {
+                                    "type": "integer",
+                                    "example": 15000
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Task": {
                 "title": "Task",
+                "description": "Representa uma tarefa dentro de um projeto ou campanha.",
                 "properties": {
                     "id": {
+                        "description": "ID único da tarefa",
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "client_id": {
+                        "description": "ID do cliente associado à tarefa",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "campaign_id": {
+                        "description": "ID da campanha associada à tarefa",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "user_id": {
+                        "description": "ID do usuário que criou a tarefa (Esse usuário é automaticamente adicionado como envolvido)",
+                        "type": "integer"
+                    },
+                    "column_id": {
+                        "description": "ID da coluna (status) à qual a tarefa pertence",
                         "type": "integer"
                     },
                     "name": {
-                        "description": "Nome da tarefa",
-                        "type": "string"
+                        "description": "Nome ou título da tarefa",
+                        "type": "string",
+                        "example": "Criar layout para post de Instagram"
+                    },
+                    "start_date": {
+                        "description": "Data de início da tarefa",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "type_task": {
+                        "description": "Tipo da tarefa",
+                        "type": "string",
+                        "enum": [
+                            "bug",
+                            "feature",
+                            "improvement",
+                            "epic"
+                        ],
+                        "example": "feature"
+                    },
+                    "number": {
+                        "description": "Número identificador da tarefa (se aplicável)",
+                        "type": "integer",
+                        "nullable": true
                     },
                     "description": {
                         "description": "Descrição detalhada da tarefa",
                         "type": "string",
                         "nullable": true
                     },
-                    "due_date": {
-                        "description": "Data de vencimento",
+                    "comment": {
+                        "description": "Comentários adicionais sobre a tarefa",
                         "type": "string",
-                        "format": "date"
+                        "nullable": true
                     },
-                    "column": {
-                        "$ref": "#/components/schemas/Column"
+                    "due_date": {
+                        "description": "Data de vencimento da tarefa",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
                     },
-                    "users": {
-                        "description": "Lista de usuários responsáveis pela tarefa",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/User"
-                        }
+                    "priority": {
+                        "description": "Nível de prioridade da tarefa",
+                        "type": "string",
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high",
+                            "urgent"
+                        ],
+                        "example": "high"
+                    },
+                    "file": {
+                        "description": "Caminho para um arquivo anexo à tarefa",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "archived": {
+                        "description": "Indica se a tarefa está arquivada",
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "order_position": {
+                        "description": "Posição ordinal da tarefa dentro da sua coluna para ordenação",
+                        "type": "integer",
+                        "example": 1
                     },
                     "involved_users": {
-                        "description": "Campo legado com IDs dos usuários envolvidos",
+                        "description": "Array com os IDs dos usuários envolvidos/responsáveis pela tarefa",
                         "type": "array",
                         "items": {
                             "type": "integer"
-                        }
+                        },
+                        "example": [
+                            1,
+                            5
+                        ]
+                    },
+                    "timer_status": {
+                        "description": "Status do cronômetro (ex: 0=parado, 1=rodando)",
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "last_started": {
+                        "description": "Última vez que o cronômetro da tarefa foi iniciado",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "time_spent": {
+                        "description": "Tempo total gasto na tarefa (em segundos)",
+                        "type": "integer",
+                        "example": 3600
                     },
                     "created_at": {
+                        "description": "Data de criação",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Tracking": {
                 "title": "Tracking",
+                "description": "Registra um evento ou ponto de controle de tempo para uma tarefa específica.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do registro de tracking",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "task_id": {
-                        "description": "ID da tarefa associada",
-                        "type": "integer"
+                        "description": "ID da tarefa que está sendo rastreada",
+                        "type": "integer",
+                        "example": 101
                     },
                     "user_id": {
-                        "description": "ID do usuário que realizou a ação",
-                        "type": "integer"
+                        "description": "ID do usuário que acionou o registro de tracking",
+                        "type": "integer",
+                        "example": 5
                     },
                     "logged_at": {
-                        "description": "Data e hora do registro",
+                        "description": "Data e hora em que o evento foi registrado",
                         "type": "string",
                         "format": "date-time"
                     },
                     "created_at": {
+                        "description": "Data de criação do registro",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização do registro",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "User": {
                 "title": "User",
+                "description": "Modelo de dados do usuário, contendo informações de autenticação e perfil.",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "description": "ID único do usuário",
+                        "type": "integer",
+                        "readOnly": true
                     },
                     "name": {
-                        "type": "string"
+                        "description": "Nome completo do usuário",
+                        "type": "string",
+                        "example": "João da Silva"
                     },
                     "email": {
+                        "description": "Endereço de e-mail do usuário",
                         "type": "string",
-                        "format": "email"
+                        "format": "email",
+                        "example": "joao.silva@example.com"
+                    },
+                    "password": {
+                        "description": "Senha do usuário (apenas para escrita)",
+                        "type": "string",
+                        "format": "password",
+                        "writeOnly": true
                     },
                     "nick": {
-                        "type": "string"
+                        "description": "Apelido ou nome de usuário",
+                        "type": "string",
+                        "example": "joao.s"
                     },
                     "status": {
-                        "type": "string"
+                        "description": "Status da conta do usuário",
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive",
+                            "suspended"
+                        ],
+                        "example": "active"
                     },
                     "user_type": {
-                        "type": "string"
+                        "description": "Tipo de usuário no sistema",
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "manager",
+                            "member",
+                            "client"
+                        ],
+                        "example": "member"
+                    },
+                    "level": {
+                        "description": "Nível de experiência ou cargo do usuário",
+                        "type": "string",
+                        "enum": [
+                            "beginner",
+                            "intermediate",
+                            "advanced",
+                            "specialist"
+                        ],
+                        "example": "intermediate"
+                    },
+                    "email_verified_at": {
+                        "description": "Data e hora da verificação do e-mail",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true
                     },
                     "created_at": {
+                        "description": "Data de criação do usuário",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "updated_at": {
+                        "description": "Data da última atualização do usuário",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "readOnly": true
                     },
                     "projects": {
-                        "description": "Projetos criados pelo usuário",
+                        "description": "Lista de projetos criados pelo usuário (geralmente carregado sob demanda).",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Project"
                         }
                     },
                     "accessibleProjects": {
-                        "description": "Projetos que o usuário tem acesso",
+                        "description": "Lista de projetos aos quais o usuário tem acesso como membro (geralmente carregado sob demanda).",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Project"
                         }
                     },
                     "tasks": {
-                        "description": "Tarefas pelas quais o usuário é responsável",
+                        "description": "Lista de tarefas atribuídas ao usuário (geralmente carregado sob demanda).",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Task"
                         }
-                    }
-                },
-                "type": "object"
-            },
-            "UserProject": {
-                "title": "User Project Association",
-                "description": "Modelo que representa a ligação entre um usuário e um projeto",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "user_id": {
-                        "description": "ID do usuário",
-                        "type": "integer"
-                    },
-                    "project_id": {
-                        "description": "ID do projeto",
-                        "type": "integer"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -4600,6 +5654,10 @@
             "description": "Projects"
         },
         {
+            "name": "User Projects",
+            "description": "User Projects"
+        },
+        {
             "name": "QR Codes",
             "description": "QR Codes"
         },
@@ -4622,10 +5680,6 @@
         {
             "name": "Users",
             "description": "Users"
-        },
-        {
-            "name": "User Projects",
-            "description": "User Projects"
         }
     ]
 }

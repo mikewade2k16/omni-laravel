@@ -3,6 +3,9 @@
 namespace App\Http\Requests\FilesOmni;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\FilesOmniVersionEnum;
+use App\Enums\FilesOmniVideoOrientationEnum;
 
 class StoreFilesOmniRequest extends FormRequest
 {
@@ -14,15 +17,15 @@ class StoreFilesOmniRequest extends FormRequest
     public function rules()
     {
         return [
-            'task_id' => 'nullable|exists:tasks,id',
+            'task_id' => 'required|exists:tasks,id',
             'client_id' => 'required|exists:clients,id',
             'uploaded_by' => 'required|exists:users,id',
             'file_path' => 'required|string',
             'file_name' => 'required|string',
             'file_type' => 'required|string',
-            'version' => 'nullable|string',
+            'version' => ['required', new Enum(FilesOmniVersionEnum::class)],
+            'video_orientation' => ['nullable', new Enum(FilesOmniVideoOrientationEnum::class)],
             'cover_image' => 'nullable|string',
-            'video_orientation' => 'nullable|string',
             'published' => 'boolean',
         ];
     }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('banner_image')->nullable();
-            $table->enum('status', ['ativa', 'em_pausa', 'concluída', 'cancelada']);
+            $table->string('status')->default('ativa');
             $table->text('channels')->nullable();
             $table->timestamps();
 

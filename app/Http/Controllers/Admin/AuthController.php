@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\User\StoreUserRequest;
 
 /**
  * @OA\Schema(
@@ -37,12 +38,15 @@ use Illuminate\Http\JsonResponse;
  * schema="RegisterRequest",
  * type="object",
  * title="Register Request",
- * required={"name", "nick", "email", "password", "password_confirmation"},
+ * required={"name", "nick", "email", "password", "password_confirmation", "status", "level", "user_type"},
  * @OA\Property(property="name", type="string", example="Edson Oliveira"),
  * @OA\Property(property="nick", type="string", example="edinho"),
  * @OA\Property(property="email", type="string", format="email", example="edson@example.com"),
  * @OA\Property(property="password", type="string", format="password", example="senha123"),
- * @OA\Property(property="password_confirmation", type="string", format="password", example="senha123")
+ * @OA\Property(property="password_confirmation", type="string", format="password", example="senha123"),
+ * @OA\Property(property="status", type="string", example="active", description="Status do usuário (ex: active, inactive)"),
+ * @OA\Property(property="level", type="string", example="marketing", description="Nível de acesso do usuário"),
+ * @OA\Property(property="user_type", type="string", example="admin", description="Tipo de usuário (ex: admin, client)")
  * )
  */
 class AuthController extends Controller
@@ -101,28 +105,30 @@ class AuthController extends Controller
      * @OA\Response(response=400, description="Erro de validação")
      * )
      */
-    public function register(Request $request): JsonResponse
+    public function register(StoreUserRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'nick' => 'required|string|between:2,50|unique:users',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-        ]);
+        try {
+            // Os dados já são validados pelo StoreUserRequest
+            $validatedData = $request->validated();
 
-        if($validator->fails()){
-            return response()->json($validator->errors()->toArray(), 400);
+            $user = User::create([
+                'name'      => $validatedData['name'],
+                'email'     => $validatedData['email'],
+                'nick'      => $validatedData['nick'],
+                'password'  => Hash::make($validatedData['password']),
+                'status'    => $validatedData['status'],    // ✅ DADO ADICIONADO
+                'level'     => $validatedData['level'],     // ✅ DADO ADICIONADO
+                'user_type' => $validatedData['user_type'], // ✅ DADO ADICIONADO
+            ]);
+
+            return response()->json([
+                'message' => 'Usuário registrado com sucesso!',
+                'user' => $user
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao registrar usuário', 'error' => $e->getMessage()], 500);
         }
-
-        $user = User::create(array_merge(
-                    $validator->validated(),
-                    ['password' => Hash::make($request->password)]
-                ));
-
-        return response()->json([
-            'message' => 'Usuário registrado com sucesso!',
-            'user' => $user
-        ], 201);
     }
 
     /**

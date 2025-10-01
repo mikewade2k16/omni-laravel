@@ -6,24 +6,39 @@ use App\Http\Controllers\Controller;
 use App\Services\CollectionService;
 use App\Http\Requests\Collection\StoreCollectionRequest;
 use App\Http\Requests\Collection\UpdateCollectionRequest;
+use App\Http\Resources\CollectionResource; // Assumindo que você tem um Resource para Collection
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
 /**
  * @OA\Schema(
  * schema="StoreCollectionRequest",
+ * title="Store Collection Request",
  * required={"name", "slug", "owner_id"},
  * @OA\Property(property="name", type="string", example="Leads do Site"),
  * @OA\Property(property="slug", type="string", example="leads-site"),
  * @OA\Property(property="owner_id", type="integer", example=1),
  * @OA\Property(property="client_id", type="integer", example=1, nullable=true),
- * @OA\Property(property="visibility", type="string", example="private"),
+ * @OA\Property(property="visibility", type="string", enum={"public", "private", "unlisted"}, example="private"),
  * @OA\Property(property="agency_access", type="boolean", example=true),
- * @OA\Property(property="schema_json", type="object", example={"campo_email": "email", "campo_telefone": "tel"})
+ * @OA\Property(property="icon", type="string", nullable=true, example="fa-users", description="Ícone associado à coleção"),
+ * @OA\Property(property="description", type="string", nullable=true, description="Descrição detalhada sobre o propósito da coleção"),
+ * @OA\Property(property="schema_json", type="object", example={"fields": {{"name": "email", "type": "email"}, {"name": "telefone", "type": "tel"}}})
  * )
  *
  * @OA\Schema(
  * schema="UpdateCollectionRequest",
- * @OA\Property(property="name", type="string", example="Leads Qualificados do Site")
+ * title="Update Collection Request",
+ * description="Todos os campos são opcionais. Envie apenas os que deseja alterar.",
+ * @OA\Property(property="name", type="string", example="Leads Qualificados do Site"),
+ * @OA\Property(property="slug", type="string", example="leads-qualificados-site"),
+ * @OA\Property(property="owner_id", type="integer", example=1),
+ * @OA\Property(property="client_id", type="integer", example=1, nullable=true),
+ * @OA\Property(property="visibility", type="string", enum={"public", "private", "unlisted"}, example="private"),
+ * @OA\Property(property="agency_access", type="boolean", example=false),
+ * @OA\Property(property="icon", type="string", nullable=true, example="fa-star"),
+ * @OA\Property(property="description", type="string", nullable=true, example="Coleção atualizada para leads qualificados."),
+ * @OA\Property(property="schema_json", type="object", example={"fields": {{"name": "email", "type": "email"}, {"name": "status", "type": "string"}}})
  * )
  */
 class CollectionController extends Controller

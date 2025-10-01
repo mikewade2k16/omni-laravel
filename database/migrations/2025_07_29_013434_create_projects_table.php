@@ -17,7 +17,7 @@ return new class extends Migration
                 ->constrained('clients')
                 ->onDelete('cascade');
             $table->string('name');
-            $table->enum('status', ['not_started', 'raw', 'started', 'in_progress', 'awaiting_approval', 'completed', 'postponed', 'canceled']);
+            $table->string('status')->default('not_started');
             $table->string('type_project')->nullable();
             $table->string('link')->nullable();
             $table->text('goal')->nullable();

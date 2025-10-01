@@ -13,13 +13,21 @@ use App\Models\Project;
 /**
  * @OA\Schema(
  * schema="StoreProjectRequest",
- * required={"client_id", "name", "status"},
+ * type="object",
+ * title="Store Project Request",
+ * required={"client_id", "name", "status", "type_project", "date_project"},
+ * properties={
  * @OA\Property(property="client_id", type="integer", example=1),
- * @OA\Property(property="name", type="string", example="Novo Projeto de Marketing"),
- * @OA\Property(property="status", type="string", example="not_started"),
- * @OA\Property(property="description", type="string", example="Descrição detalhada do projeto."),
- * @OA\Property(property="visibility", type="string", enum={"public", "private"}, example="private"),
- * @OA\Property(property="members", type="array", @OA\Items(type="integer"), example={1, 2})
+ * @OA\Property(property="name", type="string", example="Novo Projeto de Website"),
+ * @OA\Property(property="status", type="string", description="Status do projeto", enum={"not_started", "raw", "started", "in_progress", "awaiting_approval", "completed", "postponed", "canceled"}, example="not_started"),
+ * @OA\Property(property="type_project", type="string", example="Desenvolvimento"),
+ * @OA\Property(property="date_project", type="string", format="date", example="2025-12-31"),
+ * @OA\Property(property="visibility", type="string", enum={"public", "private"}, example="private", nullable=true),
+ * @OA\Property(property="members", type="array", @OA\Items(type="integer"), example={1, 2}, nullable=true),
+ * @OA\Property(property="description", type="string", example="Descrição detalhada do projeto.", nullable=true),
+ * @OA\Property(property="link", type="string", format="url", example="https://projeto.com", nullable=true),
+ * @OA\Property(property="goal", type="string", example="Aumentar as vendas em 20%", nullable=true)
+ * }
  * )
  *
  * @OA\Schema(

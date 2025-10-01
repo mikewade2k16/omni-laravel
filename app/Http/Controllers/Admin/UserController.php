@@ -12,19 +12,21 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Schema(
  * schema="StoreUserRequest",
- * required={"name", "email", "password"},
+ * required={"name", "email", "password", "nick", "status", "level", "user_type"},
  * @OA\Property(property="name", type="string", example="Edson Oliveira"),
  * @OA\Property(property="email", type="string", format="email", example="edson.oliveira@example.com"),
  * @OA\Property(property="password", type="string", format="password", example="senha123"),
+ * @OA\Property(property="password_confirmation", type="string", format="password", example="senha123"),
  * @OA\Property(property="nick", type="string", example="edinho"),
- * @OA\Property(property="status", type="string", example="active"),
- * @OA\Property(property="user_type", type="string", example="editor")
+ * @OA\Property(property="status", type="string", enum={"active", "inactive"}, example="active"),
+ * @OA\Property(property="level", type="string", enum={"admin", "manager", "marketing", "finance"}, example="marketing"),
+ * @OA\Property(property="user_type", type="string", enum={"client", "admin"}, example="client")
  * )
  *
  * @OA\Schema(
  * schema="UpdateUserRequest",
  * @OA\Property(property="name", type="string", example="Edson Oliveira Jr."),
- * @OA\Property(property="status", type="string", example="inactive")
+ * @OA\Property(property="status", type="string", enum={"active", "inactive"}, example="inactive")
  * )
  */
 class UserController extends Controller

@@ -18,6 +18,7 @@ class AdminUserSeeder extends Seeder
                 'nick'      => 'admin',
                 'status'    => 'active',
                 'user_type' => 'admin',
+                'level'     => 'admin',
             ]
         );
     }

@@ -4,24 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\CampaignStatusEnum;
 
 /**
  * @OA\Schema(
  * schema="Campaign",
  * type="object",
  * title="Campaign",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="client_id", type="integer"),
- * @OA\Property(property="name", type="string"),
- * @OA\Property(property="description", type="string"),
- * @OA\Property(property="start_date", type="string", format="date", example="2025-01-30"),
- * @OA\Property(property="end_date", type="string", format="date", example="2025-02-28"),
- * @OA\Property(property="status", type="string", example="active"),
- * @OA\Property(property="channels", type="array", @OA\Items(type="string"), example={"facebook", "instagram"}),
- * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time")
- * }
+ * description="Modelo de Campanha de Marketing",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único da campanha"),
+ * @OA\Property(property="client_id", type="integer", description="ID do cliente ao qual a campanha pertence"),
+ * @OA\Property(property="name", type="string", description="Nome da campanha", example="Promoção de Verão"),
+ * @OA\Property(property="description", type="string", description="Descrição detalhada da campanha"),
+ * @OA\Property(property="start_date", type="string", format="date", description="Data de início da campanha (AAAA-MM-DD)", example="2025-01-30"),
+ * @OA\Property(property="end_date", type="string", format="date", description="Data de término da campanha (AAAA-MM-DD)", example="2025-02-28"),
+ * @OA\Property(property="banner_image", type="string", nullable=true, description="URL da imagem do banner da campanha"),
+ * @OA\Property(property="status", type="string", description="Status atual da campanha", enum={"ativa", "em_pausa", "concluida", "cancelada"}, example="ativa"),
+ * @OA\Property(property="channels", type="array", description="Canais de veiculação da campanha",
+ * @OA\Items(type="string"), example={"facebook", "instagram", "google_ads"}),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização")
  * )
  */
 class Campaign extends Model
@@ -43,6 +45,7 @@ class Campaign extends Model
         'start_date' => 'date',
         'end_date'   => 'date',
         'channels'   => 'array',
+        'status' => CampaignStatusEnum::class,
     ];
 
     /**

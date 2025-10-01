@@ -13,17 +13,17 @@ class SiteZenService
         $this->repository = $repository;
     }
 
-    public function getAll()
+    public function list()
     {
         return $this->repository->all();
     }
 
-    public function getById(int $id)
+    public function find(int $id)
     {
         return $this->repository->find($id);
     }
 
-    public function create(array $data)
+    public function store(array $data)
     {
         return $this->repository->create($data);
     }

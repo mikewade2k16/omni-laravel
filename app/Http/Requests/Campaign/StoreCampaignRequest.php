@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Campaign;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\CampaignStatusEnum;
 
 class StoreCampaignRequest extends FormRequest
 {
@@ -25,10 +27,10 @@ class StoreCampaignRequest extends FormRequest
             'client_id' => 'required|integer|exists:clients,id',
             'name'      => 'required|string|max:255',
             'description' => 'nullable|string',
-            'start_date' => 'nullable|date',
-            'end_date'   => 'nullable|date',
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date',
             'banner_image' => 'nullable|string|max:255',
-            'status'      => 'nullable|string|max:50',
+            'status' => ['required', new Enum(CampaignStatusEnum::class)],
             'channels'    => 'nullable|array',
         ];
     }

@@ -10,19 +10,19 @@ use Illuminate\Database\Eloquent\Model;
  * schema="Collection",
  * type="object",
  * title="Collection",
- * properties={
- * @OA\Property(property="id", type="integer"),
- * @OA\Property(property="name", type="string", description="Nome da coleção"),
- * @OA\Property(property="slug", type="string", description="URL amigável da coleção"),
- * @OA\Property(property="client_id", type="integer", nullable=true, description="ID do cliente associado"),
- * @OA\Property(property="owner_id", type="integer", description="ID do usuário dono da coleção"),
- * @OA\Property(property="visibility", type="string", example="public"),
- * @OA\Property(property="agency_access", type="boolean", description="Se a agência tem acesso"),
- * @OA\Property(property="description", type="string", nullable=true),
- * @OA\Property(property="schema_json", type="object", description="Estrutura JSON dos campos da coleção"),
- * @OA\Property(property="created_at", type="string", format="date-time"),
- * @OA\Property(property="updated_at", type="string", format="date-time")
- * }
+ * description="Modelo de Coleção de Dados customizável",
+ * @OA\Property(property="id", type="integer", readOnly=true, description="ID único da coleção"),
+ * @OA\Property(property="name", type="string", description="Nome da coleção", example="Leads de Marketing"),
+ * @OA\Property(property="slug", type="string", description="URL amigável da coleção (geralmente gerado a partir do nome)", example="leads-de-marketing"),
+ * @OA\Property(property="client_id", type="integer", nullable=true, description="ID do cliente ao qual esta coleção está associada (opcional)"),
+ * @OA\Property(property="owner_id", type="integer", description="ID do usuário que é dono da coleção", example=1),
+ * @OA\Property(property="visibility", type="string", description="Define quem pode ver a coleção", enum={"public", "private", "unlisted"}, example="public"),
+ * @OA\Property(property="agency_access", type="boolean", description="Indica se a agência tem acesso a esta coleção", example=true),
+ * @OA\Property(property="icon", type="string", nullable=true, description="Ícone associado à coleção (ex: nome do ícone de uma biblioteca ou URL)", example="fa-users"),
+ * @OA\Property(property="description", type="string", nullable=true, description="Descrição detalhada sobre o propósito da coleção"),
+ * @OA\Property(property="schema_json", type="object", description="Estrutura JSON que define os campos customizados da coleção", example={"fields": {{"name": "nome_completo", "type": "string", "required": true}, {"name": "email", "type": "email", "required": true}}}),
+ * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação"),
+ * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização")
  * )
  */
 class Collection extends Model
