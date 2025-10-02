@@ -98,4 +98,25 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'project_user');
     }
+    /**
+     * O método "boot" do model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($project) {
+            if ($project->user_id) {
+                $viewType = request('settings.view_type', 'list');
+
+                \App\Models\ProjectPreference::create([
+                    'user_id' => $project->user_id,
+                    'project_id' => $project->id,
+                    'settings' => ['view_type' => $viewType]
+                ]);
+            }
+        });
+    }
 }

@@ -113,6 +113,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('projects/{id}', [ProjectController::class, 'show']);
         Route::put('projects/{id}', [ProjectController::class, 'update']);
         Route::delete('projects/{id}', [ProjectController::class, 'destroy']);
+        Route::put('projects/{id}/preferences', [ProjectController::class, 'updatePreferences']);
 
         // Rotas para ProjectUsers
         Route::get('projects-user', [ProjectUserController::class, 'index']);
