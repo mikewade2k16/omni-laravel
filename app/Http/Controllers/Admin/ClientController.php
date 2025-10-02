@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
  * schema="StoreClientRequest",
  * type="object",
  * title="Store Client Request",
- * required={"nome", "cpf", "email", "data_nasc", "rg", "contato_1", "endereco", "cep", "uf", "cidade", "bairro", "numero"},
+ * required={"nome", "cpf"},
  * properties={
  * @OA\Property(property="nome", type="string", example="João da Silva"),
  * @OA\Property(property="cpf", type="string", example="123.456.789-10"),

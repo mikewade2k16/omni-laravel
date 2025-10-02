@@ -14,12 +14,14 @@ class StoreQrcodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'slug' => 'required|unique:qrcodes,slug',
-            'target_url' => 'required|url',
-            'qr_image_path' => 'nullable|string',
-            'is_active' => 'boolean',
+            'slug' => 'required|string|max:255|unique:qrcodes,slug',
+            'target_url' => 'required|url|max:2048',
+            'scan_count' => 'required|integer|min:0',
+            'last_scanned_at' => 'nullable|date',
+            'qr_image_path' => 'nullable|string|max:255',
+            'is_active' => 'required|boolean',
             'client_id' => 'nullable|exists:clients,id',
-            //'created_by' => 'required|exists:users,id',
+            // 'created_by' => 'required|exists:users,id',
         ];
     }
 }

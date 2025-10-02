@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
  * @OA\Schema(
  * schema="StoreCollectionRequest",
  * title="Store Collection Request",
- * required={"name", "slug", "owner_id"},
+ * required={"name","visibility", "agency_access", "schema_json"},
  * @OA\Property(property="name", type="string", example="Leads do Site"),
  * @OA\Property(property="slug", type="string", example="leads-site"),
  * @OA\Property(property="owner_id", type="integer", example=1),
