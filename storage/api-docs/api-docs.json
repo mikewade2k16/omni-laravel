@@ -4271,12 +4271,7 @@
             "StoreTaskRequest": {
                 "title": "Store Task Request",
                 "required": [
-                    "client_id",
-                    "user_id",
-                    "name",
-                    "column_id",
-                    "type_task",
-                    "priority"
+                    "name"
                 ],
                 "properties": {
                     "client_id": {

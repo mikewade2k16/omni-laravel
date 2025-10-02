@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
  * schema="StoreTaskRequest",
  * type="object",
  * title="Store Task Request",
- * required={"client_id", "user_id", "name", "column_id", "type_task", "priority"},
+ * required={"name"},
  * properties={
  * @OA\Property(property="client_id", type="integer", example=1),
  * @OA\Property(property="campaign_id", type="integer", example=1, nullable=true),
