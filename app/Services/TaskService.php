@@ -21,6 +21,9 @@ class TaskService
 
     public function store(array $data)
     {
+        $userId = auth()->id();
+        $data['user_id'] = $userId;
+        
         $involvedUserIds = $data['involved_users'] ?? [];
 
         $task = $this->repository->store($data);

@@ -7,7 +7,7 @@ use App\Http\Requests\Client\StoreClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
 use App\Http\Resources\ClientResource;
 use App\Services\ClientService;
-use Illuminate\Http\JsonResponse; // Importar JsonResponse para o type-hint
+use Illuminate\Http\JsonResponse;
 
 /**
  * @OA\Schema(
@@ -90,10 +90,18 @@ class ClientController extends Controller
      * @OA\Response(response=404, description="Cliente não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $client = $this->service->find($id);
-        return new ClientResource($client);
+        try {
+            $client = $this->service->find($id);
+
+            if (!$client) {
+                return response()->json(['message' => 'Cliente não encontrada'], 404);
+            }
+            return response()->json(new ClientResource($client), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar cliente', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

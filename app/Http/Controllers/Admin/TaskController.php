@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
  * schema="StoreTaskRequest",
  * type="object",
  * title="Store Task Request",
- * required={"client_id", "user_id", "name", "column_id", "type_task", "priority"},
+ * required={"name"},
  * properties={
  * @OA\Property(property="client_id", type="integer", example=1),
  * @OA\Property(property="campaign_id", type="integer", example=1, nullable=true),
@@ -72,10 +72,18 @@ class TaskController extends Controller
      * @OA\Response(response=404, description="Tarefa não encontrada")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $task = $this->service->find($id);
-        return new TaskResource($task);
+        try {
+            $task = $this->service->find($id);
+
+            if (!$task) {
+                return response()->json(['message' => 'Tarefa não encontrada'], 404);
+            }
+            return response()->json(new TaskResource($task), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar tarefa', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

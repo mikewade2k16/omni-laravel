@@ -29,6 +29,8 @@ class StoreProjectRequest extends FormRequest
             'date_project' => 'required|date',
             'category' => 'nullable|string|max:100',
             'segment' => 'nullable|string|max:100',
+            'settings' => ['nullable', 'array'],
+            'settings.view_type' => ['sometimes', 'string', 'in:card,list'],
         ];
     }
 }

@@ -55,9 +55,18 @@ class CollectionItemController extends Controller
      * @OA\Response(response=404, description="Item não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        return $this->service->find($id);
+        try {
+            $item = $this->service->find($id);
+
+            if (!$item) {
+                return response()->json(['message' => 'CollectionItem não encontrada'], 404);
+            }
+            return response()->json(new \App\Http\Resources\CollectionItemResource($item), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar CollectionItem', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

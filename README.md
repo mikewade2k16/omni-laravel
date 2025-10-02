@@ -64,3 +64,73 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+---
+
+## Configuração do Ambiente de Desenvolvimento (Docker)
+
+Esta seção descreve como configurar o ambiente para rodar o projeto.
+
+### Pré-requisitos
+- Docker e Docker Compose instalados.
+
+### 1. Clonar o Repositório
+
+```bash
+git clone [https://docs.github.com/pt/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github](https://docs.github.com/pt/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)
+cd [nome-da-pasta-do-projeto]
+```
+
+### 2. Configurar o Arquivo `.env`
+
+Copie o arquivo de ambiente de exemplo.
+
+```bash
+cp .env.example .env
+```
+Depois, edite o arquiwvo `.env` com as configurações do seu banco de dados.
+
+### 3. Construir e Iniciar os Contêineres
+
+```bash
+docker-compose up -d --build
+```
+
+### 4. Instalar as Dependências
+
+```bash
+docker-compose exec laravel.test composer install
+```
+
+### 5. Gerar a Chave da Aplicação
+
+```bash
+docker-compose exec laravel.test php artisan key:generate
+```
+
+### 6. Rodar as Migrations
+
+```bash
+docker-compose exec laravel.test php artisan migrate
+```
+
+Sua aplicação deve estar acessível em `http://localhost:[PORTA]`.
+
+---
+
+## Histórico de Criação do Projeto (Comandos `require`)
+
+Esta seção é um registro de como os pacotes principais foram adicionados ao projeto. **(Não execute estes comandos em uma nova instalação, use `composer install` como descrito acima)**.
+
+### Pacotes Adicionais Instalados
+```bash
+# Autenticação JWT
+docker-compose exec laravel.test composer require tymon/jwt-auth
+
+# Documentação de API (Swagger)
+docker-compose exec laravel.test composer require darkaonline/l5-swagger
+
+# Log de Atividades
+docker-compose exec laravel.test composer require spatie/laravel-activitylog
+```
+Após a instalação, os arquivos de configuração foram publicados com `php artisan vendor:publish` para cada provedor de serviço.

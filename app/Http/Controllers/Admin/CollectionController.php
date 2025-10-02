@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\CollectionService;
 use App\Http\Requests\Collection\StoreCollectionRequest;
 use App\Http\Requests\Collection\UpdateCollectionRequest;
-use App\Http\Resources\CollectionResource; // Assumindo que você tem um Resource para Collection
+use App\Http\Resources\CollectionResource; 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
@@ -75,9 +75,18 @@ class CollectionController extends Controller
      * @OA\Response(response=404, description="Coleção não encontrada")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        return $this->service->find($id);
+        try {
+            $collection = $this->service->find($id);
+
+            if (!$collection) {
+                return response()->json(['message' => 'Coleção não encontrada'], 404);
+            }
+            return response()->json(new CollectionResource($collection), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar coleção', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

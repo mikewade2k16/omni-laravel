@@ -52,8 +52,16 @@ class TrackingController extends Controller
      */
     public function show($id): JsonResponse
     {
-        $tracking = $this->service->find($id);
-        return response()->json($tracking, 200);
+        try {
+            $tracking = $this->service->find($id);
+
+            if (!$tracking) {
+                return response()->json(['message' => 'Tracking não encontrada'], 404);
+            }
+            return response()->json(new \App\Http\Resources\TrackingResource($tracking), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar tracking', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

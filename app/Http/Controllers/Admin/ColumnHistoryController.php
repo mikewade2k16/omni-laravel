@@ -58,10 +58,18 @@ class ColumnHistoryController extends Controller
      * @OA\Response(response=404, description="Registro não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $history = $this->service->find($id);
-        return new ColumnHistoryResource($history);
+        try {
+            $history = $this->service->find($id);
+
+            if (!$history) {
+                return response()->json(['message' => 'Histórico não encontrado'], 404);
+            }
+            return response()->json(new ColumnHistoryResource($history), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar histórico', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

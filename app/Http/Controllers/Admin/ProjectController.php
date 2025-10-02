@@ -9,6 +9,8 @@ use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use App\Models\Project;
+use App\Http\Requests\Project\UpdatePreferenceRequest;
+use App\Services\ProjectPreferenceService;
 
 /**
  * @OA\Schema(
@@ -20,13 +22,28 @@ use App\Models\Project;
  * @OA\Property(property="client_id", type="integer", example=1),
  * @OA\Property(property="name", type="string", example="Novo Projeto de Website"),
  * @OA\Property(property="status", type="string", description="Status do projeto", enum={"not_started", "raw", "started", "in_progress", "awaiting_approval", "completed", "postponed", "canceled"}, example="not_started"),
- * @OA\Property(property="type_project", type="string", example="Desenvolvimento"),
+ * @OA\Property(property="visibility", type="string", enum={"public", "private"}, example="public"),
+* @OA\Property(
+* property="members",
+* type="array",
+* description="Array of user IDs to be members of the project.",
+* nullable=true,
+* example="[1, 2]",
+* @OA\Items(type="integer")
+* ),
+ * @OA\Property(property="type_project", type="string", maxLength=50, example="Web Development"),
+ * @OA\Property(property="link", type="string", format="url", maxLength=255, nullable=true, example="https://example.com/project-link"),
+ * @OA\Property(property="goal", type="string", maxLength=255, nullable=true, example="Increase user engagement by 20%"),
+ * @OA\Property(property="description", type="string", nullable=true, example="A very detailed description of the project goals and deliverables."),
  * @OA\Property(property="date_project", type="string", format="date", example="2025-12-31"),
- * @OA\Property(property="visibility", type="string", enum={"public", "private"}, example="private", nullable=true),
- * @OA\Property(property="members", type="array", @OA\Items(type="integer"), example={1, 2}, nullable=true),
- * @OA\Property(property="description", type="string", example="Descrição detalhada do projeto.", nullable=true),
- * @OA\Property(property="link", type="string", format="url", example="https://projeto.com", nullable=true),
- * @OA\Property(property="goal", type="string", example="Aumentar as vendas em 20%", nullable=true)
+ * @OA\Property(property="category", type="string", maxLength=100, nullable=true, example="Marketing"),
+ * @OA\Property(property="segment", type="string", maxLength=100, nullable=true, example="B2B"),
+ * @OA\Property(
+ * property="settings",
+ * type="object",
+ * nullable=true,
+ * @OA\Property(property="view_type", type="string", enum={"card", "list"}, example="list")
+ * ),
  * }
  * )
  *
@@ -37,14 +54,30 @@ use App\Models\Project;
  * @OA\Property(property="visibility", type="string", enum={"public", "private"}, example="public"),
  * @OA\Property(property="members", type="array", @OA\Items(type="integer"), example={1, 3})
  * )
+ * 
+ * @OA\Schema(
+ * schema="UpdatePreferenceRequest",
+ * type="object",
+ * title="Update Preference Request",
+ * required={"settings"},
+ * properties={
+ * @OA\Property(
+ * property="settings",
+ * type="object",
+ * description="Configurações de preferência do usuário",
+ * @OA\Property(property="view_type", type="string", enum={"card", "list"}, example="list")
+ * )
+ * }
+ * )
  */
 class ProjectController extends Controller
 {
-    protected $service;
+    protected $preferenceService;
 
-    public function __construct(ProjectService $service)
+    public function __construct(ProjectService $service, ProjectPreferenceService $preferenceService)
     {
         $this->service = $service;
+        $this->preferenceService = $preferenceService;
     }
 
     /**
@@ -73,11 +106,18 @@ class ProjectController extends Controller
      * @OA\Response(response=404, description="Projeto não encontrado")
      * )
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $project = $this->service->find($id);
-        $this->authorize('view', $project); // ✅ VERIFICA A PERMISSÃO
-        return new ProjectResource($project);
+        try {
+            $project = $this->service->find($id);
+
+            if (!$project) {
+                return response()->json(['message' => 'Projeto não encontrado'], 404);
+            }
+            return response()->json(new ProjectResource($project), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar projeto', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -147,5 +187,39 @@ class ProjectController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Erro ao deletar Projeto', 'error'   => $e->getMessage()], 500);
         }
+    }
+/**
+     * @OA\Put(
+     * path="/api/admin/projects/{id}/preferences",
+     * summary="Atualiza as preferências do usuário para um projeto",
+     * tags={"Projects"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, description="ID do projeto",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\RequestBody( required=true, description="Objeto com as configurações de preferência",
+     * @OA\JsonContent(ref="#/components/schemas/UpdatePreferenceRequest")
+     * ),
+     * @OA\Response( response=200, description="Preferências atualizadas com sucesso",
+     * @OA\JsonContent( type="object", example={ "id": 1, "user_id": 1, "preferable_id": 15, "preferable_type": "App\\Models\\Project", "settings": { "view_type": "list" }
+     * }
+     * )
+     * ),
+     * @OA\Response(response=403, description="Ação não autorizada"),
+     * @OA\Response(response=404, description="Projeto não encontrado"),
+     * @OA\Response(response=422, description="Erro de validação de dados")
+     * )
+     */
+    public function updatePreferences(UpdatePreferenceRequest $request, $id): JsonResponse
+    {
+        $project = Project::findOrFail($id);
+
+        $preference = $this->preferenceService->updateOrCreateForUser(
+            $project,
+            $request->user(),
+            $request->validated()['settings']
+        );
+
+        return response()->json($preference, 200);
     }
 }
