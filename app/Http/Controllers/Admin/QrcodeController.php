@@ -13,11 +13,14 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Schema(
  * schema="StoreQrcodeRequest",
- * required={"target_url"},
+ * required={"slug", "target_url", "scan_count", "is_active"},
+ * @OA\Property(property="slug", type="string", example="promo-verao-25"),
  * @OA\Property(property="target_url", type="string", format="url", example="https://seusite.com/pagina-de-destino"),
- * @OA\Property(property="slug", type="string", example="promo-verao-25", description="Opcional. Se não enviado, um slug único será gerado"),
- * @OA\Property(property="client_id", type="integer", example=1, nullable=true),
- * @OA\Property(property="is_active", type="boolean", example=true)
+ * @OA\Property(property="scan_count", type="integer", example=0),
+ * @OA\Property(property="last_scanned_at", type="string", format="date-time", nullable=true, example="2023-08-30T12:34:56Z"),
+ * @OA\Property(property="qr_image_path", type="string", example="qrcodes/promo-verao-25.svg", nullable=true),
+ * @OA\Property(property="is_active", type="boolean", example=true),
+ * @OA\Property(property="client_id", type="integer", example=1, nullable=true)
  * )
  *
  * @OA\Schema(

@@ -15,9 +15,9 @@ class StoreCollectionRequest extends FormRequest
     {
         return [
             'name'          => 'required|string|max:255',
-            'slug'          => 'required|string|max:255|unique:collections,slug',
+            'slug'          => 'nullable|string|max:255|unique:collections,slug',
             'client_id'     => 'nullable|integer|exists:clients,id',
-            'owner_id'      => 'required|integer|exists:users,id',
+            'owner_id'      => 'nullable|integer|exists:users,id',
             'visibility'    => 'required|string|in:public,private',
             'agency_access' => 'boolean',
             'icon'          => 'nullable|string|max:255',
