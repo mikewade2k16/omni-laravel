@@ -20,7 +20,11 @@ use Illuminate\Http\JsonResponse;
  * @OA\Property(property="nick", type="string", example="edinho"),
  * @OA\Property(property="status", type="string", enum={"active", "inactive"}, example="active"),
  * @OA\Property(property="level", type="string", enum={"admin", "manager", "marketing", "finance"}, example="marketing"),
- * @OA\Property(property="user_type", type="string", enum={"client", "admin"}, example="client")
+ * @OA\Property(property="user_type", type="string", enum={"client", "admin"}, example="client"),
+ * @OA\Property(property="client_id", type="integer", nullable=true, description="ID do cliente ou organização associada. Opcional.", example="1"),
+ * @OA\Property(property="phone", type="string", nullable=true, description="Número de telefone. Opcional.", example="5511987654321"),
+ * @OA\Property(property="profile_image", type="string", nullable=true, description="URL ou caminho para a imagem de perfil. Opcional.", example="/images/profile/default.jpg"),
+ * @OA\Property(property="preferences", type="object", nullable=true, description="Preferências do usuário em formato JSON. Opcional.", example={"theme": "dark"})
  * )
  *
  * @OA\Schema(

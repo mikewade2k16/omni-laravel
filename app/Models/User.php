@@ -29,11 +29,13 @@ use App\Enums\UserTypeEnum;
  * @OA\Property(property="user_type", type="string", enum={"admin", "manager", "member", "client"}, description="Tipo de usuário no sistema", example="member"),
  * @OA\Property(property="level", type="string", enum={"beginner", "intermediate", "advanced", "specialist"}, description="Nível de experiência ou cargo do usuário", example="intermediate"),
  * @OA\Property(property="email_verified_at", type="string", format="date-time", readOnly=true, nullable=true, description="Data e hora da verificação do e-mail"),
- * @OA\Property(property="created_at", type="string", format="date-time", readOnly=true, description="Data de criação do usuário"),
- * @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true, description="Data da última atualização do usuário"),
  * @OA\Property(property="projects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Lista de projetos criados pelo usuário (geralmente carregado sob demanda)."),
  * @OA\Property(property="accessibleProjects", type="array", @OA\Items(ref="#/components/schemas/Project"), description="Lista de projetos aos quais o usuário tem acesso como membro (geralmente carregado sob demanda)."),
- * @OA\Property(property="tasks", type="array", @OA\Items(ref="#/components/schemas/Task"), description="Lista de tarefas atribuídas ao usuário (geralmente carregado sob demanda).")
+ * @OA\Property(property="tasks", type="array", @OA\Items(ref="#/components/schemas/Task"), description="Lista de tarefas atribuídas ao usuário (geralmente carregado sob demanda)."),
+ * @OA\Property(property="client_id", type="integer", nullable=true, description="ID do cliente ou organização associada. Opcional.", example="1"),
+ * @OA\Property(property="phone", type="string", nullable=true, description="Número de telefone. Opcional.", example="5511987654321"),
+ * @OA\Property(property="profile_image", type="string", nullable=true, description="URL ou caminho para a imagem de perfil. Opcional.", example="/images/profile/default.jpg"),
+ * @OA\Property(property="preferences", type="object", nullable=true, description="Preferências do usuário em formato JSON. Opcional.", example={"theme": "dark"}),
  * )
  */
 class User extends Authenticatable implements JWTSubject
@@ -53,6 +55,10 @@ class User extends Authenticatable implements JWTSubject
         'status',
         'user_type',
         'level',
+        'client_id',    
+        'phone',        
+        'profile_image',
+        'preferences',
     ];
 
     /**
@@ -63,6 +69,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'last_login', 
     ];
 
     /**
@@ -76,6 +83,11 @@ class User extends Authenticatable implements JWTSubject
         'status' => UserStatusEnum::class,
         'level' => UserLevelEnum::class,
         'user_type' => UserTypeEnum::class,
+        'client_id' => 'int',       
+        'phone' => 'string',        
+        'profile_image' => 'string',
+        'preferences' => 'array',   
+        'last_login' => 'datetime',
     ];
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
