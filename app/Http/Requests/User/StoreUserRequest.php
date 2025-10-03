@@ -26,13 +26,17 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|string|email|max:255|unique:users,email',
-            'password'  => 'required|string|min:6|confirmed',
-            'nick'      => 'required|string|max:50',
-            'status'    => ['required', new Enum(UserStatusEnum::class)],
-            'level'     => ['required', new Enum(UserLevelEnum::class)],
-            'user_type' => ['required', new Enum(UserTypeEnum::class)],
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|string|email|max:255|unique:users,email',
+            'password'      => 'required|string|min:6|confirmed',
+            'nick'          => 'required|string|max:50',
+            'client_id'     => 'nullable|integer|exists:clients,id',
+            'phone'         => 'nullable|string|max:20',
+            'profile_image' => 'nullable|string|max:255',
+            'preferences'   => 'nullable|array',
+            'status'        => ['required', new Enum(UserStatusEnum::class)],
+            'level'         => ['required', new Enum(UserLevelEnum::class)],
+            'user_type'     => ['required', new Enum(UserTypeEnum::class)],
         ];
     }
 }

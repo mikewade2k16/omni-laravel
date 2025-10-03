@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Schema(
  * schema="StoreSiteZenRequest",
- * required={"mes", "visitas", "compras", "novas_visitas", "taxa_conversao", "ticket_medio", "pa", "receita_total"},
+ * required={"mes", "visitas", "compras", "novas_visitas", "taxa_conversao", "ticket_medio", "receita_total", "produtos_mais_vistos", "produtos_comprados", "funil_usuarios"},
  * @OA\Property(property="mes", type="string", maxLength=50, example="Janeiro"),
  * @OA\Property(property="visitas", type="integer", format="int32", example=1500),
  * @OA\Property(property="compras", type="integer", format="int32", example=50),
