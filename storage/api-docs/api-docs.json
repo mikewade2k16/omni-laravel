@@ -3390,17 +3390,7 @@
                 "title": "Store Client Request",
                 "required": [
                     "nome",
-                    "cpf",
-                    "email",
-                    "data_nasc",
-                    "rg",
-                    "contato_1",
-                    "endereco",
-                    "cep",
-                    "uf",
-                    "cidade",
-                    "bairro",
-                    "numero"
+                    "cpf"
                 ],
                 "properties": {
                     "nome": {
@@ -3481,8 +3471,9 @@
                 "title": "Store Collection Request",
                 "required": [
                     "name",
-                    "slug",
-                    "owner_id"
+                    "visibility",
+                    "agency_access",
+                    "schema_json"
                 ],
                 "properties": {
                     "name": {
@@ -3999,27 +3990,44 @@
             },
             "StoreQrcodeRequest": {
                 "required": [
-                    "target_url"
+                    "slug",
+                    "target_url",
+                    "scan_count",
+                    "is_active"
                 ],
                 "properties": {
+                    "slug": {
+                        "type": "string",
+                        "example": "promo-verao-25"
+                    },
                     "target_url": {
                         "type": "string",
                         "format": "url",
                         "example": "https://seusite.com/pagina-de-destino"
                     },
-                    "slug": {
-                        "description": "Opcional. Se não enviado, um slug único será gerado",
-                        "type": "string",
-                        "example": "promo-verao-25"
-                    },
-                    "client_id": {
+                    "scan_count": {
                         "type": "integer",
-                        "example": 1,
+                        "example": 0
+                    },
+                    "last_scanned_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-08-30T12:34:56Z",
+                        "nullable": true
+                    },
+                    "qr_image_path": {
+                        "type": "string",
+                        "example": "qrcodes/promo-verao-25.svg",
                         "nullable": true
                     },
                     "is_active": {
                         "type": "boolean",
                         "example": true
+                    },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -4101,8 +4109,10 @@
                     "novas_visitas",
                     "taxa_conversao",
                     "ticket_medio",
-                    "pa",
-                    "receita_total"
+                    "receita_total",
+                    "produtos_mais_vistos",
+                    "produtos_comprados",
+                    "funil_usuarios"
                 ],
                 "properties": {
                     "mes": {
@@ -4456,6 +4466,32 @@
                             "admin"
                         ],
                         "example": "client"
+                    },
+                    "client_id": {
+                        "description": "ID do cliente ou organização associada. Opcional.",
+                        "type": "integer",
+                        "example": "1",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "Número de telefone. Opcional.",
+                        "type": "string",
+                        "example": "5511987654321",
+                        "nullable": true
+                    },
+                    "profile_image": {
+                        "description": "URL ou caminho para a imagem de perfil. Opcional.",
+                        "type": "string",
+                        "example": "/images/profile/default.jpg",
+                        "nullable": true
+                    },
+                    "preferences": {
+                        "description": "Preferências do usuário em formato JSON. Opcional.",
+                        "type": "object",
+                        "example": {
+                            "theme": "dark"
+                        },
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -5713,18 +5749,6 @@
                         "readOnly": true,
                         "nullable": true
                     },
-                    "created_at": {
-                        "description": "Data de criação do usuário",
-                        "type": "string",
-                        "format": "date-time",
-                        "readOnly": true
-                    },
-                    "updated_at": {
-                        "description": "Data da última atualização do usuário",
-                        "type": "string",
-                        "format": "date-time",
-                        "readOnly": true
-                    },
                     "projects": {
                         "description": "Lista de projetos criados pelo usuário (geralmente carregado sob demanda).",
                         "type": "array",
@@ -5745,6 +5769,32 @@
                         "items": {
                             "$ref": "#/components/schemas/Task"
                         }
+                    },
+                    "client_id": {
+                        "description": "ID do cliente ou organização associada. Opcional.",
+                        "type": "integer",
+                        "example": "1",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "Número de telefone. Opcional.",
+                        "type": "string",
+                        "example": "5511987654321",
+                        "nullable": true
+                    },
+                    "profile_image": {
+                        "description": "URL ou caminho para a imagem de perfil. Opcional.",
+                        "type": "string",
+                        "example": "/images/profile/default.jpg",
+                        "nullable": true
+                    },
+                    "preferences": {
+                        "description": "Preferências do usuário em formato JSON. Opcional.",
+                        "type": "object",
+                        "example": {
+                            "theme": "dark"
+                        },
+                        "nullable": true
                     }
                 },
                 "type": "object"

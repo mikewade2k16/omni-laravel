@@ -20,11 +20,11 @@ class StoreSiteZenRequest extends FormRequest
             'novas_visitas' => 'required|integer',
             'taxa_conversao' => 'required|numeric',
             'ticket_medio' => 'required|numeric',
-            'pa' => 'required|numeric',
+            'pa' => 'nullable|numeric',
             'receita_total' => 'required|numeric',
-            'produtos_mais_vistos' => 'nullable|array',
-            'produtos_comprados' => 'nullable|array',
-            'funil_usuarios' => 'nullable|array',
+            'produtos_mais_vistos' => 'required|array',
+            'produtos_comprados' => 'required|array',
+            'funil_usuarios' => 'required|array',
         ];
     }
 }
